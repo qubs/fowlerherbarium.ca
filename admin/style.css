@@ -1,0 +1,280 @@
+body {
+	margin: 0;
+	background-color: #F9F9F9;
+}
+
+nav {
+	height: 50px;
+	background-color: #455A64;
+	border-bottom: 2px solid #37474F;
+	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+	list-style: none;
+	padding: 0;
+	margin: auto;
+	max-width: 1140px;
+	height: 50px;
+
+	overflow: hidden;
+	vertical-align: top;
+}
+
+nav ul li {
+	display: inline-block;
+	margin-top: 10px;
+	height: 30px;
+	float: left;
+	border-right: 1px solid #37474F;
+}
+nav ul li.alignRight {
+	float: right;
+}
+nav ul li:last-child {
+	border-left: 1px solid #37474F;
+}
+
+nav ul li a {
+	display: block;
+	height: 30px;
+	padding: 0 1em;
+
+	color: #B0BEC5;
+	font-family: "Open Sans", sans-serif;
+	font-weight: bold;
+	line-height: 30px;
+	text-transform: uppercase;
+	text-decoration: none;
+	font-size: 0.9em;
+
+	transition: color 0.2s;
+}
+nav ul li a:hover {
+	color: #CFD8DC;
+	transition: color 0.2s;
+}
+nav ul li.title a {
+	font-family: "Playfair Display", serif;
+	font-size: 1.2em;
+	font-weight: normal;
+	color: #ECEFF1;
+	line-height: 28px;
+	letter-spacing: 1px;
+}
+
+section.main {
+	max-width: 1140px;
+	box-sizing: border-box;
+	margin: auto;
+	padding: 20px;
+
+	color: #333;
+	font-family: "Open Sans", sans-serif;
+	font-size: 0.9em;
+}
+section.main h2 {
+	margin: 0.3em 0;
+	color: #333;
+	font-family: "Playfair Display", serif;
+	font-weight: normal;
+	text-transform: uppercase;
+}
+section.main h2 button {
+	font-size: 0.5em;
+	padding: 5px 7px;
+	vertical-align: top;
+	margin-top: 0;
+	margin-left: 5px;
+	float: right;
+}
+section.main h3 {
+	margin-bottom: 10px;
+	color: #333;
+}
+section.main p {
+	font-size: 0.9em;
+	color: #222;
+	line-height: 1.6em;
+	overflow: hidden;
+}
+section.main p img {
+	max-width: 33%;
+}
+section.main .box {
+	background-color: #FFF;
+	padding: 15px;
+}
+section.main .box h3:first-child {
+	margin-top: 0;
+	margin-bottom: 15px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #F3F3F3;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+	border: 1px solid #E9E9E9;
+}
+table th, td {
+	padding: 7px;
+	color: #333;
+	font-size: 0.9em;
+}
+table th {
+	text-transform: uppercase;
+	color: #666;
+	background-color: #E9E9E9;
+}
+table td {
+	border-right: 1px solid #E9E9E9;
+}
+table td button {
+	margin-top: 0;
+}
+table thead tr {
+	border-bottom: 1px solid #DDD;
+}
+table tbody tr:nth-child(even) {
+	background-color: #F3F3F3;
+}
+
+footer {
+	max-width: 1140px;
+	box-sizing: border-box;
+	margin: auto;
+	padding: 20px;
+
+	border-top: 1px solid #E9E9E9;
+
+	color: #999;
+	font-family: "Open Sans", sans-serif;
+	font-size: 0.9em;
+}
+
+/* === FORMS === */
+input[type="button"], button {
+	background-color: #2196F3;
+	color: #E3F2FD;
+	padding: 0.8em 1em;
+	font-family: "Open Sans", sans-serif;
+	font-size: 0.8em;
+	border: none;
+	margin-top: 7px;
+	outline: 0;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	font-weight: bold;
+	cursor: pointer;
+}
+input[type="button"]:hover, button:hover {
+	background-color: #42A5F5;
+}
+input[type="button"].disabled, button.disabled {
+	background-color: #CECECE;
+	color: #999;
+	cursor: not-allowed;
+}
+input[type="button"] span, button span {
+	display: inline-block;
+	vertical-align: top;
+	margin-top: 3px;
+}
+
+input[type="text"], input[type="password"], input[type="file"] {
+	padding: 5px;
+	font-family: "Open Sans", sans-serif;
+	border: 1px solid #CCC;
+	outline: 0;
+	background-color: #F9F9F9;
+}
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
+	border-color: #2196F3;
+}
+
+textarea {
+	padding: 5px;
+	font-family: "Open Sans", sans-serif;
+	border: 1px solid #CCC;
+	outline: 0;
+	background-color: #F9F9F9;
+	font-size: 0.95em;
+}
+
+label {
+	display: block;
+	margin-top: 10px;
+
+	font-size: 0.9em;
+	font-weight: bold;
+	color: #444;
+	text-transform: uppercase;
+}
+
+.pagination {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	margin-top: 1em;
+	text-align: center;
+}
+.pagination li {
+	display: inline-block;
+	border-right: 1px solid #1E88E5;
+}
+.pagination li:last-child {
+	border-right: none;
+}
+.pagination li.skipToPage {
+	padding-left: 0.7em;
+	background-color: #64B5F6;
+	border-left: 3px solid #1E88E5;
+	border-right: 4px solid #1E88E5;
+}
+.pagination li.skipToPage label {
+	display: inline-block;
+	margin-top: 0;
+	color: #E3F2FD;
+}
+.pagination li.skipToPage input {
+	margin-right: 0.7em;
+	width: 3em;
+}
+.pagination li button {
+	margin-top: 0;
+}
+.pagination li button.active {
+	background-color: #1E88E5;
+}
+
+.error {
+	background-color: #F44336;
+	color: #FFF;
+	padding: 10px;
+	margin-bottom: 15px;
+	font-size: 0.9em;
+}
+
+.col {
+	box-sizing: border-box;
+	display: inline-block;
+	padding: 10px;
+	vertical-align: top;
+}
+.col.noPad {
+	padding: 0;
+}
+.col.padRight {
+	padding-right: 10px;
+}
+.col.padLeft {
+	padding-left: 10px;
+}
+.col.col50 {
+	width: 50%;
+}
+
+.col input[type="text"], .col input[type="file"], .col textarea {
+	width: 100%;
+}

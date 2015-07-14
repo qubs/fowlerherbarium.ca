@@ -1,0 +1,107 @@
+<?php
+	require_once('../config.php');
+	require_once('../shared.php');
+
+	session_start();
+
+	if(!isset($_SESSION['user'])) {
+		header('Location: index.php');
+	}
+
+	$mysqli = mysqli_connect($_DATABASE_HOST, $_DATABASE_USER, $_DATABASE_PASS, $_DATABASE_DEFAULT);
+	if(mysqli_connect_errno()) {
+		$message = message(4, "Connect failed: " . mysqli_connect_error());
+	}
+	$mysqli->set_charset("utf8");
+
+	if(!isset($_GET['id'])) {
+		header('Location: main.php');
+	}
+
+	$id = intval($mysqli->real_escape_string($_GET['id']));
+
+	if(isset($_POST['submit'])) {
+		$id = $_POST['id'];
+	}
+
+	$query = "SELECT * FROM specimens WHERE web_id = $id LIMIT 1";
+	$fetch_specimen = $mysqli->query($query);
+
+	if($fetch_specimen->num_rows == 0) {
+		header('Location: main.php');
+	}
+
+	$specimen = $fetch_specimen->fetch_assoc();
+
+	$page = "editentry";
+	require_once('./header.php');
+?>
+<h2>Edit Entry "<em><?php echo $specimen['genus'] . ' ' . $specimen['species']; ?>"</em> (Web ID: <?php echo $specimen['web_id']; ?>)</h2>
+<form action="edit_entry.php" class="box">
+	<input type="hidden" value="<?php echo $id; ?>">
+	<div class="row">
+		<div class="col col50">
+			<label for="dataset">Dataset</label>
+			<input type="text" name="dataset" value="<?php echo $specimen['dataset']; ?>">
+			<div class="row">
+				<div class="col col50 noPad padRight">
+					<label for="genus">Genus</label>
+					<input type="text" name="genus" value="<?php echo $specimen['genus']; ?>">
+				</div><div class="col col50 noPad padLeft">
+					<label for="species">Species</label>
+					<input type="text" name="species" value="<?php echo $specimen['species']; ?>">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col col50 noPad padRight">
+					<label for="DTH">DTH #</label>
+					<input type="text" name="DTH" value="<?php echo $specimen['DTH']; ?>">
+				</div><div class="col col50 noPad padLeft">
+					<label for="accession">Accession #</label>
+					<input type="text" name="accession" value="<?php echo $specimen['accession']; ?>">
+				</div>
+			</div>
+			<label for="common_name">Common Name</label>
+			<input type="text" name="common_name" value="<?php echo $specimen['common_name']; ?>">
+			<div class="row">
+				<div class="col col50 noPad padRight">
+					<label for="date_collected">Date Collected</label>
+					<input type="text" name="date_collected" placeholder="mm dd yyyy" value="<?php echo $specimen['date_collected']; ?>">
+				</div><div class="col col50 noPad padLeft">
+					<label for="collectors">Collector(s)</label>
+					<input type="text" name="collectors" value="<?php echo $specimen['collectors']; ?>">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col col50 noPad padRight">
+					<label for="map_included"><input type="checkbox" name="map_included" <?php if($specimen['map_included'] == 'yes') { ?>checked<?php } ?>> Map Included</label>
+				</div><div class="col col50 noPad padLeft">
+					<label for="map_reference">Map Reference</label>
+					<input type="text" name="map_reference" value="<?php echo $specimen['map_reference']; ?>">
+				</div>
+			</div>
+			<label for="image">Image</label>
+			<input type="file" name="image" value="<?php echo $specimen['image']; ?>">
+		</div><div class="col col50">
+			<div class="row">
+				<div class="col col50 noPad padRight">
+					<label for="county">County</label>
+					<input type="text" name="county" value="<?php echo $specimen['county']; ?>">
+				</div><div class="col col50 noPad padLeft">
+					<label for="township">Township</label>
+					<input type="text" name="township" value="<?php echo $specimen['township']; ?>">
+				</div>
+			</div>
+			<label for="location">Location</label>
+			<input type="text" name="location" value="<?php echo $specimen['location']; ?>">
+			<label for="habitat">Habitat</label>
+			<textarea name="habitat" cols="30" rows="5"><?php echo $specimen['habitat']; ?></textarea>
+			<label for="habitat">Notes</label>
+			<textarea name="notes" cols="30" rows="5"><?php echo $specimen['notes']; ?></textarea>
+			<button>Add Entry</button>
+		</div>
+	</div>
+</form>
+<?php
+	require_once('./footer.php');
+?>
