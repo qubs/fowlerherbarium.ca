@@ -38,7 +38,7 @@
 ?>
 <h2>Edit Entry "<em><?php echo $specimen['genus'] . ' ' . $specimen['species']; ?>"</em> (Web ID: <?php echo $specimen['web_id']; ?>)</h2>
 <form action="edit_entry.php" class="box">
-	<input type="hidden" value="<?php echo $id; ?>">
+	<input type="hidden" name="id" value="<?php echo $id; ?>">
 	<div class="row">
 		<div class="col col50">
 			<label for="dataset">Dataset</label>
@@ -82,6 +82,7 @@
 			</div>
 			<label for="image">Image</label>
 			<input type="file" name="image" value="<?php echo $specimen['image']; ?>">
+			<button><span class="icon-done"></span> Save Changes</button>
 		</div><div class="col col50">
 			<div class="row">
 				<div class="col col50 noPad padRight">
@@ -98,7 +99,6 @@
 			<textarea name="habitat" cols="30" rows="5"><?php echo $specimen['habitat']; ?></textarea>
 			<label for="habitat">Notes</label>
 			<textarea name="notes" cols="30" rows="5"><?php echo $specimen['notes']; ?></textarea>
-			<button>Add Entry</button>
 		</div>
 	</div>
 </form>

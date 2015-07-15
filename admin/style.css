@@ -1,5 +1,116 @@
 @charset "utf-8";
 
+/* FONTS ***************************************************/
+
+@font-face {
+	font-family: 'icomoon';
+	src:url('/fonts/icomoon.eot?-2aj1tr');
+	src:url('/fonts/icomoon.eot?#iefix-2aj1tr') format('embedded-opentype'),
+		url('/fonts/icomoon.ttf?-2aj1tr') format('truetype'),
+		url('/fonts/icomoon.woff?-2aj1tr') format('woff'),
+		url('/fonts/icomoon.svg?-2aj1tr#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-export:before {
+	content: "\e607";
+}
+.icon-description:before {
+	content: "\e600";
+}
+.icon-done:before {
+	content: "\e608";
+}
+.icon-help:before {
+	content: "\e614";
+}
+.icon-highlight-remove:before {
+	content: "\e615";
+}
+.icon-home:before {
+	content: "\e601";
+}
+.icon-perm-phone-msg:before {
+	content: "\e602";
+}
+.icon-reorder:before {
+	content: "\e603";
+}
+.icon-room:before {
+	content: "\e609";
+}
+.icon-search:before {
+	content: "\e604";
+}
+.icon-settings:before {
+	content: "\e616";
+}
+.icon-warning:before {
+	content: "\e60a";
+}
+.icon-live-help:before {
+	content: "\e605";
+}
+.icon-remove-circle-outline:before {
+	content: "\e617";
+}
+.icon-insert-link:before {
+	content: "\e60b";
+}
+.icon-mode-edit:before {
+	content: "\e618";
+}
+.icon-file-download:before {
+	content: "\e619";
+}
+.icon-camera-alt:before {
+	content: "\e60c";
+}
+.icon-control-point:before {
+	content: "\e60d";
+}
+.icon-nature:before {
+	content: "\e60e";
+}
+.icon-nature-people:before {
+	content: "\e60f";
+}
+.icon-menu:before {
+	content: "\e606";
+}
+.icon-more-vert:before {
+	content: "\e610";
+}
+.icon-people:before {
+	content: "\e61a";
+}
+.icon-person:before {
+	content: "\e611";
+}
+.icon-publ:before {
+	content: "\e612";
+}
+.icon-calendar:before {
+	content: "\e613";
+}
+
+/***********************************************************/
+
 body {
 	margin: 0;
 	background-color: #F9F9F9;
@@ -56,6 +167,11 @@ nav ul li a:hover, nav ul li.active a {
 	color: #CFD8DC;
 	transition: color 0.2s;
 }
+nav ul li a span {
+	position: relative;
+	top: 1px;
+	color: #FFC107;
+}
 nav ul li.title a {
 	font-family: "Playfair Display", serif;
 	font-size: 1.2em;
@@ -82,11 +198,11 @@ section.main h2 {
 	font-weight: normal;
 	text-transform: uppercase;
 }
-section.main h2 button {
+section.main h2 button, section.main h2 button input[type="button"], section.main h2 .button {
 	font-size: 0.5em;
 	padding: 5px 7px;
 	vertical-align: top;
-	margin-top: 0;
+	margin-top: 3px;
 	margin-left: 5px;
 	float: right;
 }
@@ -156,7 +272,8 @@ footer {
 }
 
 /* === FORMS === */
-input[type="button"], button {
+input[type="button"], button, .button {
+	display: inline-block;
 	background-color: #2196F3;
 	color: #E3F2FD;
 	padding: 0.8em 1em;
@@ -166,14 +283,15 @@ input[type="button"], button {
 	margin-top: 7px;
 	outline: 0;
 	text-transform: uppercase;
+	text-decoration: none;
 	letter-spacing: 0.5px;
 	font-weight: bold;
 	cursor: pointer;
 }
-input[type="button"]:hover, button:hover {
+input[type="button"]:hover, button:hover, .button:hover {
 	background-color: #42A5F5;
 }
-input[type="button"].disabled, button.disabled {
+input[type="button"].disabled, button.disabled, .button.disabled {
 	background-color: #CECECE;
 	color: #999;
 	cursor: not-allowed;
@@ -181,7 +299,8 @@ input[type="button"].disabled, button.disabled {
 input[type="button"] span, button span {
 	display: inline-block;
 	vertical-align: top;
-	margin-top: 3px;
+	margin-top: 1px;
+	font-size: 1.1em;
 }
 
 input[type="text"], input[type="password"], input[type="file"], input[type="email"] {
@@ -220,6 +339,53 @@ label.required:after {
 	margin-top: 2px;
 	margin-left: 0.3em;
 	color: #F44336;
+}
+label .help {
+	display: inline-block;
+	position: relative;
+}
+label .help div {
+	display: none;
+	font-weight: normal;
+	text-transform: none;
+
+	background-color: #F3F3F3;
+	padding: 10px;
+	min-height: 50px;
+	min-width: 300px;
+
+	position: absolute;
+	left: 23px;
+	top: -25px;
+}
+label .help:hover div {
+	display: block;
+}
+label .help:hover div:after {
+	content: "";
+	height: 10px;
+	width: 10px;
+	display: block;
+
+	position: absolute;
+	top: 28px;
+	left: -5px;
+
+	background-color: #F3F3F3;
+	color: #444;
+
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+label .help:before {
+	content: "\e614";
+	font-size: 1.1em;
+	color: #2196F3;
+	font-family: 'icomoon';
+	display: inline-block;
+	font-weight: normal;
+	position: relative;
+	top: 1px;
 }
 
 a {

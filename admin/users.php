@@ -21,6 +21,28 @@
 		$passagain = $_POST['passagain'];
 
 		$dead = false;
+		$error = "";
+
+		if($password != $passagain) {
+			$dead = true;
+			$error = "Entered passwords do not match.";
+		}
+		if(
+			(!isset($username) || !isset($email) || !isset($password) || !isset($passagain))
+		 || ($username == "" || $email == "" || $password == "" || $passagain == "")) {
+			$dead = true;
+			$error = "All fields must be filled in.";
+		}
+
+		if(!$dead) {
+			$hasher = new PasswordHash($_HASH_COST, $_HASH_PORTABLE);
+			$passHash = $hasher->HashPassword($password);
+
+			$insert_user = $mysqli->prepare("INSERT INTO users(username, email, password) VALUES(?, ?, ?)");
+			$insert_user->bind_param("sss", $username, $email, $password);
+			$insert_user->execute();
+			$insert_user->close();
+		}
 	}
 
 	$fetch_all_users = $mysqli->query("SELECT * FROM users");
@@ -30,8 +52,11 @@
 ?>
 <h2>Users</h2>
 <div class="box">
+	<?php if(isset($error) && $error != "") { ?>
+		<div class="error"><?php echo $error; ?></div>
+	<?php } ?>
 	<h3>Add New</h3>
-	<form action="users.php">
+	<form action="users.php" method="post">
 		<div class="row">
 			<div class="col col50">
 				<label for="username" class="required">Username</label>
@@ -39,7 +64,7 @@
 				<label for="email" class="required">Email</label>
 				<input type="email" name="email" required>
 				<br>
-				<button type="submit" name="submit">Create User</button>
+				<button type="submit" name="submit"><span class="icon-control-point"></span> Create User</button>
 			</div><div class="col col50">
 				<label for="password" class="required">Password</label>
 				<input type="password" name="password" required>
@@ -66,7 +91,7 @@
 					<td><?=$user['id']?></td>
 					<td><?=$user['username']?></td>
 					<td><a href="mailto:<?=$user['email']?>"><?=$user['email']?></a></td>
-					<td><button onclick="window.location = 'edit_user.php?id=<?php echo $user['id']; ?>'">Edit</button> <button>Delete</button></td>
+					<td><button onclick="window.location = 'edit_user.php?id=<?php echo $user['id']; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button><span class="icon-highlight-remove"></span> Delete</button></td>
 				</tr>
 			<?php } ?>
 		</tbody>

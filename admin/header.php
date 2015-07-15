@@ -13,9 +13,9 @@
 		<nav>
 			<ul>
 				<li class="title"><a href="main.php">Fowler Herbarium Admin</a></li>
-				<li<?php if($page == "main") { ?> class="active"<?php } ?>><a href="main.php">Entries</a></li>
-				<li<?php if($page == "users") { ?> class="active"<?php } ?>><a href="users.php">Users</a></li>
-				<li<?php if($page == "usersettings") { ?> class="active"<?php } ?>><a href="usersettings.php">My Settings</a></li>
+				<li<?php if($page == "main") { ?> class="active"<?php } ?>><a href="main.php"><span class="icon-reorder"></span> Entries</a></li>
+				<li<?php if($page == "users") { ?> class="active"<?php } ?>><a href="users.php"><span class="icon-people"></span> Users</a></li>
+				<li<?php if($page == "usersettings") { ?> class="active"<?php } ?>><a href="usersettings.php"><span class="icon-settings"></span> My Settings</a></li>
 				<li class="alignRight"><a href="logout.php">Log Out<?php if($page != "login") { ?> (<?php echo $_SESSION['user']; ?>)<?php } ?></a></li>
 			</ul>
 		</nav>

@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?j3xhnh');
-	src:url('fonts/icomoon.eot?#iefixj3xhnh') format('embedded-opentype'),
-		url('fonts/icomoon.ttf?j3xhnh') format('truetype'),
-		url('fonts/icomoon.woff?j3xhnh') format('woff'),
-		url('fonts/icomoon.svg?j3xhnh#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?-2aj1tr');
+	src:url('fonts/icomoon.eot?#iefix-2aj1tr') format('embedded-opentype'),
+		url('fonts/icomoon.ttf?-2aj1tr') format('truetype'),
+		url('fonts/icomoon.woff?-2aj1tr') format('woff'),
+		url('fonts/icomoon.svg?-2aj1tr#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -32,6 +32,12 @@
 .icon-done:before {
 	content: "\e608";
 }
+.icon-help:before {
+	content: "\e614";
+}
+.icon-highlight-remove:before {
+	content: "\e615";
+}
 .icon-home:before {
 	content: "\e601";
 }
@@ -47,14 +53,26 @@
 .icon-search:before {
 	content: "\e604";
 }
+.icon-settings:before {
+	content: "\e616";
+}
 .icon-warning:before {
 	content: "\e60a";
 }
 .icon-live-help:before {
 	content: "\e605";
 }
+.icon-remove-circle-outline:before {
+	content: "\e617";
+}
 .icon-insert-link:before {
 	content: "\e60b";
+}
+.icon-mode-edit:before {
+	content: "\e618";
+}
+.icon-file-download:before {
+	content: "\e619";
 }
 .icon-camera-alt:before {
 	content: "\e60c";
@@ -73,6 +91,9 @@
 }
 .icon-more-vert:before {
 	content: "\e610";
+}
+.icon-people:before {
+	content: "\e61a";
 }
 .icon-person:before {
 	content: "\e611";
