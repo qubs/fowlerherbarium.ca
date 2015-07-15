@@ -22,7 +22,7 @@
 
 		function addFilter(boolVal, fieldVal, matchTypeVal, paramVal) {
 			boolVal = typeof boolVal !== 'undefined' ? boolVal : "AND";
-			fieldVal = typeof fieldVal !== 'undefined' ? fieldVal : "dataset";
+			fieldVal = typeof fieldVal !== 'undefined' ? fieldVal : "web_id";
 			matchTypeVal = typeof matchTypeVal !== 'undefined' ? matchTypeVal : "equal";
 			paramVal = typeof paramVal !== 'undefined' ? paramVal : "";
 
@@ -68,51 +68,52 @@
 
 			html += '<input type="text" name="parameter[]" class="parameter" value="' + paramVal + '"><button type="button" class="searchRestrictionDelete">Delete</button></li>';
 
-			// $('.searchRestrictions').append('<li class="searchRestriction"><select class="andOr" name="boolean[]"><option value="AND">AND</option><option value="OR">OR</option></select> <div style="width: 70px; display: inline-block;"></div><select name="field[]" class="field"><?php foreach($availFields as $f) { echo "<option value=\"$f\">$f</option>"; } ?></select> <select name="match[]" class="match"><option value="equal">exactly equals</option><option value="notequal">does not equal</option><option value="contains">contains</option><option value="notcontains">does not contain</option><option value="start">starts with</option><option value="end">ends with</option></select><input type="text" name="parameter[]" class="parameter"><button type="button" class="searchRestrictionDelete">Delete</button></li>');
 			$('.searchRestrictions').append(html);
 		}
 
 		$('#searchForm').submit(function(e) {
-			e.preventDefault();
+			if(document.getElementById('exportType').value == '') {
+				e.preventDefault();
 
-			var booleans = [];
-			$("[name='boolean[]']").each(function() {
-				booleans.push(this.value);
-			});
+				var booleans = [];
+				$("[name='boolean[]']").each(function() {
+					booleans.push(this.value);
+				});
 
-			var fields = [];
-			$("[name='field[]']").each(function() {
-				fields.push(this.value);
-			});
+				var fields = [];
+				$("[name='field[]']").each(function() {
+					fields.push(this.value);
+				});
 
-			var matches = [];
-			$("[name='match[]']").each(function() {
-				matches.push(this.value);
-			});
+				var matches = [];
+				$("[name='match[]']").each(function() {
+					matches.push(this.value);
+				});
 
-			var parameters = [];
-			$("[name='parameter[]']").each(function() {
-				parameters.push(this.value);
-			});
+				var parameters = [];
+				$("[name='parameter[]']").each(function() {
+					parameters.push(this.value);
+				});
 
-			$.get("export.php", {
-				type: "json", 
-				"boolean[]": booleans, 
-				"field[]": fields, 
-				"match[]": matches, 
-				"parameter[]": parameters
-			}).done(function(data) {
-				$('#searchResults').css('display', 'block');
-				$('#resultsContainer').html('');
-				console.log(data);
-				if(data.length > 0) {
-					for(var d in data) {
-						$('#resultsContainer').append(makeSearchResult(data[d]));
+				$.get("export.php", {
+					type: "json", 
+					"boolean[]": booleans, 
+					"field[]": fields, 
+					"match[]": matches, 
+					"parameter[]": parameters
+				}).done(function(data) {
+					$('#searchResults').css('display', 'block');
+					$('#resultsContainer').html('');
+					console.log(data);
+					if(data.length > 0) {
+						for(var d in data) {
+							$('#resultsContainer').append(makeSearchResult(data[d]));
+						}
+					} else {
+						$('#resultsContainer').html('<strong>No specimens were found with those parameters.</strong>');
 					}
-				} else {
-					$('#resultsContainer').html('<strong>No specimens were found with those parameters.</strong>');
-				}
-			});
+				});
+			}
 		});
 
 		if(document.getElementById('parameter0').value != '') {
@@ -137,10 +138,10 @@
 </script>
 <h2>Search Database</h2>
 <p>
-	We here provide a multi-term search engine for our herbarium database. As yet we do not have all records entered, but thus far include approximately 16,000 specimens from Eastern Ontario. Records can be exported in JSON or CSV format. With time we will include all 144,000 specimens.
+	We here provide a multi-term search engine for our herbarium database. As yet we do not have all records entered, but thus far include approximately 16,000 specimens from Eastern Ontario. Records can be exported in JSON, CSV, or XML format. With time we will include all 144,000 specimens.
 </p>
-<form id="searchForm" name="searchForm">
-	<input type="hidden" name="type" id="exportType" value="csv">
+<form id="searchForm" name="searchForm" action="search.php" method="post">
+	<input type="hidden" name="type" id="exportType" value="">
 	<ul class="searchRestrictions">
 		<li class="searchRestriction firstRestriction">
 			<input type="hidden" name="boolean[]" value="">
@@ -153,12 +154,11 @@
 				<option value="start" <?php if($submitted) { if($matchTypes[0] == "start") { ?>selected="selected"<?php } } ?>>starts with</option>
 				<option value="end" <?php if($submitted) { if($matchTypes[0] == "end") { ?>selected="selected"<?php } } ?>>ends with</option>
 			</select><input type="text" name="parameter[]" class="parameter" id="parameter0" <?php if($submitted) { echo 'value = "' . $parameters[0] . '"'; } ?>>
-			<!-- <button type="button" class="searchRestrictionDelete">Delete</button> -->
 		</li>
 	</ul>
 	<button type="submit" name="submitBtn"><span class="icon-search"></span> Search</button> <button id="addFilter" type="button">+ Add Filter</button>
 	<div id="searchResults">
-		<h2>Search Results <button type="button" onclick="$('#exportType').attr('value', 'csv'); $('#searchForm').attr('action', 'export.php'); $('#searchForm').attr('method', 'get'); $('#searchForm').submit(); $('#searchForm').attr('action', 'search.php'); $('#searchForm').attr('method', 'post');">Export as CSV</button> <button type="button" onclick="$('#exportType').attr('value', 'json'); $('#searchForm').attr('action', 'export.php'); $('#searchForm').attr('method', 'get'); $('#searchForm').submit(); $('#searchForm').attr('action', 'search.php'); $('#searchForm').attr('method', 'post');">Export as JSON</button></h2>
+		<h2>Search Results <button type="button" onclick="$('#exportType').attr('value', 'csv'); $('#searchForm').attr('action', 'export.php'); $('#searchForm').attr('method', 'get'); $('#searchForm').submit(); $('#exportType').attr('value', ''); $('#searchForm').attr('action', 'search.php'); $('#searchForm').attr('method', 'post');">Export as CSV</button> <button type="button" onclick="$('#exportType').attr('value', 'json'); $('#searchForm').attr('action', 'export.php'); $('#searchForm').attr('method', 'get'); $('#searchForm').submit(); $('#exportType').attr('value', ''); $('#searchForm').attr('action', 'search.php'); $('#searchForm').attr('method', 'post');">Export as JSON</button> <button type="button" onclick="$('#exportType').attr('value', 'xml'); $('#searchForm').attr('action', 'export.php'); $('#searchForm').attr('method', 'get'); $('#searchForm').submit(); $('#exportType').attr('value', ''); $('#searchForm').attr('action', 'search.php'); $('#searchForm').attr('method', 'post');">Export as XML</button></h2>
 		<div id="resultsContainer">
 		</div>
 	</div>

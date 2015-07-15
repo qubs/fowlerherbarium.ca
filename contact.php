@@ -1,6 +1,6 @@
 <?php require_once('header.php'); ?>
 <h2>Contact Information</h2>
-<p>The Fowler Herbarium is located at the Queen's University Biological Station.</p>
+<p>The Fowler Herbarium is located at the <a href="http://queensu.ca/qubs/">Queen's University Biological Station (QUBS)</a>.</p>
 <p>
 	<strong>Associate Curator</strong>
 	Mr. Dale Kristensen <br>

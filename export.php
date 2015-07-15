@@ -54,7 +54,20 @@
 
 			$headers = "Content-type:text/csv";
 		} else if($type == "xml") {
-			//...
+			$xml = new SimpleXMLElement('<xml/>');
+
+			while($s = $fetch_specimens->fetch_assoc()) {
+				$specimen = $xml->addChild('specimen');
+				foreach(array_keys($availFields) as $k) {
+					$specimen->addChild($k, htmlspecialchars($s[$k]));
+				}
+			}
+
+			$headers = "Content-type:text/xml";
+
+			$dom = dom_import_simplexml($xml)->ownerDocument;
+			$dom->formatOutput = true;
+			$output = $dom->saveXML();
 		}
 
 		header($headers);

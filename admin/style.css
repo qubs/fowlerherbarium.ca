@@ -1,3 +1,5 @@
+@charset "utf-8";
+
 body {
 	margin: 0;
 	background-color: #F9F9F9;
@@ -50,7 +52,7 @@ nav ul li a {
 
 	transition: color 0.2s;
 }
-nav ul li a:hover {
+nav ul li a:hover, nav ul li.active a {
 	color: #CFD8DC;
 	transition: color 0.2s;
 }
@@ -182,7 +184,7 @@ input[type="button"] span, button span {
 	margin-top: 3px;
 }
 
-input[type="text"], input[type="password"], input[type="file"] {
+input[type="text"], input[type="password"], input[type="file"], input[type="email"] {
 	padding: 5px;
 	font-family: "Open Sans", sans-serif;
 	border: 1px solid #CCC;
@@ -210,6 +212,18 @@ label {
 	font-weight: bold;
 	color: #444;
 	text-transform: uppercase;
+}
+label.required:after {
+	content: "*";
+	display: inline-block;
+	vertical-align: top;
+	margin-top: 2px;
+	margin-left: 0.3em;
+	color: #F44336;
+}
+
+a {
+	color: #2196F3;
 }
 
 .pagination {
@@ -275,6 +289,6 @@ label {
 	width: 50%;
 }
 
-.col input[type="text"], .col input[type="file"], .col textarea {
+.col input[type="text"], .col input[type="file"], .col input[type="password"], .col input[type="email"], .col textarea {
 	width: 100%;
 }

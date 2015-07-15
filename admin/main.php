@@ -80,6 +80,7 @@
 			</div>
 			<label for="image">Image</label>
 			<input type="file" name="image">
+			<button type="submit" name="submit">Add Entry</button>
 		</div><div class="col col50">
 			<div class="row">
 				<div class="col col50 noPad padRight">
@@ -96,7 +97,6 @@
 			<textarea name="habitat" cols="30" rows="5"></textarea>
 			<label for="habitat">Notes</label>
 			<textarea name="notes" cols="30" rows="5"></textarea>
-			<button>Add Entry</button>
 		</div>
 	</div>
 </form>
