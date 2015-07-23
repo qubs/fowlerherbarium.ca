@@ -28,15 +28,25 @@
 		'end' => ' LIKE "%@" '
 	);
 
+	function fetchFieldData($mysqli, $search = false) {
+		$query = "SELECT * FROM fields";
+		if($search) {
+			$query .= " WHERE searchable = 1";
+		}
+		$fetch_fields = $mysqli->query($query);
+		$fieldInfo = array(); 
+
+		while($f = $fetch_fields->fetch_assoc()) {
+			array_push($fieldInfo, $f);
+		}
+
+		return $fieldInfo;
+	}
+
 	function buildSearchQuery($mysqli, $booleans, $fields, $matchTypes, $parameters) {
 		global $equivs;
 
-		$fetch_fields = $mysqli->query("SELECT * FROM fields");
-		$fieldInfo = array(); 
-
-		foreach($fetch_fields->fetch_assoc() as $f) {
-			array_push($fieldInfo, $f);
-		}
+		$fieldInfo = fetchFieldData($mysqli);
 
 		$query = "SELECT * FROM specimens ";
 

@@ -222,6 +222,7 @@ section.main p img {
 section.main .box {
 	background-color: #FFF;
 	padding: 15px;
+	margin-bottom: 15px;
 }
 section.main .box h3:first-child {
 	margin-top: 0;
@@ -250,6 +251,13 @@ table td {
 }
 table td button {
 	margin-top: 0;
+	vertical-align: top;
+}
+table td p:first-child {
+	margin-top: 0;
+}
+table td p:last-child {
+	margin-bottom: 0;
 }
 table thead tr {
 	border-bottom: 1px solid #DDD;
@@ -423,6 +431,7 @@ a {
 }
 .pagination li button {
 	margin-top: 0;
+	vertical-align: bottom;
 }
 .pagination li button.active {
 	background-color: #1E88E5;
