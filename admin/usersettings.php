@@ -78,13 +78,17 @@
 	<?php } ?>
 	<h3>Change Password</h3>
 	<form action="usersettings.php" method="post">
-		<label for="oldpass">Old Password</label>
-		<input type="password" name="oldpass" required>
-		<label for="newpass">New Password</label>
-		<input type="password" name="newpass" required>
-		<label for="newpassagain">New Password Again</label>
-		<input type="password" name="newpassagain" required>
-		<br><button type="submit" name="submitChangePassword">Change Password</button>
+		<div class="row">
+			<div class="col col33 nopad">
+				<label for="oldpass">Old Password</label>
+				<input type="password" name="oldpass" required>
+				<label for="newpass">New Password</label>
+				<input type="password" name="newpass" required>
+				<label for="newpassagain">New Password Again</label>
+				<input type="password" name="newpassagain" required>
+				<br><button type="submit" name="submitChangePassword">Change Password</button>
+			</div>
+		</div>
 	</form>
 </div>
 <div class="box">
@@ -93,10 +97,14 @@
 	<?php } ?>
 	<h3>Update Email</h3>
 	<form action="usersettings.php" method="post">
-		<label for="email">Email</label>
-		<input type="email" name="email" value="<?=$user_object['email']?>" required>
-		<br>
-		<button type="submit" name="submitUpdateEmail">Update Email</button>
+		<div class="row">
+			<div class="col col33 nopad">
+				<label for="email">Email</label>
+				<input type="email" name="email" value="<?=$user_object['email']?>" required>
+				<br>
+				<button type="submit" name="submitUpdateEmail">Update Email</button>
+			</div>
+		</div>
 	</form>
 </div>
 <?php

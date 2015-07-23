@@ -1,7 +1,15 @@
 <?php require_once('header.php'); ?>
 <h2>About the Herbarium</h2>
 <p>
-	<img src="/images/deslauriers.jpg" alt="Jessie V. Deslauriers Centre for Biology" class="alignRight">The Fowler Herbarium collection, now housed in the Jessie V. Deslauriers Centre for Biology, includes over 140,000 plant specimens, with some dating back to the mid-1800s. The Kingston region is particularly well-represented, but the herbarium also contains excellent collections of bryophytes (mosses and lichens) and vascular plants from the Canadian Arctic and Russia. The purpose of the Fowler Herbarium is to catalogue the biodiversity of plants in the Kingston region and make this information available to interested individuals and institutions. Visits to the herbarium can be arranged by contacting the Associate Curator. The herbarium maintains an electronic database and has published the Plants of the Kingston Region (1996), which is available for a small fee. The herbarium also sponsors workshops on plant ecology and identification, which is open to the general public.
+	<img src="/images/deslauriers.jpg" alt="Jessie V. Deslauriers Centre for Biology" class="alignRight">
+	The Fowler Herbarium collection, now housed in the Jessie V. Deslauriers Centre for Biology, includes over 140,000 
+	plant specimens with some dating back to the mid-1800s. The Kingston region is particularly well-represented, but the 
+	herbarium also contains excellent collections of bryophytes (mosses and lichens) and vascular plants from the Canadian 
+	Arctic and Russia. The purpose of the Fowler Herbarium is to catalogue the biodiversity of plants in the Kingston region 
+	and make this information available to interested individuals and institutions. The herbarium maintains an electronic 
+	database and has published the Plants of the Kingston Region (1996), which is available for a small fee. Visits to the 
+	herbarium can be arranged by contacting the Associate Curator. The herbarium also sponsors workshops on plant ecology 
+	and identification, which are open to the general public.
 </p>
 <p>
 	<strong>What is a herbarium?</strong> A herbarium is a taxonomically organized collection of pressed and dried plant specimens. Each specimen is identified to species (and often subspecies) and annotated with information about where and when it was obtained and who collected it. In a typical herbarium, local plants are especially well-represented, however, most herbaria also contain a range of species from around the world. Many herbaria are connected with a library of books on plant taxonomy and systematics, systematic monographs, regional floras, and technical publications of interest to herbarium users. Individual herbaria in universities or government institutions make up a connected network in which information and specimens are freely exchanged.

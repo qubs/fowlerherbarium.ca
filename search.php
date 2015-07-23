@@ -66,9 +66,24 @@
 				}
 			}
 
-			html += '<input type="text" name="parameter[]" class="parameter" value="' + paramVal + '"><button type="button" class="searchRestrictionDelete">Delete</button></li>';
+			html += '<input type="text" name="parameter[]" class="parameter" value="' + paramVal + '"><button type="button" class="searchRestrictionDelete"><span class="icon-highlight-remove"></span> Delete</button></li>';
 
 			$('.searchRestrictions').append(html);
+		}
+
+		if(window.location.hash != '' && window.location.hash != '#') {
+			var searchParams = JSON.parse(window.location.hash.substring(1));
+
+			for(var i = 0; i < searchParams["boolean[]"].length; i++) {
+				if(i == 0) {
+					document.getElementById("boolean0").value = searchParams["boolean[]"][i];
+					document.getElementById("field0").value = searchParams["field[]"][i];
+					document.getElementById("match0").value = searchParams["match[]"][i];
+					document.getElementById("parameter0").value = searchParams["parameter[]"][i];
+				} else {
+					addFilter(searchParams["boolean[]"][i], searchParams["field[]"][i], searchParams["match[]"][i], searchParams["parameter[]"][i])
+				}
+			}
 		}
 
 		$('#searchForm').submit(function(e) {
@@ -104,7 +119,7 @@
 				}).done(function(data) {
 					$('#searchResults').css('display', 'block');
 					$('#resultsContainer').html('');
-					console.log(data);
+					// console.log(data);
 					if(data.length > 0) {
 						for(var d in data) {
 							$('#resultsContainer').append(makeSearchResult(data[d]));
@@ -113,6 +128,8 @@
 						$('#resultsContainer').html('<strong>No specimens were found with those parameters.</strong>');
 					}
 				});
+
+				window.location.hash = JSON.stringify({ type: "json", "boolean[]": booleans, "field[]": fields, "match[]": matches, "parameter[]": parameters });
 			}
 		});
 
@@ -144,9 +161,9 @@
 	<input type="hidden" name="type" id="exportType" value="">
 	<ul class="searchRestrictions">
 		<li class="searchRestriction firstRestriction">
-			<input type="hidden" name="boolean[]" value="">
-			<select name="field[]" class="field"><?php foreach(array_keys($availFields) as $f) { if($submitted) { $s = ""; if($f == $fields[0]) { $s = 'selected="selected"'; } echo '<option ' . $s . ' value="' . $f . '">' . $availFields[$f] . "</option>"; } else { echo '<option value="' . $f . '">' . $availFields[$f] . '</option>'; } } ?></select>
-			<select name="match[]" class="match">
+			<input type="hidden" name="boolean[]" id="boolean0" value="">
+			<select name="field[]" class="field" id="field0"><?php foreach(array_keys($availFields) as $f) { if($submitted) { $s = ""; if($f == $fields[0]) { $s = 'selected="selected"'; } echo '<option ' . $s . ' value="' . $f . '">' . $availFields[$f] . "</option>"; } else { echo '<option value="' . $f . '">' . $availFields[$f] . '</option>'; } } ?></select>
+			<select name="match[]" class="match" id="match0">
 				<option value="equal" <?php if($submitted) { if($matchTypes[0] == "equal") { ?>selected="selected"<?php } } ?>>exactly equals</option>
 				<option value="notequal" <?php if($submitted) { if($matchTypes[0] == "notequal") { ?>selected="selected"<?php } } ?>>does not equal</option>
 				<option value="contains" <?php if($submitted) { if($matchTypes[0] == "contains") { ?>selected="selected"<?php } } ?>>contains</option>

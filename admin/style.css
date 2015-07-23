@@ -451,9 +451,12 @@ a {
 .col.padLeft {
 	padding-left: 10px;
 }
-.col.col50 {
-	width: 50%;
-}
+
+.col.col30 { width: 30%; }
+.col.col33 { width: 33.3%; }
+.col.col50 { width: 50%; }
+.col.col66 { width: 66.6%; }
+.col.col70 { width: 70%; }
 
 .col input[type="text"], .col input[type="file"], .col input[type="password"], .col input[type="email"], .col textarea {
 	width: 100%;

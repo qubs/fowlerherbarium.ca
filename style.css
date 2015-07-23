@@ -418,6 +418,15 @@ input[type="text"]:focus {
 	margin: 0;
 	background-color: #DDD;
 	color: #777;
+	transition: background-color 0.15s;
+}
+.searchRestriction button:hover {
+	background-color: #E4E4E4;
+	transition: background-color 0.15s;
+}
+.searchRestriction button span {
+	margin-top: 1px;
+	font-size: 1.1em;
 }
 .searchRestriction input, select {
 	vertical-align: top;

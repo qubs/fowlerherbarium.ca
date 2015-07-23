@@ -29,7 +29,14 @@
 	);
 
 	function buildSearchQuery($mysqli, $booleans, $fields, $matchTypes, $parameters) {
-		global $availFields, $equivs;
+		global $equivs;
+
+		$fetch_fields = $mysqli->query("SELECT * FROM fields");
+		$fieldInfo = array(); 
+
+		foreach($fetch_fields->fetch_assoc() as $f) {
+			array_push($fieldInfo, $f);
+		}
 
 		$query = "SELECT * FROM specimens ";
 
