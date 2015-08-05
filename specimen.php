@@ -34,13 +34,13 @@
 	<tbody>
 		<?php foreach($fieldData as $f) { ?>
 			<tr>
-				<td><?php echo $f['label']; ?></td>
+				<td><?php echo $f['label']; if(!empty($f['help'])) { ?> <div class="help"><div><?php echo $f['help']; } ?></div></div></td>
 				<td><?php echo $specimen[$f['field']]; ?></td>
 			</tr>
 		<?php } ?>
 	</tbody>
 </table><div class="wiki">
-	<h3>From Wikipedia</h3>
+	<h4>From Wikipedia</h4>
 	<iframe src="http://en.m.wikipedia.org/wiki/<?php echo str_replace(' ', '_', ($specimen['genus'] . ' ' . $specimen['species'])); ?>" frameborder="0"></iframe>
 </div>
 </div>

@@ -403,6 +403,68 @@ input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
 	border-color: #2196F3;
 }
 
+.help {
+	display: inline-block;
+	position: relative;
+	top: 2px;
+}
+.help div {
+	display: none;
+	font-weight: normal;
+	text-transform: none;
+	font-size: 0.85em;
+
+	line-height: 1.4em;
+
+	background-color: #F6F6F6;
+	padding: 10px;
+	min-height: 50px;
+	min-width: 300px;
+
+	position: absolute;
+	left: 25px;
+	top: -25px;
+
+	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+
+	z-index: 1000;
+}
+.help:hover div {
+	display: block;
+}
+.help:hover div:after {
+	content: "";
+	height: 10px;
+	width: 10px;
+	display: block;
+
+	position: absolute;
+	top: 30px;
+	left: -5px;
+
+	background-color: #F6F6F6;
+	color: #444;
+
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.help:before {
+	content: "\e614";
+	font-size: 1.1em;
+	color: #2196F3;
+	font-family: 'icomoon';
+	display: inline-block;
+	font-weight: normal;
+	position: relative;
+	top: 1px;
+
+	transition: color 0.2s;
+}
+.help:hover:before {
+	color: #42A5F5;
+	transition: color 0.2s;
+}
+
 /* === SEARCH === */
 .searchRestrictions {
 	list-style: none;
@@ -523,6 +585,11 @@ input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
 	font-style: italic;
 	font-size: 2em;
 	margin: 15px 0;
+}
+.specimenFull .wiki h4 {
+	margin-top: 0;
+	margin-bottom: 15px;
+	font-size: 1.5em;
 }
 
 .specimenFull table {

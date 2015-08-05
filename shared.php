@@ -31,14 +31,21 @@
 	function fetchFieldData($mysqli, $search = false) {
 		$query = "SELECT * FROM fields";
 		if($search) {
-			$query .= " WHERE searchable = 1";
+			$query .= " WHERE searchable = 1 ORDER BY field ASC";
 		}
 		$fetch_fields = $mysqli->query($query);
 		$fieldInfo = array(); 
+		$fieldInfoFirst = array();
 
 		while($f = $fetch_fields->fetch_assoc()) {
-			array_push($fieldInfo, $f);
+			if(!$search || ($f["field"] != "genus" && $f["field"] != "species")) {
+				array_push($fieldInfo, $f);
+			} else if($f["field"] == "genus" || $f["field"] == "species") {
+				array_push($fieldInfoFirst, $f);
+			}
 		}
+
+		$fieldInfo = array_merge($fieldInfoFirst, $fieldInfo);
 
 		return $fieldInfo;
 	}

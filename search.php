@@ -23,7 +23,7 @@
 	$(document).ready(function() {
 		//Aquilegia test
 
-		var fields = <?php echo json_encode($fieldData); ?>;
+		var fieldData = <?php echo json_encode($fieldData); ?>;
 
 		$('#searchResults').css('display', 'none');
 
@@ -49,13 +49,11 @@
 
 			html += '</select> <div class="booleanSpacing">&#8942;</div><select name="field[]" class="field">';
 
-			var fields = <?php echo json_encode($fieldData); ?>;
-
-			for(var f in fields) {
-				if(fields[f]["field"] == fieldVal) {
-					html += '<option value="' + fields[f]["field"] + '" data-inputtype="' + fields[f]["input"] + '" selected="selected">' + fields[f]["label"] + '</option>';
+			for(var f in fieldData) {
+				if(fieldData[f]["field"] == fieldVal) {
+					html += '<option value="' + fieldData[f]["field"] + '" data-inputtype="' + fieldData[f]["input"] + '" selected="selected">' + fieldData[f]["label"] + '</option>';
 				} else {
-					html += '<option value="' + fields[f]["field"] + '" data-inputtype="' + fields[f]["input"] + '">' + fields[f]["label"] + '</option>';
+					html += '<option value="' + fieldData[f]["field"] + '" data-inputtype="' + fieldData[f]["input"] + '">' + fieldData[f]["label"] + '</option>';
 				}
 			}
 
@@ -232,6 +230,14 @@
 
 		function updateInputTypeOnParameter(obj) {
 			var inputType = $(obj).children("option:selected").data("inputtype");
+			var fieldName = $(obj).children("option:selected")[0].value;
+			var help = $("#helpDisplay");
+
+			for(var f in fieldData) {
+				if(fieldData[f]["field"] == fieldName) {
+					help.children("div").html(fieldData[f]["help"]);
+				}
+			}
 
 			if(inputType == "select") {
 				var include0id = false;
@@ -246,9 +252,9 @@
 				}
 				select += '>';
 				var options = '';
-				for(var f in fields) {
-					if(fields[f]["field"] == obj.value) {
-						var splitOptions = fields[f]["options"].split(",");
+				for(var f in fieldData) {
+					if(fieldData[f]["field"] == obj.value) {
+						var splitOptions = fieldData[f]["options"].split(",");
 						for(var o in splitOptions) {
 							options += '<option value="' + splitOptions[o] + '">' + splitOptions[o] + '</option>';
 						}
@@ -414,6 +420,7 @@
 		<li class="searchRestriction firstRestriction">
 			<input type="hidden" name="boolean[]" id="boolean0" value="">
 			<select name="field[]" class="field" id="field0"><?php foreach($fieldData as $f) { echo '<option value="' . $f["field"] . '" data-inputtype="' . $f["input"] . '"'; if($f["field"] == "genus") { echo " selected"; } echo '>' . $f["label"] . '</option>'; } ?></select>
+			<div class="help" id="helpDisplay"><div></div></div>
 			<select name="match[]" class="match" id="match0">
 				<option value="equal">exactly equals</option>
 				<option value="notequal">does not equal</option>
