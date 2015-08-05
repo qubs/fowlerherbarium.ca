@@ -1,6 +1,6 @@
 <?php
-	require_once('config.php');
-	require_once('shared.php');
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/config.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/shared.php");
 
 	$mysqli = mysqli_connect($_DATABASE_HOST, $_DATABASE_USER, $_DATABASE_PASS, $_DATABASE_DEFAULT);
 	if(mysqli_connect_errno()) {
@@ -19,29 +19,29 @@
 
 	$fieldData = fetchFieldData($mysqli, false);
 
-	require_once('header.php');
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/header.php");
 ?>
 <button type="button" onclick="window.history.back();">&larr; Back</button>
 <h2>Specimen Details</h2>
 <div class="specimenFull">
-<h3><?php echo $specimen['genus'] . ' ' . $specimen['species']; ?></h3>
-<table>
-	<thead>
-		<tr>
-			<th>Field</th><th>Value</th>
-		</tr>
-	</thead>
-	<tbody>
-		<?php foreach($fieldData as $f) { ?>
+	<h3><?php echo $specimen['genus'] . ' ' . $specimen['species']; ?></h3>
+	<table>
+		<thead>
 			<tr>
-				<td><?php echo $f['label']; if(!empty($f['help'])) { ?> <div class="help"><div><?php echo $f['help']; } ?></div></div></td>
-				<td><?php echo $specimen[$f['field']]; ?></td>
+				<th>Field</th><th>Value</th>
 			</tr>
-		<?php } ?>
-	</tbody>
-</table><div class="wiki">
-	<h4>From Wikipedia</h4>
-	<iframe src="http://en.m.wikipedia.org/wiki/<?php echo str_replace(' ', '_', ($specimen['genus'] . ' ' . $specimen['species'])); ?>" frameborder="0"></iframe>
+		</thead>
+		<tbody>
+			<?php foreach($fieldData as $f) { ?>
+				<tr>
+					<td><?php echo $f['label']; if(!empty($f['help'])) { ?> <div class="help"><div><?php echo $f['help']; } ?></div></div></td>
+					<td><?php echo $specimen[$f['field']]; ?></td>
+				</tr>
+			<?php } ?>
+		</tbody>
+	</table><div class="wiki">
+		<h4>From Wikipedia</h4>
+		<iframe src="http://en.m.wikipedia.org/wiki/<?php echo str_replace(' ', '_', ($specimen['genus'] . ' ' . $specimen['species'])); ?>" frameborder="0"></iframe>
+	</div>
 </div>
-</div>
-<?php require_once('footer.php'); ?>
+<?php require_once($_SERVER["DOCUMENT_ROOT"] . "/footer.php"); ?>

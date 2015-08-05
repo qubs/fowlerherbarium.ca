@@ -1,4 +1,4 @@
-<?php require_once('header.php'); ?>
+<?php require_once($_SERVER["DOCUMENT_ROOT"] . "/header.php"); ?>
 <h2>About the Herbarium</h2>
 <p>
 	<img src="/images/deslauriers.jpg" alt="Jessie V. Deslauriers Centre for Biology" class="alignRight">
@@ -21,4 +21,4 @@
 <p>
 	<strong>Who uses a herbarium?</strong> Scientists, students, government technicians and environmental consultants use the plant reference collection in studies involving environmental impact, plant ecology, botany, evolution, systematics and paleobotany.   You can browse this website, arrange loans of books and specimens from the herbarium, search our online specimen databases, discover the history of plant collection at Queen's University, find out about herbarium events and publications, or travel to other botanical websites.
 </p>
-<?php require_once('footer.php'); ?>
+<?php require_once($_SERVER["DOCUMENT_ROOT"] . "/footer.php"); ?>

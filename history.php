@@ -1,4 +1,4 @@
-<?php require_once('header.php'); ?>
+<?php require_once($_SERVER["DOCUMENT_ROOT"] . "/header.php"); ?>
 <h2>History of the Fowler Herbarium</h2>
 <h3>The Fowler Years</h3>
 <p>
@@ -12,4 +12,4 @@
 <p>
 	<img src="/images/crowder.jpg" alt="Adele Crowder" class="alignLeft">Adele Crowder took over the lichen and moss collection in 1969 and became curator after Beschel's death in 1971. With the assistance of Garwood, until his death in 1992, Crowder added about 2,000 specimens per year, and ushered the herbarium into the computer age. All of the herbarium's 140,000 specimens continue to be entered into an electronic database. During this period, the herbarium played new roles in environmental planning and biodiversity monitoring, and Crowder forged links with Ontario's Natural Heritage Information Centre. After her retirement, she continued as a driving force behind the herbarium, secured a new home for the facility in the Biosciences Complex, and in 1996 published an extensive update of Plants of the Kingston Region.
 </p>
-<?php require_once('footer.php'); ?>
+<?php require_once($_SERVER["DOCUMENT_ROOT"] . "/footer.php"); ?>

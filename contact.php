@@ -1,4 +1,4 @@
-<?php require_once('header.php'); ?>
+<?php require_once($_SERVER["DOCUMENT_ROOT"] . "/header.php"); ?>
 <h2>Contact Information</h2>
 <p>The Fowler Herbarium is located at the <a href="http://queensu.ca/qubs/">Queen's University Biological Station (QUBS)</a>.</p>
 <p>
@@ -10,4 +10,4 @@
 	<strong>FAX:</strong> 613-533-6617<br>
 	<strong>Email:</strong> <a href="mailto:drk1@queensu.ca">drk1@queensu.ca</a>
 </p>
-<?php require_once('footer.php'); ?>
+<?php require_once($_SERVER["DOCUMENT_ROOT"] . "/footer.php"); ?>

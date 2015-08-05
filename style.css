@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?-2aj1tr');
-	src:url('fonts/icomoon.eot?#iefix-2aj1tr') format('embedded-opentype'),
-		url('fonts/icomoon.ttf?-2aj1tr') format('truetype'),
-		url('fonts/icomoon.woff?-2aj1tr') format('woff'),
-		url('fonts/icomoon.svg?-2aj1tr#icomoon') format('svg');
+	src:url('/fonts/icomoon.eot?-2aj1tr');
+	src:url('/fonts/icomoon.eot?#iefix-2aj1tr') format('embedded-opentype'),
+		url('/fonts/icomoon.ttf?-2aj1tr') format('truetype'),
+		url('/fonts/icomoon.woff?-2aj1tr') format('woff'),
+		url('/fonts/icomoon.svg?-2aj1tr#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -401,6 +401,7 @@ input[type="text"], input[type="number"], input[type="date"] {
 }
 input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
 	border-color: #2196F3;
+	box-shadow: inset 0px 1px 0.5px rgba(0, 0, 0, 0.05);
 }
 
 .help {

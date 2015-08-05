@@ -9,7 +9,7 @@
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 
-		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="/style.css">
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
@@ -31,12 +31,12 @@
 			<h1>Fowler Herbarium</h1>
 			<nav>
 				<ul>
-					<li><a href="index.php"><span class="icon-home"></span> Home</a></li>
-					<li><a href="search.php"><span class="icon-search"></span> Search Database</a></li>
-					<li><a href="publications.php"><span class="icon-description"></span> Publications</a></li>
-					<li><a href="history.php"><span class="icon-reorder"></span> History</a></li>
-					<li><a href="links.php"><span class="icon-insert-link"></span> Useful Links</a></li>
-					<li><a href="contact.php"><span class="icon-perm-phone-msg"></span> Contact</a></li>
+					<li><a href="/"><span class="icon-home"></span> Home</a></li>
+					<li><a href="/search/"><span class="icon-search"></span> Search Database</a></li>
+					<li><a href="/publications/"><span class="icon-description"></span> Publications</a></li>
+					<li><a href="/history/"><span class="icon-reorder"></span> History</a></li>
+					<li><a href="/links/"><span class="icon-insert-link"></span> Useful Links</a></li>
+					<li><a href="/contact/"><span class="icon-perm-phone-msg"></span> Contact</a></li>
 				</ul>
 			</nav>
 		</header>
