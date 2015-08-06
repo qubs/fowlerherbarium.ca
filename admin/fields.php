@@ -95,12 +95,10 @@
 					<td style="min-width: 160px;"><?=$user['label']?></td>
 					<td><p><?=$user['help']?></p></td>
 					<td><input type="checkbox" onclick="return false" <?php if($user['searchable'] == 1) { echo "checked"; } ?>></td>
-					<td style="min-width: 80px;"><button onclick="window.location = 'edit_user.php?id=<?php echo $user['id']; ?>'"><span class="icon-mode-edit"></span></button> <button><span class="icon-highlight-remove"></span></button></td>
+					<td style="min-width: 80px;"><button onclick="window.location = 'edit_field.php?id=<?php echo $user['id']; ?>'"><span class="icon-mode-edit"></span></button> <button><span class="icon-highlight-remove"></span></button></td>
 				</tr>
 			<?php } ?>
 		</tbody>
 	</table>
 </div>
-<?php
-	require_once('./footer.php');
-?>
+<?php require_once("./footer.php"); ?>

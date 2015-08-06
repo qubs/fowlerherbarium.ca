@@ -1,10 +1,10 @@
 <?php
-	require_once('../config.php');
-	require_once('../shared.php');
+	require_once("../config.php");
+	require_once("../shared.php");
 
 	session_start();
 
-	if(!isset($_SESSION['user'])) {
+	if(!isset($_SESSION["user"])) {
 		header('Location: index.php');
 	}
 
@@ -21,35 +21,35 @@
 
 	$pageNo = 1;
 
-	if(isset($_GET['page'])) {
-		$set_page = intval($_GET['page']);
+	if(isset($_GET["page"])) {
+		$set_page = intval($_GET["page"]);
 		if($set_page >= 1 && $set_page <= $nOfPages) {
 			$pageNo = $set_page;
 		}
 	}
 
-	if(isset($_POST['submitEntry'])) {
-		$dataset = $_POST['dataset'];
+	if(isset($_POST["submitEntry"])) {
+		$dataset = $_POST["dataset"];
 
-		$genus = $_POST['genus'];
-		$species = $_POST['species'];
+		$genus = $_POST["genus"];
+		$species = $_POST["species"];
 
-		$DTH = $_POST['DTH'];
-		$accession = $_POST['accession'];
+		$DTH = $_POST["DTH"];
+		$accession = $_POST["accession"];
 
-		$common_name = $_POST['common_name'];
+		$common_name = $_POST["common_name"];
 
-		$date_collected = $_POST['date_collected'];
-		$collectors = $_POST['collectors'];
+		$date_collected = $_POST["date_collected"];
+		$collectors = $_POST["collectors"];
 
-		$map_included = $_POST['map_included'];
-		$map_reference = $_POST['map_reference'];
-		$county = $_POST['county'];
-		$township = $_POST['township'];
-		$location = $_POST['location'];
+		$map_included = $_POST["map_included"];
+		$map_reference = $_POST["map_reference"];
+		$county = $_POST["county"];
+		$township = $_POST["township"];
+		$location = $_POST["location"];
 
-		$habitat = $_POST['habitat'];
-		$notes = $_POST['notes'];
+		$habitat = $_POST["habitat"];
+		$notes = $_POST["notes"];
 
 		//$image = ...
 
@@ -180,15 +180,15 @@
 		<tbody>
 			<?php while($specimen = $fetch_specimens->fetch_assoc()) { ?>
 				<tr>
-					<td><?=$specimen['web_id']?></td>
-					<td><?=$specimen['dataset']?></td>
-					<td><?=$specimen['genus']?></td>
-					<td><?=$specimen['species']?></td>
-					<td><?=$specimen['DTH']?></td>
-					<td><?=$specimen['accession']?></td>
-					<td><?=$specimen['common_name']?></td>
-					<td><?=$specimen['date_collected']?></td>
-					<td><button onclick="window.location = 'edit_entry.php?id=<?php echo $specimen['web_id']; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button><span class="icon-highlight-remove"></span> Delete</button></td>
+					<td><?=$specimen["web_id"]?></td>
+					<td><?=$specimen["dataset"]?></td>
+					<td><?=$specimen["genus"]?></td>
+					<td><?=$specimen["species"]?></td>
+					<td><?=$specimen["DTH"]?></td>
+					<td><?=$specimen["accession"]?></td>
+					<td><?=$specimen["common_name"]?></td>
+					<td><?=$specimen["date_collected"]?></td>
+					<td><button onclick="window.location = 'edit_entry.php?id=<?php echo $specimen["web_id"]; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button><span class="icon-highlight-remove"></span> Delete</button></td>
 				</tr>
 			<?php } ?>
 		</tbody>
@@ -206,6 +206,4 @@
 		?><li><button <?php if($pageNo < $nOfPages) { ?>onclick="window.location = 'main.php?page=<?php echo $pageNo + 1; ?>'" <?php } else { echo 'class="disabled"'; } ?>>Next &#8250;</button></li><li><button onclick="window.location = 'main.php?page=<?php echo $nOfPages; ?>'">Last &raquo;</button></li>
 	</ul>
 </div>
-<?php
-	require_once('./footer.php');
-?>
+<?php require_once("./footer.php"); ?>

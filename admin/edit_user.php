@@ -1,11 +1,11 @@
 <?php
-	require_once('../config.php');
-	require_once('../shared.php');
+	require_once("../config.php");
+	require_once("../shared.php");
 
 	session_start();
 
-	if(!isset($_SESSION['user'])) {
-		header('Location: index.php');
+	if(!isset($_SESSION["user"])) {
+		header("Location: index.php");
 	}
 
 	$mysqli = mysqli_connect($_DATABASE_HOST, $_DATABASE_USER, $_DATABASE_PASS, $_DATABASE_DEFAULT);
@@ -14,14 +14,12 @@
 	}
 	$mysqli->set_charset("utf8");
 
-	if(!isset($_GET['id'])) {
+	if(!isset($_GET["id"]) && !isset($_POST["submit"])) {
 		header('Location: main.php');
-	}
-
-	$id = intval($mysqli->real_escape_string($_GET['id']));
-
-	if(isset($_POST['submit'])) {
-		$id = $_POST['id'];
+	} else if(isset($_POST["submit"])) {
+		$id = $_POST["id"];
+	} else {
+		$id = intval($mysqli->real_escape_string($_GET['id']));
 	}
 
 	$query = "SELECT * FROM users WHERE id = $id LIMIT 1";
@@ -33,8 +31,8 @@
 
 	$user = $fetch_user->fetch_assoc();
 
-	$page = "editentry";
-	require_once('./header.php');
+	$page = "edituser";
+	require_once("./header.php");
 ?>
 <h2><a href="users.php" class="button" style="float: left; margin-right: 10px; margin-left: 0;">&larr; Back to Users</a> Edit User "<em><?php echo $user['username']; ?>"</em> (ID: <?php echo $user['id']; ?>)</h2>
 <form action="edit_user.php" class="box">

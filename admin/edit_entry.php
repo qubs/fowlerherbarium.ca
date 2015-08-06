@@ -1,10 +1,10 @@
 <?php
-	require_once('../config.php');
-	require_once('../shared.php');
+	require_once("../config.php");
+	require_once("../shared.php");
 
 	session_start();
 
-	if(!isset($_SESSION['user'])) {
+	if(!isset($_SESSION["user"])) {
 		header('Location: index.php');
 	}
 
@@ -14,14 +14,21 @@
 	}
 	$mysqli->set_charset("utf8");
 
-	if(!isset($_GET['id'])) {
+	if(!isset($_GET["id"])) {
 		header('Location: main.php');
 	}
 
-	$id = intval($mysqli->real_escape_string($_GET['id']));
+	$id = intval($mysqli->real_escape_string($_GET["id"]));
 
-	if(isset($_POST['submit'])) {
-		$id = $_POST['id'];
+	if(isset($_POST["submit"])) {
+		$id = $_POST["id"];
+	}
+
+	$field_info = fetchFieldData($mysqli, false);
+	$field_info_assoc = array();
+
+	foreach($field_info as $f) {
+		$field_info_assoc[$f["field"]] = $f;
 	}
 
 	$query = "SELECT * FROM specimens WHERE web_id = $id LIMIT 1";
@@ -36,72 +43,72 @@
 	$page = "editentry";
 	require_once('./header.php');
 ?>
-<h2>Edit Entry "<em><?php echo $specimen['genus'] . ' ' . $specimen['species']; ?>"</em> (Web ID: <?php echo $specimen['web_id']; ?>)</h2>
+<h2>Edit Entry "<em><?php echo $specimen["genus"] . " " . $specimen["species"]; ?></em>" (Web ID: <?php echo $specimen["web_id"]; ?>)</h2>
 <form action="edit_entry.php" class="box">
 	<input type="hidden" name="id" value="<?php echo $id; ?>">
 	<div class="row">
 		<div class="col col50">
-			<label for="dataset">Dataset</label>
-			<input type="text" name="dataset" value="<?php echo $specimen['dataset']; ?>">
+			<label for="dataset">Dataset <div class="help"><div><?php echo $field_info_assoc["dataset"]["help"]; ?></div></div></label>
+			<input type="text" name="dataset" value="<?php echo $specimen["dataset"]; ?>">
 			<div class="row">
 				<div class="col col50 noPad padRight">
-					<label for="genus">Genus</label>
-					<input type="text" name="genus" value="<?php echo $specimen['genus']; ?>">
+					<label for="genus">Genus <div class="help"><div><?php echo $field_info_assoc["genus"]["help"]; ?></div></div></label>
+					<input type="text" name="genus" value="<?php echo $specimen["genus"]; ?>">
 				</div><div class="col col50 noPad padLeft">
-					<label for="species">Species</label>
-					<input type="text" name="species" value="<?php echo $specimen['species']; ?>">
+					<label for="species">Species <div class="help"><div><?php echo $field_info_assoc["species"]["help"]; ?></div></div></label>
+					<input type="text" name="species" value="<?php echo $specimen["species"]; ?>">
 				</div>
 			</div>
 			<div class="row">
 				<div class="col col50 noPad padRight">
-					<label for="DTH">DTH #</label>
-					<input type="text" name="DTH" value="<?php echo $specimen['DTH']; ?>">
+					<label for="DTH">DTH # <div class="help"><div><?php echo $field_info_assoc["DTH"]["help"]; ?></div></div></label>
+					<input type="text" name="DTH" value="<?php echo $specimen["DTH"]; ?>">
 				</div><div class="col col50 noPad padLeft">
-					<label for="accession">Accession #</label>
-					<input type="text" name="accession" value="<?php echo $specimen['accession']; ?>">
+					<label for="accession">Accession # <div class="help"><div><?php echo $field_info_assoc["accession"]["help"]; ?></div></div></label>
+					<input type="text" name="accession" value="<?php echo $specimen["accession"]; ?>">
 				</div>
 			</div>
-			<label for="common_name">Common Name</label>
-			<input type="text" name="common_name" value="<?php echo $specimen['common_name']; ?>">
+			<label for="common_name">Common Name <div class="help"><div><?php echo $field_info_assoc["common_name"]["help"]; ?></div></div></label>
+			<input type="text" name="common_name" value="<?php echo $specimen["common_name"]; ?>">
 			<div class="row">
 				<div class="col col50 noPad padRight">
-					<label for="date_collected">Date Collected</label>
-					<input type="text" name="date_collected" placeholder="mm dd yyyy" value="<?php echo $specimen['date_collected']; ?>">
+					<label for="date_collected">Date Collected <div class="help"><div><?php echo $field_info_assoc["date_collected"]["help"]; ?></div></div></label>
+					<input type="text" name="date_collected" placeholder="mm dd yyyy" value="<?php echo $specimen["date_collected"]; ?>">
 				</div><div class="col col50 noPad padLeft">
-					<label for="collectors">Collector(s)</label>
-					<input type="text" name="collectors" value="<?php echo $specimen['collectors']; ?>">
+					<label for="collectors">Collector(s) <div class="help"><div><?php echo $field_info_assoc["collectors"]["help"]; ?></div></div></label>
+					<input type="text" name="collectors" value="<?php echo $specimen["collectors"]; ?>">
 				</div>
 			</div>
 			<div class="row">
 				<div class="col col50 noPad padRight">
-					<label for="map_included"><input type="checkbox" name="map_included" <?php if($specimen['map_included'] == 'yes') { ?>checked<?php } ?>> Map Included</label>
+					<label for="map_included"><input type="checkbox" name="map_included" <?php if($specimen["map_included"] == 'yes') { ?>checked<?php } ?>> Map Included</label>
 				</div><div class="col col50 noPad padLeft">
-					<label for="map_reference">Map Reference</label>
-					<input type="text" name="map_reference" value="<?php echo $specimen['map_reference']; ?>">
+					<label for="map_reference">Map Reference <div class="help"><div><?php echo $field_info_assoc["map_reference"]["help"]; ?></div></div></label>
+					<input type="text" name="map_reference" value="<?php echo $specimen["map_reference"]; ?>">
 				</div>
 			</div>
 			<label for="image">Image</label>
-			<input type="file" name="image" value="<?php echo $specimen['image']; ?>">
+			<input type="file" name="image" value="<?php echo $specimen["image"]; ?>">
 			<button><span class="icon-done"></span> Save Changes</button>
 		</div><div class="col col50">
 			<div class="row">
 				<div class="col col50 noPad padRight">
-					<label for="county">County</label>
-					<input type="text" name="county" value="<?php echo $specimen['county']; ?>">
+					<label for="county">County <div class="help"><div><?php echo $field_info_assoc["county"]["help"]; ?></div></div></label>
+					<input type="text" name="county" value="<?php echo $specimen["county"]; ?>">
 				</div><div class="col col50 noPad padLeft">
-					<label for="township">Township</label>
-					<input type="text" name="township" value="<?php echo $specimen['township']; ?>">
+					<label for="township">Township <div class="help"><div><?php echo $field_info_assoc["township"]["help"]; ?></div></div></label>
+					<input type="text" name="township" value="<?php echo $specimen["township"]; ?>">
 				</div>
 			</div>
-			<label for="location">Location</label>
-			<input type="text" name="location" value="<?php echo $specimen['location']; ?>">
-			<label for="habitat">Habitat</label>
-			<textarea name="habitat" cols="30" rows="5"><?php echo $specimen['habitat']; ?></textarea>
-			<label for="habitat">Notes</label>
-			<textarea name="notes" cols="30" rows="5"><?php echo $specimen['notes']; ?></textarea>
+			<label for="location">Location <div class="help"><div><?php echo $field_info_assoc["location"]["help"]; ?></div></div></label>
+			<input type="text" name="location" value="<?php echo $specimen["location"]; ?>">
+			<label for="habitat">Habitat <div class="help"><div><?php echo $field_info_assoc["habitat"]["help"]; ?></div></div></label>
+			<textarea name="habitat" cols="30" rows="5"><?php echo $specimen["habitat"]; ?></textarea>
+			<label for="habitat">Notes <div class="help"><div><?php echo $field_info_assoc["notes"]["help"]; ?></div></div></label>
+			<textarea name="notes" cols="30" rows="5"><?php echo $specimen["notes"]; ?></textarea>
 		</div>
 	</div>
 </form>
 <?php
-	require_once('./footer.php');
+	require_once("./footer.php");
 ?>

@@ -1,10 +1,10 @@
 <?php
-	require_once('../config.php');
-	require_once('../shared.php');
+	require_once("../config.php");
+	require_once("../shared.php");
 
 	session_start();
 
-	if(!isset($_SESSION['user'])) {
+	if(!isset($_SESSION["user"])) {
 		header('Location: index.php');
 	}
 
@@ -14,11 +14,11 @@
 	}
 	$mysqli->set_charset("utf8");
 
-	if(isset($_POST['submit'])) {
-		$username = $_POST['username'];
-		$email = $_POST['email'];
-		$password = $_POST['password'];
-		$passagain = $_POST['passagain'];
+	if(isset($_POST["submit"])) {
+		$username = $_POST["username"];
+		$email = $_POST["email"];
+		$password = $_POST["password"];
+		$passagain = $_POST["passagain"];
 
 		$dead = false;
 		$error = "";
@@ -32,6 +32,16 @@
 		 || ($username == "" || $email == "" || $password == "" || $passagain == "")) {
 			$dead = true;
 			$error = "All fields must be filled in.";
+		}
+
+		$check_existing = $mysqli->prepare("SELECT * FROM users WHERE email = ?");
+		$check_existing->bind_param("s", $email);
+		$check_existing->execute();
+		$check_existing->store_result();
+
+		if($check_existing->num_rows > 0) {
+			$dead = true;
+			$error = "A user with that email already exists.";
 		}
 
 		if(!$dead) {
@@ -88,15 +98,13 @@
 		<tbody>
 			<?php while($user = $fetch_all_users->fetch_assoc()) { ?>
 				<tr>
-					<td><?=$user['id']?></td>
-					<td><?=$user['username']?></td>
-					<td><a href="mailto:<?=$user['email']?>"><?=$user['email']?></a></td>
-					<td><button onclick="window.location = 'edit_user.php?id=<?php echo $user['id']; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button><span class="icon-highlight-remove"></span> Delete</button></td>
+					<td><?=$user["id"]?></td>
+					<td><?=$user["username"]?></td>
+					<td><a href="mailto:<?=$user["email"]?>"><?=$user["email"]?></a></td>
+					<td><button onclick="window.location = 'edit_user.php?id=<?php echo $user["id"]; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button><span class="icon-highlight-remove"></span> Delete</button></td>
 				</tr>
 			<?php } ?>
 		</tbody>
 	</table>
 </div>
-<?php
-	require_once('./footer.php');
-?>
+<?php require_once("./footer.php"); ?>

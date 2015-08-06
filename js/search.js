@@ -236,11 +236,11 @@ $(document).ready(function() {
 						}
 
 						$('#resultsContainer').append(html);
-						$('#loading').css('display', 'none');
 					} else {
 						$('#resultsContainer').html('<strong>No specimens were found with those parameters.</strong>');
 					}
 
+					$('#loading').css('display', 'none');
 					$("#searchResults").css("display", "block");
 
 					if(numberOfResults > itemsPerPage) {
