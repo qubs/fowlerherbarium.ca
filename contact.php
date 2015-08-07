@@ -1,13 +1,5 @@
-<?php require_once($_SERVER["DOCUMENT_ROOT"] . "/header.php"); ?>
-<h2>Contact Information</h2>
-<p>The Fowler Herbarium is located at the <a href="http://queensu.ca/qubs/">Queen's University Biological Station (QUBS)</a>.</p>
-<p>
-	<strong>Associate Curator</strong>
-	Mr. Dale Kristensen <br>
-	5603 Biosciences, Queen's University <br>
-	Kingston, Ontario, Canada &nbsp; K7L 3N6 <br>
-	<strong>Voice:</strong> 613-533-6151<br>
-	<strong>FAX:</strong> 613-533-6617<br>
-	<strong>Email:</strong> <a href="mailto:drk1@queensu.ca">drk1@queensu.ca</a>
-</p>
-<?php require_once($_SERVER["DOCUMENT_ROOT"] . "/footer.php"); ?>
+<?php 
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/header.php");
+
+	echo $twig->render("contact.html");
+?>
