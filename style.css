@@ -467,7 +467,7 @@ input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
 }
 
 /* === SEARCH === */
-.searchRestrictions {
+#searchRestrictions {
 	list-style: none;
 	padding: 0;
 	margin: 0;

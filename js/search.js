@@ -1,54 +1,3 @@
-function buildFilter(fieldData, boolVal, fieldVal, matchTypeVal, paramVal) {
-	boolVal = typeof boolVal !== 'undefined' ? boolVal : "AND";
-	fieldVal = typeof fieldVal !== 'undefined' ? fieldVal : "genus";
-	matchTypeVal = typeof matchTypeVal !== 'undefined' ? matchTypeVal : "equal";
-	paramVal = typeof paramVal !== 'undefined' ? paramVal : "";
-
-	var html = '<li class="searchRestriction"><select class="andOr" name="boolean[]">';
-
-	if(boolVal == "OR") {
-		html += '<option value="AND">AND</option><option value="OR" selected="selected">OR</option>';
-	} else {
-		html += '<option value="AND" selected="selected">AND</option><option value="OR">OR</option>'
-	}
-
-	html += '</select> <div class="booleanSpacing">&#8942;</div><select name="field[]" class="field">';
-
-	for(var f in FHS.fieldData) {
-		if(FHS.fieldData[f]["field"] == fieldVal) {
-			html += '<option value="' + FHS.fieldData[f]["field"] + '" data-inputtype="' + FHS.fieldData[f]["input"] + '" selected="selected">' + FHS.fieldData[f]["label"] + '</option>';
-		} else {
-			html += '<option value="' + FHS.fieldData[f]["field"] + '" data-inputtype="' + FHS.fieldData[f]["input"] + '">' + FHS.fieldData[f]["label"] + '</option>';
-		}
-	}
-
-	html += '</select> <select name="match[]" class="match">';
-
-	var equivLabels = {
-		'equal': 'exactly equals',
-		'notequal': 'does not equal',
-		'contains': 'contains',
-		'notcontains': 'does not contain',
-		'start': 'starts with',
-		'end': 'ends with'
-	};
-
-	for(var e in equivLabels) {
-		html += '<option value="' + e + '"';
-		if(e == matchTypeVal) {
-			html += ' selected="selected"';
-		}
-		if(e == "contains" || e == "notcontains" || e == "start" || e == "end") {
-			html += ' class="disableForSelect"';
-		}
-		html += ">" + equivLabels[e] + "</option>";
-	}
-
-	html += '<input type="text" name="parameter[]" class="parameter" value="' + paramVal + '"><button type="button" class="searchRestrictionDelete"><span class="icon-highlight-remove"></span> Delete</button></li>';
-
-	return html;
-}
-
 function FHSearch(params) {
 	var FHS = this;
 
@@ -158,25 +107,174 @@ function FHSearch(params) {
 		}
 
 		FHS.refreshHash();
-	}
+	};
 
 	FHS.nextPage = function() {
 		if(FHS.page < FHS.maxPage) {
 			FHS.setPage(FHS.page + 1);
 		}
 
-	}
+	};
 	FHS.prevPage = function() {
 		if(FHS.page > 1) {
 			FHS.setPage(FHS.page - 1);
 		}
-	}
+	};
 	FHS.firstPage = function() {
 		FHS.setPage(1);
-	}
+	};
 	FHS.lastPage = function() {
 		FHS.setPage(FHS.maxPage);
-	}
+	};
+
+	FHS.buildFilter = function(boolVal, fieldVal, matchTypeVal, paramVal) {
+		boolVal = typeof boolVal !== 'undefined' ? boolVal : "AND";
+		fieldVal = typeof fieldVal !== 'undefined' ? fieldVal : "genus";
+		matchTypeVal = typeof matchTypeVal !== 'undefined' ? matchTypeVal : "equal";
+		paramVal = typeof paramVal !== 'undefined' ? paramVal : "";
+
+		var searchRestriction = document.createElement("li");
+		searchRestriction.setAttribute("class", "searchRestriction");
+
+		var boolSelect = document.createElement("select");
+		boolSelect.setAttribute("name", "boolean[]");
+		boolSelect.setAttribute("class", "andOr");
+
+		var boolAnd = document.createElement("option");
+		boolAnd.setAttribute("value", "AND");
+		boolAnd.appendChild(document.createTextNode("AND"));
+
+		var boolOr = document.createElement("option");
+		boolOr.setAttribute("value", "OR");
+		boolOr.appendChild(document.createTextNode("OR"));
+
+		if(boolVal === "OR") {
+			boolOr.setAttribute("selected", "selected");
+		} else {
+			boolAnd.setAttribute("selected", "selected");
+		}
+
+		boolSelect.appendChild(boolAnd);
+		boolSelect.appendChild(boolOr);
+
+		searchRestriction.appendChild(boolSelect);
+		searchRestriction.appendChild(document.createTextNode(" "));
+
+		var boolSpacing = document.createElement("div");
+		boolSpacing.setAttribute("class", "booleanSpacing");
+		boolSpacing.appendChild(document.createTextNode("⋮"));
+
+		searchRestriction.appendChild(boolSpacing);
+
+		var fieldSelect = document.createElement("select");
+		fieldSelect.setAttribute("name", "field[]");
+		fieldSelect.setAttribute("class", "field");
+
+		for(var f in FHS.fieldData) {
+			var fieldOption = document.createElement("option");
+			fieldOption.setAttribute("value", FHS.fieldData[f]["field"]);
+			fieldOption.setAttribute("data-inputtype", FHS.fieldData[f]["input"]);
+
+			if(FHS.fieldData[f]["field"] == fieldVal) {
+				fieldOption.setAttribute("selected", "selected");
+			}
+
+			fieldOption.appendChild(document.createTextNode(FHS.fieldData[f]["label"]));
+			fieldSelect.appendChild(fieldOption);
+		}
+
+		searchRestriction.appendChild(fieldSelect);
+		searchRestriction.appendChild(document.createTextNode(" "));
+
+		var matchSelect = document.createElement("select");
+		matchSelect.setAttribute("name", "match[]");
+		matchSelect.setAttribute("class", "match");
+
+		for(var e in FHS.equivLabels) {
+			var matchOption = document.createElement("option");
+			matchOption.setAttribute("value", e);
+			if(e == matchTypeVal) {
+				matchOption.setAttribute("selected", "selected");
+			}
+			
+			if(e === "contains" || e === "notcontains" || e === "start" || e === "end") {
+				matchOption.setAttribute("class", "disableForSelect");
+			}
+			
+			matchOption.appendChild(document.createTextNode(FHS.equivLabels[e]));
+			matchSelect.appendChild(matchOption);
+		}
+
+		searchRestriction.appendChild(matchSelect);
+		searchRestriction.appendChild(document.createTextNode(" "));
+
+		var parameterInput = document.createElement("input");
+		parameterInput.setAttribute("type", "text");
+		parameterInput.setAttribute("name", "parameter[]");
+		parameterInput.setAttribute("class", "parameter");
+		parameterInput.setAttribute("value", paramVal);
+
+		searchRestriction.appendChild(parameterInput);
+
+		var searchRestrictionDelete = document.createElement("button");
+		searchRestrictionDelete.setAttribute("type", "button");
+		searchRestrictionDelete.setAttribute("class", "searchRestrictionDelete");
+
+		var searchRestrictionDeleteIcon = document.createElement("span");
+		searchRestrictionDeleteIcon.setAttribute("class", "icon-highlight-remove");
+
+		searchRestrictionDelete.appendChild(searchRestrictionDeleteIcon);
+		searchRestrictionDelete.appendChild(document.createTextNode(" Delete"));
+		searchRestriction.appendChild(searchRestrictionDelete);
+
+		return searchRestriction;
+
+		var html = '<li class="searchRestriction"><select class="andOr" name="boolean[]">';
+
+		if(boolVal == "OR") {
+			html += '<option value="AND">AND</option><option value="OR" selected="selected">OR</option>';
+		} else {
+			html += '<option value="AND" selected="selected">AND</option><option value="OR">OR</option>'
+		}
+
+		html += '</select> <div class="booleanSpacing">&#8942;</div><select name="field[]" class="field">';
+
+		for(var f in FHS.fieldData) {
+			if(FHS.fieldData[f]["field"] == fieldVal) {
+				html += '<option value="' + FHS.fieldData[f]["field"] + '" data-inputtype="' + FHS.fieldData[f]["input"] + '" selected="selected">' + FHS.fieldData[f]["label"] + '</option>';
+			} else {
+				html += '<option value="' + FHS.fieldData[f]["field"] + '" data-inputtype="' + FHS.fieldData[f]["input"] + '">' + FHS.fieldData[f]["label"] + '</option>';
+			}
+		}
+
+		html += '</select> <select name="match[]" class="match">';
+
+		var equivLabels = {
+			'equal': 'exactly equals',
+			'notequal': 'does not equal',
+			'contains': 'contains',
+			'notcontains': 'does not contain',
+			'start': 'starts with',
+			'end': 'ends with'
+		};
+
+		for(var e in equivLabels) {
+			html += '<option value="' + e + '"';
+			if(e == matchTypeVal) {
+				html += ' selected="selected"';
+			}
+			if(e == "contains" || e == "notcontains" || e == "start" || e == "end") {
+				html += ' class="disableForSelect"';
+			}
+			html += ">" + equivLabels[e] + "</option>";
+		}
+
+		html += '<input type="text" name="parameter[]" class="parameter" value="' + paramVal + '"><button type="button" class="searchRestrictionDelete"><span class="icon-highlight-remove"></span> Delete</button></li>';
+	};
+
+	FHS.addFilter = function(boolVal, fieldVal, matchTypeVal, paramVal) {
+		FHS.searchRestrictions.appendChild(FHS.buildFilter(boolVal, fieldVal, matchTypeVal, paramVal));
+	};
 
 	$.get("/fielddata.php", {
 		"search": "true"
@@ -201,7 +299,7 @@ function FHSearch(params) {
 		searchForm.appendChild(exportType);
 
 		var searchRestrictions = document.createElement("ul"); // <ul class="searchRestrictions">
-		searchRestrictions.setAttribute("class", "searchRestrictions");
+		searchRestrictions.setAttribute("id", "searchRestrictions");
 
 		var firstRestriction = document.createElement("li");
 		firstRestriction.setAttribute("class", "searchRestriction firstRestriction"); // <li class="searchRestriction firstRestriction">
@@ -426,6 +524,10 @@ function FHSearch(params) {
 
 		// ---------------------------------------------------
 
+		FHS.searchRestrictions = document.getElementById("searchRestrictions");
+
+		// ---------------------------------------------------
+
 		$("#searchResults").css("display", "none");
 
 		function makeSearchResult(searchResultNumber, data) {
@@ -433,15 +535,11 @@ function FHSearch(params) {
 			return html;
 		}
 
-		function addFilter(boolVal, fieldVal, matchTypeVal, paramVal) {
-			$('.searchRestrictions').append(buildFilter(fieldData, boolVal, fieldVal, matchTypeVal, paramVal));
-		}
-
 		$('#searchForm').submit(function(e) {
 			if(document.getElementById('exportType').value == '') {
 				e.preventDefault();
 
-				$('#loading').css('display', 'block');
+				$("#loading").css("display", "block");
 
 				var booleans = [];
 				$("[name='boolean[]']").each(function() {
@@ -470,7 +568,7 @@ function FHSearch(params) {
 					"match[]": matches, 
 					"parameter[]": parameters
 				}).done(function(data) {
-					$('#resultsContainer').html('');
+					$("#resultsContainer").html("");
 					var numberOfResults = data.length;
 					FHS.maxPage = Math.ceil(numberOfResults / FHS.itemsPerPage);
 
@@ -571,7 +669,7 @@ function FHSearch(params) {
 					document.getElementById("match0").value = searchParams["match[]"][i];
 					document.getElementById("parameter0").value = searchParams["parameter[]"][i];
 				} else {
-					addFilter(searchParams["boolean[]"][i], searchParams["field[]"][i], searchParams["match[]"][i], searchParams["parameter[]"][i])
+					FHS.searchRestrictions.addFilter(searchParams["boolean[]"][i], searchParams["field[]"][i], searchParams["match[]"][i], searchParams["parameter[]"][i])
 				}
 			}
 
@@ -639,7 +737,7 @@ function FHSearch(params) {
 		$('.field').change();
 
 		$('#addFilter').click(function() {
-			addFilter();
+			FHS.addFilter();
 
 			$('.searchRestrictionDelete').click(function() {
 				$(this).parent().remove();
@@ -649,7 +747,7 @@ function FHSearch(params) {
 			$(this).parent().remove();
 		});
 
-		$(".searchRestrictions").sortable({
+		$("#searchRestrictions").sortable({
 			items: "li:not(.firstRestriction)"
 		});
 	});
