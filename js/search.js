@@ -56,7 +56,7 @@ function FHSearch(params) {
 		var endOfOldPage = (FHS.page * FHS.itemsPerPage);
 
 		for(var i = startOfOldPage; i <= endOfOldPage; i++) {
-			$('#specimen' + i.toString()).css("display", "none");
+			document.getElementById("specimen" + i.toString()).style.display = "none";
 		}
 
 		FHS.page = pageNo;
@@ -65,7 +65,7 @@ function FHSearch(params) {
 		var endOfPage = (FHS.page * FHS.itemsPerPage);
 
 		for(var i = startOfPage; i <= endOfPage; i++) {
-			$("#specimen" + i.toString()).css("display", "block");
+			document.getElementById("specimen" + i.toString()).style.display = "block";
 		}
 
 		$("#bBeforeBtn").text((FHS.page - 2).toString());
@@ -128,10 +128,12 @@ function FHSearch(params) {
 	};
 
 	FHS.buildFilter = function(boolVal, fieldVal, matchTypeVal, paramVal) {
-		boolVal = typeof boolVal !== 'undefined' ? boolVal : "AND";
-		fieldVal = typeof fieldVal !== 'undefined' ? fieldVal : "genus";
-		matchTypeVal = typeof matchTypeVal !== 'undefined' ? matchTypeVal : "equal";
-		paramVal = typeof paramVal !== 'undefined' ? paramVal : "";
+		boolVal = typeof boolVal !== "undefined" ? boolVal : "AND";
+		fieldVal = typeof fieldVal !== "undefined" ? fieldVal : "genus";
+		matchTypeVal = typeof matchTypeVal !== "undefined" ? matchTypeVal : "equal";
+		paramVal = typeof paramVal !== "undefined" ? paramVal : "";
+
+		// Create search restriction element and subelements
 
 		var searchRestriction = document.createElement("li");
 		searchRestriction.setAttribute("class", "searchRestriction");
@@ -228,48 +230,6 @@ function FHSearch(params) {
 		searchRestriction.appendChild(searchRestrictionDelete);
 
 		return searchRestriction;
-
-		var html = '<li class="searchRestriction"><select class="andOr" name="boolean[]">';
-
-		if(boolVal == "OR") {
-			html += '<option value="AND">AND</option><option value="OR" selected="selected">OR</option>';
-		} else {
-			html += '<option value="AND" selected="selected">AND</option><option value="OR">OR</option>'
-		}
-
-		html += '</select> <div class="booleanSpacing">&#8942;</div><select name="field[]" class="field">';
-
-		for(var f in FHS.fieldData) {
-			if(FHS.fieldData[f]["field"] == fieldVal) {
-				html += '<option value="' + FHS.fieldData[f]["field"] + '" data-inputtype="' + FHS.fieldData[f]["input"] + '" selected="selected">' + FHS.fieldData[f]["label"] + '</option>';
-			} else {
-				html += '<option value="' + FHS.fieldData[f]["field"] + '" data-inputtype="' + FHS.fieldData[f]["input"] + '">' + FHS.fieldData[f]["label"] + '</option>';
-			}
-		}
-
-		html += '</select> <select name="match[]" class="match">';
-
-		var equivLabels = {
-			'equal': 'exactly equals',
-			'notequal': 'does not equal',
-			'contains': 'contains',
-			'notcontains': 'does not contain',
-			'start': 'starts with',
-			'end': 'ends with'
-		};
-
-		for(var e in equivLabels) {
-			html += '<option value="' + e + '"';
-			if(e == matchTypeVal) {
-				html += ' selected="selected"';
-			}
-			if(e == "contains" || e == "notcontains" || e == "start" || e == "end") {
-				html += ' class="disableForSelect"';
-			}
-			html += ">" + equivLabels[e] + "</option>";
-		}
-
-		html += '<input type="text" name="parameter[]" class="parameter" value="' + paramVal + '"><button type="button" class="searchRestrictionDelete"><span class="icon-highlight-remove"></span> Delete</button></li>';
 	};
 
 	FHS.addFilter = function(boolVal, fieldVal, matchTypeVal, paramVal) {
@@ -524,22 +484,59 @@ function FHSearch(params) {
 
 		// ---------------------------------------------------
 
+		FHS.searchForm = document.getElementById("searchForm");
 		FHS.searchRestrictions = document.getElementById("searchRestrictions");
+		FHS.resultsContainer = document.getElementById("resultsContainer");
+		FHS.searchResults = document.getElementById("searchResults");
+
+		FHS.loadingAnimation = document.getElementById("loading");
 
 		// ---------------------------------------------------
 
-		$("#searchResults").css("display", "none");
+		FHS.searchResults.style.display = "none";
 
 		function makeSearchResult(searchResultNumber, data) {
-			var html = '<a class="specimen" id="specimen' + searchResultNumber.toString() + '" href="/specimen/?id=' + data["web_id"] + '"><h3>' + data["genus"] + ' ' + data["species"] + '</h3><div class="accession"><span>Accession #: </span>' + data["accession"] + '</div><div class="dth"><span>DTH #: </span>' + data["DTH"] + '</div><div class="date_collected"><span>Date Collected: </span>' + data["date_collected"] + '</div></a>';
-			return html;
+			var specimen = document.createElement("a");
+			specimen.setAttribute("id", "specimen" + searchResultNumber.toString());
+			specimen.setAttribute("class", "specimen");
+			specimen.setAttribute("href", "/specimen/?id=" + data["web_id"]);
+
+			var specimenTitle = document.createElement("h3");
+			specimenTitle.appendChild(document.createTextNode(data["genus"] + " " + data["species"]));
+			specimen.appendChild(specimenTitle);
+
+			var accession = document.createElement("div");
+			accession.setAttribute("class", "accession");
+			var accessionLabel = document.createElement("span");
+			accessionLabel.appendChild(document.createTextNode("Accession #: "));
+			accession.appendChild(accessionLabel);
+			accession.appendChild(document.createTextNode(data["accession"]));
+			specimen.appendChild(accession);
+
+			var dth = document.createElement("div");
+			dth.setAttribute("class", "dth");
+			var dthLabel = document.createElement("span");
+			dthLabel.appendChild(document.createTextNode("DTH #: "));
+			dth.appendChild(dthLabel);
+			dth.appendChild(document.createTextNode(data["DTH"]));
+			specimen.appendChild(dth);
+
+			var dateCollected = document.createElement("div");
+			dateCollected.setAttribute("class", "date_collected");
+			var dateCollectedLabel = document.createElement("span");
+			dateCollectedLabel.appendChild(document.createTextNode("Date Collected: "));
+			dateCollected.appendChild(dateCollectedLabel);
+			dateCollected.appendChild(document.createTextNode(data["date_collected"]));
+			specimen.appendChild(dateCollected);
+
+			return specimen;
 		}
 
-		$('#searchForm').submit(function(e) {
-			if(document.getElementById('exportType').value == '') {
+		$(FHS.searchForm).submit(function(e) {
+			if(document.getElementById('exportType').value == "") {
 				e.preventDefault();
 
-				$("#loading").css("display", "block");
+				FHS.loadingAnimation.style.display = "block";
 
 				var booleans = [];
 				$("[name='boolean[]']").each(function() {
@@ -568,25 +565,23 @@ function FHSearch(params) {
 					"match[]": matches, 
 					"parameter[]": parameters
 				}).done(function(data) {
-					$("#resultsContainer").html("");
+					FHS.resultsContainer.innerHTML = "";
+
 					var numberOfResults = data.length;
 					FHS.maxPage = Math.ceil(numberOfResults / FHS.itemsPerPage);
 
 					if(data.length > 0) {
 						var i = 1;
-						var html = "";
 						for(var d in data) {
-							html += makeSearchResult(i, data[d]);
+							FHS.resultsContainer.appendChild(makeSearchResult(i, data[d]));
 							i++;
 						}
-
-						$('#resultsContainer').append(html);
 					} else {
-						$('#resultsContainer').html('<strong>No specimens were found with those parameters.</strong>');
+						FHS.resultsContainer.innerHTML = "<strong>No specimens were found with those parameters.</strong>";
 					}
 
-					$('#loading').css('display', 'none');
-					$("#searchResults").css("display", "block");
+					FHS.loadingAnimation.style.display = "none";
+					FHS.searchResults.style.display = "block";
 
 					if(numberOfResults > FHS.itemsPerPage) {
 						FHS.pagination = true;
@@ -669,13 +664,13 @@ function FHSearch(params) {
 					document.getElementById("match0").value = searchParams["match[]"][i];
 					document.getElementById("parameter0").value = searchParams["parameter[]"][i];
 				} else {
-					FHS.searchRestrictions.addFilter(searchParams["boolean[]"][i], searchParams["field[]"][i], searchParams["match[]"][i], searchParams["parameter[]"][i])
+					FHS.addFilter(searchParams["boolean[]"][i], searchParams["field[]"][i], searchParams["match[]"][i], searchParams["parameter[]"][i])
 				}
 			}
 
-			$('#searchForm').submit();
+			$(FHS.searchForm).submit();
 		} else if(document.getElementById('parameter0').value != '') {
-			$('#searchForm').submit();
+			$(FHS.searchForm).submit();
 		}
 
 		function updateInputTypeOnParameter(obj) {
@@ -696,30 +691,33 @@ function FHSearch(params) {
 				}
 
 				$(obj).parent().children(".parameter").remove();
-				var select = '<select name="parameter[]" class="parameter select"';
+
+				var parameterSelect = document.createElement("select");
+				parameterSelect.setAttribute("name", "parameter[]");
 				if(include0id) {
-					select += ' id="parameter0"';
+					parameterSelect.setAttribute("id", "parameter0");
 				}
-				select += '>';
-				var options = '';
+
 				for(var f in FHS.fieldData) {
-					if(FHS.fieldData[f]["field"] == obj.value) {
+					if(FHS.fieldData[f]["field"] === obj.value) {
 						var splitOptions = fieldData[f]["options"].split(",");
-						for(var o in splitOptions) {
-							options += '<option value="' + splitOptions[o] + '">' + splitOptions[o] + '</option>';
+						for(var o in splitOptions) { 
+							var parameterOption = document.createElement("option");
+							parameterOption.setAttribute("value", splitOptions[o]);
+							parameterOption.appendChild(document.createTextNode(splitOptions[o]));
+							parameterSelect.appendChild(parameterOption);
 						}
 					}
 				}
-				select += options;
-				select += "</select>";
-				$(obj).parent().append(select);
+
+				$(obj).parent()[0].appendChild(parameterSelect);
 
 				$(obj).parent().children("select").children(".disableForSelect").each(function() {
 					$(this).attr("disabled", "disabled");
 				});
 			} else {
-				if($(obj).parent().children('.parameter').hasClass("select")) {
-					$(obj).parent().children('.parameter').remove();
+				if($(obj).parent().children(".parameter").hasClass("select")) {
+					$(obj).parent().children(".parameter").remove();
 					var input = '<input type="text" name="parameter[]" class="parameter">';
 					$(obj).parent().append(input);
 				}
@@ -731,23 +729,23 @@ function FHSearch(params) {
 			}
 		}
 
-		$('.field').change(function() {
+		$(".field").change(function() {
 			updateInputTypeOnParameter(this);
 		});
-		$('.field').change();
+		$(".field").change();
 
-		$('#addFilter').click(function() {
+		$("#addFilter").click(function() {
 			FHS.addFilter();
 
-			$('.searchRestrictionDelete').click(function() {
+			$(".searchRestrictionDelete").click(function() {
 				$(this).parent().remove();
 			});
 		});
-		$('.searchRestrictionDelete').click(function() {
+		$(".searchRestrictionDelete").click(function() {
 			$(this).parent().remove();
 		});
 
-		$("#searchRestrictions").sortable({
+		$(FHS.searchRestrictions).sortable({
 			items: "li:not(.firstRestriction)"
 		});
 	});
