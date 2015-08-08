@@ -86,7 +86,7 @@
 				<input type="password" name="newpass" required>
 				<label for="newpassagain">New Password Again</label>
 				<input type="password" name="newpassagain" required>
-				<br><button type="submit" name="submitChangePassword">Change Password</button>
+				<br><button class="button" type="submit" name="submitChangePassword">Change Password</button>
 			</div>
 		</div>
 	</form>
@@ -102,7 +102,7 @@
 				<label for="email">Email</label>
 				<input type="email" name="email" value="<?=$user_object['email']?>" required>
 				<br>
-				<button type="submit" name="submitUpdateEmail">Update Email</button>
+				<button class="button" type="submit" name="submitUpdateEmail">Update Email</button>
 			</div>
 		</div>
 	</form>

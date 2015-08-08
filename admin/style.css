@@ -250,7 +250,7 @@ table th {
 table td {
 	border-right: 1px solid #E9E9E9;
 }
-table td button {
+table td button, table td .button {
 	margin-top: 0;
 	vertical-align: top;
 }
@@ -281,31 +281,33 @@ footer {
 }
 
 /* === FORMS === */
-input[type="button"], button, .button {
+.button {
 	display: inline-block;
 	background-color: #2196F3;
-	color: #E3F2FD;
 	padding: 0.8em 1em;
+	margin-top: 7px;
+	border: none;
+	outline: 0;
+
+	color: #E3F2FD;
 	font-family: "Open Sans", sans-serif;
 	font-size: 0.8em;
-	border: none;
-	margin-top: 7px;
-	outline: 0;
+	font-weight: bold;
 	text-transform: uppercase;
 	text-decoration: none;
 	letter-spacing: 0.5px;
-	font-weight: bold;
+	
 	cursor: pointer;
 }
-input[type="button"]:hover, button:hover, .button:hover {
+.button:hover {
 	background-color: #42A5F5;
 }
-input[type="button"].disabled, button.disabled, .button.disabled {
+.button.disabled {
 	background-color: #CECECE;
 	color: #999;
 	cursor: not-allowed;
 }
-input[type="button"] span, button span {
+.button span {
 	display: inline-block;
 	vertical-align: top;
 	margin-top: 1px;

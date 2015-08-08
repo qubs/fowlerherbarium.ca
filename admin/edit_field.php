@@ -46,7 +46,7 @@
 			<label for="help">Help Text</label>
 			<textarea name="help" rows="7"><?php echo $field["help"]; ?></textarea>
 			<br>
-			<button type="submit" name="submit"><span class="icon-done"></span> Save Changes</button>
+			<button class="button" type="submit" name="submit"><span class="icon-done"></span> Save Changes</button>
 		</div><div class="col col50">
 			<label for="input" class="required" style="margin-top: 0;">Input</label>
 			<input type="text" name="input" required value="<?php echo $field["input"]; ?>">

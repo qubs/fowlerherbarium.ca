@@ -140,7 +140,7 @@
 			</div>
 			<label for="image">Image</label>
 			<input type="file" name="image">
-			<button type="submit" name="submitEntry"><span class="icon-control-point"></span> Add Entry</button>
+			<button class="button" type="submit" name="submitEntry"><span class="icon-control-point"></span> Add Entry</button>
 		</div><div class="col col50">
 			<div class="row">
 				<div class="col col50 noPad padRight">
@@ -188,22 +188,22 @@
 					<td><?=$specimen["accession"]?></td>
 					<td><?=$specimen["common_name"]?></td>
 					<td><?=$specimen["date_collected"]?></td>
-					<td><button onclick="window.location = 'edit_entry.php?id=<?php echo $specimen["web_id"]; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button><span class="icon-highlight-remove"></span> Delete</button></td>
+					<td><button class="button" onclick="window.location = 'edit_entry.php?id=<?php echo $specimen["web_id"]; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
 				</tr>
 			<?php } ?>
 		</tbody>
 	</table>
 
 	<ul class="pagination">
-		<li><button onclick="window.location = 'main.php?page=1'">&laquo; First</button></li><li><button <?php if($pageNo > 1) { ?>onclick="window.location = 'main.php?page=<?php echo $pageNo - 1; ?>'" <?php } else { echo 'class="disabled"'; } ?>>&#8249; Previous</button></li><!-- <li><button class="active">1</button></li><li><button>2</button></li><li><button>3</button></li><li class="skipToPage"><label for="skip">Skip to Page:</label> <input type="text" name="skip"><button>Go</button></li><li><button>98</button></li><li><button>99</button></li><li><button><?php echo $nOfPages; ?></button> --><?php
+		<li><button class="button" onclick="window.location = 'main.php?page=1'">&laquo; First</button></li><li><button class="button<?php if($pageNo <= 1) { echo ' disabled'; } ?>" <?php if($pageNo > 1) { ?>onclick="window.location = 'main.php?page=<?php echo $pageNo - 1; ?>'" <?php } ?>>&#8249; Previous</button></li><!-- <li><button class="active">1</button></li><li><button>2</button></li><li><button>3</button></li><li class="skipToPage"><label for="skip">Skip to Page:</label> <input type="text" name="skip"><button>Go</button></li><li><button>98</button></li><li><button>99</button></li><li><button><?php echo $nOfPages; ?></button> --><?php
 			if($pageNo == 1) {
-		?><li><button class="active" onclick="window.location = 'main.php?page=1'">1</button></li><li><button onclick="window.location = 'main.php?page=2'">2</button></li><li><button onclick="window.location = 'main.php?page=3'">3</button></li><?php
+		?><li><button class="button active" onclick="window.location = 'main.php?page=1'">1</button></li><li><button class="button" onclick="window.location = 'main.php?page=2'">2</button></li><li><button class="button" onclick="window.location = 'main.php?page=3'">3</button></li><?php
 			} else if($pageNo == $nOfPages) {
-		?><li><button onclick="window.location = 'main.php?page=<?php echo $nOfPages - 2; ?>'"><?php echo $nOfPages - 2; ?></button></li><li><button onclick="window.location = 'main.php?page=<?php echo $nOfPages - 1; ?>'"><?php echo $nOfPages - 1; ?></button></li><li><button class="active" onclick="window.location = 'main.php?page=<?php echo $nOfPages; ?>'"><?php echo $nOfPages; ?></button></li><?php
+		?><li><button class="button" onclick="window.location = 'main.php?page=<?php echo $nOfPages - 2; ?>'"><?php echo $nOfPages - 2; ?></button></li><li><button class="button" onclick="window.location = 'main.php?page=<?php echo $nOfPages - 1; ?>'"><?php echo $nOfPages - 1; ?></button></li><li><button class="button active" onclick="window.location = 'main.php?page=<?php echo $nOfPages; ?>'"><?php echo $nOfPages; ?></button></li><?php
 			} else {
-		?><li><button onclick="window.location = 'main.php?page=<?php echo $pageNo - 1; ?>'"><?php echo $pageNo - 1; ?></button></li><li><button class="active" onclick="window.location = 'main.php?page=<?php echo $pageNo; ?>'"><?php echo $pageNo; ?></button></li><li><button onclick="window.location = 'main.php?page=<?php echo $pageNo + 1; ?>'"><?php echo $pageNo + 1; ?></button></li><?php
+		?><li><button class="button" onclick="window.location = 'main.php?page=<?php echo $pageNo - 1; ?>'"><?php echo $pageNo - 1; ?></button></li><li><button class="button active" onclick="window.location = 'main.php?page=<?php echo $pageNo; ?>'"><?php echo $pageNo; ?></button></li><li><button class="button" onclick="window.location = 'main.php?page=<?php echo $pageNo + 1; ?>'"><?php echo $pageNo + 1; ?></button></li><?php
 			}
-		?><li><button <?php if($pageNo < $nOfPages) { ?>onclick="window.location = 'main.php?page=<?php echo $pageNo + 1; ?>'" <?php } else { echo 'class="disabled"'; } ?>>Next &#8250;</button></li><li><button onclick="window.location = 'main.php?page=<?php echo $nOfPages; ?>'">Last &raquo;</button></li>
+		?><li><button class="button<?php if($pageNo >= $nOfPages) { echo ' disabled'; } ?>" <?php if($pageNo < $nOfPages) { ?>onclick="window.location = 'main.php?page=<?php echo $pageNo + 1; ?>'"<?php } ?>>Next &#8250;</button></li><li><button class="button" onclick="window.location = 'main.php?page=<?php echo $nOfPages; ?>'">Last &raquo;</button></li>
 	</ul>
 </div>
 <?php require_once("./footer.php"); ?>

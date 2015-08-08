@@ -95,7 +95,7 @@
 					<td style="min-width: 160px;"><?=$user['label']?></td>
 					<td><p><?=$user['help']?></p></td>
 					<td><input type="checkbox" onclick="return false" <?php if($user['searchable'] == 1) { echo "checked"; } ?>></td>
-					<td style="min-width: 80px;"><button onclick="window.location = 'edit_field.php?id=<?php echo $user['id']; ?>'"><span class="icon-mode-edit"></span></button> <button><span class="icon-highlight-remove"></span></button></td>
+					<td style="min-width: 160px;"><button class="button" onclick="window.location = 'edit_field.php?id=<?php echo $user['id']; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
 				</tr>
 			<?php } ?>
 		</tbody>

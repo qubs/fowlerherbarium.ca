@@ -35,7 +35,7 @@
 	$fetch_specimen = $mysqli->query($query);
 
 	if($fetch_specimen->num_rows == 0) {
-		header('Location: main.php');
+		header("Location: main.php");
 	}
 
 	$specimen = $fetch_specimen->fetch_assoc();
@@ -89,7 +89,7 @@
 			</div>
 			<label for="image">Image</label>
 			<input type="file" name="image" value="<?php echo $specimen["image"]; ?>">
-			<button><span class="icon-done"></span> Save Changes</button>
+			<button class="button"><span class="icon-done"></span> Save Changes</button>
 		</div><div class="col col50">
 			<div class="row">
 				<div class="col col50 noPad padRight">

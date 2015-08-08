@@ -59,7 +59,7 @@
 	<label for="password">Password</label>
 	<input type="password" name="password">
 	<br>
-	<button type="submit" name="submit">Log In</button>
+	<button class="button" type="submit" name="submit">Log In</button>
 </form>
 <?php
 	require_once('./footer.php');

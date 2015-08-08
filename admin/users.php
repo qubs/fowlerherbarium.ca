@@ -74,7 +74,7 @@
 				<label for="email" class="required">Email</label>
 				<input type="email" name="email" required>
 				<br>
-				<button type="submit" name="submit"><span class="icon-control-point"></span> Create User</button>
+				<button class="button" type="submit" name="submit"><span class="icon-control-point"></span> Create User</button>
 			</div><div class="col col50">
 				<label for="password" class="required">Password</label>
 				<input type="password" name="password" required>
@@ -101,7 +101,7 @@
 					<td><?=$user["id"]?></td>
 					<td><?=$user["username"]?></td>
 					<td><a href="mailto:<?=$user["email"]?>"><?=$user["email"]?></a></td>
-					<td><button onclick="window.location = 'edit_user.php?id=<?php echo $user["id"]; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button><span class="icon-highlight-remove"></span> Delete</button></td>
+					<td><button class="button" onclick="window.location = 'edit_user.php?id=<?php echo $user["id"]; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
 				</tr>
 			<?php } ?>
 		</tbody>
