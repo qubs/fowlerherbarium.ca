@@ -1,11 +1,11 @@
 <?php
-	require_once('../config.php');
-	require_once('../shared.php');
+	require_once("../config.php");
+	require_once("../shared.php");
 
 	session_start();
 
-	if(!isset($_SESSION['user'])) {
-		header('Location: index.php');
+	if(!isset($_SESSION["user"])) {
+		header("Location: index.php");
 	}
 
 	$mysqli = mysqli_connect($_DATABASE_HOST, $_DATABASE_USER, $_DATABASE_PASS, $_DATABASE_DEFAULT);
@@ -14,7 +14,7 @@
 	}
 	$mysqli->set_charset("utf8");
 
-	if(isset($_POST['submit'])) {
+	if(isset($_POST["submit"])) {
 		// $username = $_POST['username'];
 		// $email = $_POST['email'];
 		// $password = $_POST['password'];
@@ -47,35 +47,27 @@
 
 	$fetch_all_users = $mysqli->query("SELECT * FROM fields");
 
-	$page = 'fields';
-	require_once('./header.php');
+	$page = "fields";
+	require_once("./header.php");
 ?>
 <h2>Fields</h2>
-<!-- <div class="box">
-	<?php if(isset($error) && $error != "") { ?>
+<div class="box">
+	<?php if(isset($error) && !empty($error)) { ?>
 		<div class="error"><?php echo $error; ?></div>
 	<?php } ?>
 	<h3>Add New</h3>
 	<form action="fields.php" method="post">
 		<div class="row">
 			<div class="col col50">
-				<label for="username" class="required">Username</label>
-				<input type="text" name="username" required>
-				<label for="email" class="required">Email</label>
-				<input type="email" name="email" required>
-				<br>
-				<button type="submit" name="submit"><span class="icon-control-point"></span> Create User</button>
+				<strong>Coming Soon</strong>
+				<!-- <button type="submit" name="submit"><span class="icon-control-point"></span> Add Field</button> -->
 			</div><div class="col col50">
-				<label for="password" class="required">Password</label>
-				<input type="password" name="password" required>
-				<label for="passagain" class="required">Password Again</label>
-				<input type="password" name="passagain" required>
 			</div>
 		</div>
 	</form>
-</div> -->
+</div>
 <div class="box">
-	<h3>Existing Users</h3>
+	<h3>Existing Fields</h3>
 	<table>
 		<thead>
 			<tr>

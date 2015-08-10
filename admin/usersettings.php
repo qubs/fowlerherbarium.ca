@@ -1,11 +1,11 @@
 <?php
-	require_once('../config.php');
-	require_once('../shared.php');
+	require_once("../config.php");
+	require_once("../shared.php");
 
 	session_start();
 
-	if(!isset($_SESSION['user'])) {
-		header('Location: index.php');
+	if(!isset($_SESSION["user"])) {
+		header("Location: index.php");
 	}
 
 	$mysqli = mysqli_connect($_DATABASE_HOST, $_DATABASE_USER, $_DATABASE_PASS, $_DATABASE_DEFAULT);
@@ -17,10 +17,10 @@
 	$fetch_user = $mysqli->query("SELECT * FROM users WHERE username = '" . $mysqli->real_escape_string($_SESSION['user']) . "'");
 	$user_object = $fetch_user->fetch_assoc();
 
-	if(isset($_POST['submitChangePassword'])) {
-		$oldpass = $_POST['oldpass'];
-		$newpass = $_POST['newpass'];
-		$newpassagain = $_POST['newpassagain'];
+	if(isset($_POST["submitChangePassword"])) {
+		$oldpass = $_POST["oldpass"];
+		$newpass = $_POST["newpass"];
+		$newpassagain = $_POST["newpassagain"];
 
 		$dead = false;
 		$changePasswordError = "";
@@ -43,15 +43,15 @@
 			$change_password->execute();
 			$change_password->close();
 		}
-	} else if(isset($_POST['submitUpdateEmail'])) {
-		$email = $_POST['email'];
+	} else if(isset($_POST["submitUpdateEmail"])) {
+		$email = $_POST["email"];
 
 		$dead = false;
 		$updateEmailError = "";
 
 		if(!isset($email) || $email == "" || $email == " ") {
 			$dead = true;
-			$updateEmailError = "All fields must be filled in.";
+			$updateEmailError = "All required fields must be filled in.";
 		}
 
 		$check_existing = $mysqli->query("SELECT * FROM users WHERE email = '" . $mysqli->real_escape_string($email) . "'");
@@ -68,12 +68,12 @@
 		}
 	}
 
-	$page = 'usersettings';
-	require_once('./header.php');
+	$page = "usersettings";
+	require_once("./header.php");
 ?>
-<h2>Settings and Options for <?=$user_object['username']?></h2>
+<h2>Settings and Options for <?php echo $user_object["username"]; ?></h2>
 <div class="box">
-	<?php if(isset($changePasswordError) && $changePasswordError != "") { ?>
+	<?php if(isset($changePasswordError) && !empty($changePasswordError)) { ?>
 		<div class="error"><?php echo $changePasswordError; ?></div>
 	<?php } ?>
 	<h3>Change Password</h3>
@@ -92,7 +92,7 @@
 	</form>
 </div>
 <div class="box">
-	<?php if(isset($updateEmailError) && $updateEmailError != "") { ?>
+	<?php if(isset($updateEmailError) && !empty($updateEmailError)) { ?>
 		<div class="error"><?php echo $updateEmailError; ?></div>
 	<?php } ?>
 	<h3>Update Email</h3>
@@ -100,7 +100,7 @@
 		<div class="row">
 			<div class="col col33 nopad">
 				<label for="email">Email</label>
-				<input type="email" name="email" value="<?=$user_object['email']?>" required>
+				<input type="email" name="email" value="<?php echo $user_object["email"]; ?>" required>
 				<br>
 				<button class="button" type="submit" name="submitUpdateEmail">Update Email</button>
 			</div>

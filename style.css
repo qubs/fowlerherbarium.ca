@@ -131,7 +131,7 @@
 #qubsBar ul li:first-child {
 	border-left: 1px solid #4F4F4F;
 }
-#qubsBar ul li.active {
+#qubsBar ul li.active, #qubsBar ul li:hover {
 	background-color: #4F4F4F;
 }
 #qubsBar ul li a {

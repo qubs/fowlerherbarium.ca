@@ -110,6 +110,16 @@ function FHSearch(params) {
 			$("#bBeforeBtn").parent().css("borderRightWidth", "0");
 		}
 
+		// Special conditions for 2 pages
+
+		if(FHS.page == 1 && FHS.maxPage == 2) {
+			$("#aAfterBtn").css("display", "none");
+			$("#aAfterBtn").parent().css("borderRightWidth", "0");
+		} else if(FHS.page == 2 && FHS.maxPage == 2) {
+			$("#bBeforeBtn").css("display", "none");
+			$("#bBeforeBtn").parent().css("borderRightWidth", "0");
+		}
+
 		FHS.refreshHash();
 	};
 
@@ -409,6 +419,7 @@ function FHSearch(params) {
 		var prevPageLI = document.createElement("li");
 		var prevPageBtn = document.createElement("button");
 		prevPageBtn.setAttribute("type", "button");
+		prevPageBtn.setAttribute("id", "prevPageBtn");
 		prevPageBtn.setAttribute("onclick", "window.search.prevPage();");
 		prevPageBtn.appendChild(document.createTextNode("‹ Previous"));
 
@@ -466,6 +477,7 @@ function FHSearch(params) {
 		var nextPageLI = document.createElement("li");
 		var nextPageBtn = document.createElement("button");
 		nextPageBtn.setAttribute("type", "button");
+		nextPageBtn.setAttribute("id", "nextPageBtn");
 		nextPageBtn.setAttribute("onclick", "window.search.nextPage();");
 		nextPageBtn.appendChild(document.createTextNode("Next ›"));
 
@@ -536,6 +548,8 @@ function FHSearch(params) {
 			return specimen;
 		}
 
+		// ---------------------------------------------------
+
 		$(FHS.searchForm).submit(function(e) {
 			if(document.getElementById('exportType').value == "") {
 				e.preventDefault();
@@ -589,8 +603,8 @@ function FHSearch(params) {
 
 					if(numberOfResults > FHS.itemsPerPage) {
 						FHS.pagination = true;
-						$('#pagination').css("display", "block");
-						$('.specimen').css("display", "none");
+						$("#pagination").css("display", "block");
+						$(".specimen").css("display", "none");
 
 						var startOfPage = ((FHS.page - 1) * FHS.itemsPerPage) + 1;
 						var endOfPage = (FHS.page * FHS.itemsPerPage);
@@ -633,6 +647,16 @@ function FHSearch(params) {
 							$("#nextPageBtn").removeClass("disabled");
 							$("#afterBtn").css("display", "inline-block");
 							$("#afterBtn").parent().css("borderRightWidth", "1px");
+							$("#bBeforeBtn").css("display", "none");
+							$("#bBeforeBtn").parent().css("borderRightWidth", "0");
+						}
+
+						// Special conditions for 2 pages
+
+						if(FHS.page == 1 && FHS.maxPage == 2) {
+							$("#aAfterBtn").css("display", "none");
+							$("#aAfterBtn").parent().css("borderRightWidth", "0");
+						} else if(FHS.page == 2 && FHS.maxPage == 2) {
 							$("#bBeforeBtn").css("display", "none");
 							$("#bBeforeBtn").parent().css("borderRightWidth", "0");
 						}

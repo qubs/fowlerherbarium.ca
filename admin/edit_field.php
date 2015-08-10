@@ -17,7 +17,31 @@
 	if(!isset($_GET["id"]) && !isset($_POST["submit"])) {
 		header('Location: main.php');
 	} else if(isset($_POST["submit"])) {
-		$id = $_POST["id"];
+		$id = intval($_POST["id"]);
+
+		$field = $_POST["field"];
+		$label = $_POST["label"];
+		$help = $_POST["help"];
+		$input = $_POST["input"];
+		$options = $_POST["options"];
+		$searchable = intval($_POST["searchable"]);
+
+		$dead = false;
+		$error = "";
+
+		if(empty($field) || empty($label) || empty($input) || empty($searchable)) {
+			$dead = true;
+			$error = "All required fields must be filled out.";
+		}
+
+		if(!$dead) {
+			$update_field = $mysqli->prepare("UPDATE fields SET field = ?, label = ?, help = ?, input = ?, options = ?, searchable = ? WHERE id = ? LIMIT 1");
+			$update_field->bind_param("sssssii", $field, $label, $help, $input, $options, $searchable, $id);
+			$update_field->execute();
+			$update_field->close();
+
+			header("Location: fields.php");
+		}
 	} else {
 		$id = intval($mysqli->real_escape_string($_GET["id"]));
 	}
@@ -36,6 +60,9 @@
 ?>
 <h2><a href="fields.php" class="button" style="float: left; margin-right: 10px; margin-left: 0;">&larr; Back to Fields</a> Edit Field "<em><?php echo $field["field"]; ?>"</em></h2>
 <form action="edit_field.php" class="box">
+	<?php if(isset($error) && !empty($error)) { ?>
+		<div class="error"><?php echo $error; ?></div>
+	<?php } ?>
 	<input type="hidden" name="id" value="<?php echo $id; ?>">
 	<div class="row">
 		<div class="col col50">

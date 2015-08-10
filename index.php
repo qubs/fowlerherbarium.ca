@@ -48,6 +48,7 @@
 	function homePage() {
 		global $twig;
 		global $pages;
+
 		echo $twig->render("base.html", array(
 			"title" => $pages["home"]["title"], 
 			"header" => $pages["home"]["header"],
@@ -60,8 +61,6 @@
 		global $twig;
 		global $pages;
 		global $fieldData;
-
-		error_log($pages["search"]["title"]);
 
 		echo $twig->render("base.html", array(
 			"title" => $pages["search"]["title"], 
@@ -171,6 +170,7 @@
 	function publicationsPage() {
 		global $twig;
 		global $pages;
+		
 		echo $twig->render("base.html", array(
 			"title" => $pages["publications"]["title"], 
 			"header" => $pages["publications"]["header"],
@@ -182,6 +182,7 @@
 	function historyPage() {
 		global $twig;
 		global $pages;
+
 		echo $twig->render("base.html", array(
 			"title" => $pages["history"]["title"], 
 			"header" => $pages["history"]["header"],
@@ -193,6 +194,7 @@
 	function linksPage() {
 		global $twig;
 		global $pages;
+
 		echo $twig->render("base.html", array(
 			"title" => $pages["links"]["title"], 
 			"header" => $pages["links"]["header"],
@@ -204,6 +206,7 @@
 	function contactPage() {
 		global $twig;
 		global $pages;
+
 		echo $twig->render("base.html", array(
 			"title" => $pages["contact"]["title"], 
 			"header" => $pages["contact"]["header"],

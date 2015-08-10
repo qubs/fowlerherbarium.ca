@@ -5,7 +5,7 @@
 	session_start();
 
 	if(!isset($_SESSION["user"])) {
-		header('Location: index.php');
+		header("Location: index.php");
 	}
 
 	$mysqli = mysqli_connect($_DATABASE_HOST, $_DATABASE_USER, $_DATABASE_PASS, $_DATABASE_DEFAULT);
@@ -76,75 +76,20 @@
 	// 	}
 	// }
 
-	$page = "main";
-	require_once('./header.php');
+	$page = "pages";
+	require_once("./header.php");
 ?>
 <h2>Pages</h2>
-<!-- <form action="main.php" class="box">
+<form action="pages.php" class="box">
 	<h3>Add New</h3>
 	<div class="row">
 		<div class="col col50">
-			<label for="dataset">Dataset <div class="help"><div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias, quidem excepturi adipisci officia, cum eaque doloribus autem dolores voluptas eum animi minima eius. Eveniet vitae provident facere tempore mollitia enim!</div></div></label>
-			<input type="text" name="dataset" value="kingston">
-			<div class="row">
-				<div class="col col50 noPad padRight">
-					<label for="genus">Genus</label>
-					<input type="text" name="genus">
-				</div><div class="col col50 noPad padLeft">
-					<label for="species">Species</label>
-					<input type="text" name="species">
-				</div>
-			</div>
-			<div class="row">
-				<div class="col col50 noPad padRight">
-					<label for="DTH">DTH #</label>
-					<input type="text" name="DTH">
-				</div><div class="col col50 noPad padLeft">
-					<label for="accession">Accession #</label>
-					<input type="text" name="accession">
-				</div>
-			</div>
-			<label for="common_name">Common Name</label>
-			<input type="text" name="common_name">
-			<div class="row">
-				<div class="col col50 noPad padRight">
-					<label for="date_collected">Date Collected</label>
-					<input type="text" name="date_collected" placeholder="mm dd yyyy">
-				</div><div class="col col50 noPad padLeft">
-					<label for="collectors">Collector(s)</label>
-					<input type="text" name="collectors">
-				</div>
-			</div>
-			<div class="row">
-				<div class="col col50 noPad padRight">
-					<label for="map_included"><input type="checkbox" name="map_included" value="yes"> Map Included</label>
-				</div><div class="col col50 noPad padLeft">
-					<label for="map_reference">Map Reference</label>
-					<input type="text" name="map_reference">
-				</div>
-			</div>
-			<label for="image">Image</label>
-			<input type="file" name="image">
-			<button type="submit" name="submitEntry"><span class="icon-control-point"></span> Add Entry</button>
+			<strong>Coming Soon</strong>
+			<!-- <button type="submit" name="submitEntry"><span class="icon-control-point"></span> Add Page</button> -->
 		</div><div class="col col50">
-			<div class="row">
-				<div class="col col50 noPad padRight">
-					<label for="county">County</label>
-					<input type="text" name="county">
-				</div><div class="col col50 noPad padLeft">
-					<label for="township">Township</label>
-					<input type="text" name="township">
-				</div>
-			</div>
-			<label for="location">Location</label>
-			<input type="text" name="location">
-			<label for="habitat">Habitat</label>
-			<textarea name="habitat" cols="30" rows="5"></textarea>
-			<label for="habitat">Notes</label>
-			<textarea name="notes" cols="30" rows="5"></textarea>
 		</div>
 	</div>
-</form> -->
+</form>
 <div class="box">
 	<h3>Existing Pages</h3>
 	<p>Specimens are listed in order of ascending latin name.</p>
