@@ -56,7 +56,9 @@ function FHSearch(params) {
 		var endOfOldPage = (FHS.page * FHS.itemsPerPage);
 
 		for(var i = startOfOldPage; i <= endOfOldPage; i++) {
-			document.getElementById("specimen" + i.toString()).style.display = "none";
+			if(document.getElementById("specimen" + i.toString()) !== null) {
+				document.getElementById("specimen" + i.toString()).style.display = "none";
+			}
 		}
 
 		FHS.page = pageNo;
@@ -65,7 +67,9 @@ function FHSearch(params) {
 		var endOfPage = (FHS.page * FHS.itemsPerPage);
 
 		for(var i = startOfPage; i <= endOfPage; i++) {
-			document.getElementById("specimen" + i.toString()).style.display = "block";
+			if(document.getElementById("specimen" + i.toString()) !== null) {
+				document.getElementById("specimen" + i.toString()).style.display = "block";
+			}
 		}
 
 		$("#bBeforeBtn").text((FHS.page - 2).toString());
@@ -499,7 +503,7 @@ function FHSearch(params) {
 			var specimen = document.createElement("a");
 			specimen.setAttribute("id", "specimen" + searchResultNumber.toString());
 			specimen.setAttribute("class", "specimen");
-			specimen.setAttribute("href", "/specimen/?id=" + data["web_id"]);
+			specimen.setAttribute("href", "/specimen/" + data["web_id"] + "/");
 
 			var specimenTitle = document.createElement("h3");
 			specimenTitle.appendChild(document.createTextNode(data["genus"] + " " + data["species"]));
@@ -558,7 +562,7 @@ function FHSearch(params) {
 					parameters.push(this.value);
 				});
 
-				$.get("/export.php", {
+				$.get("/export/", {
 					"type": "json", 
 					"boolean[]": booleans, 
 					"field[]": fields, 

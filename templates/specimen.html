@@ -1,31 +1,22 @@
-{% extends "base.html" %}
-
-{% block scripts %}<script type="text/javascript" src="/js/search.js"></script>{% endblock %}
-
-{% block title %}Specimen{% endblock %}
-{% block header %}Specimen Details{% endblock %}
-{% block content %}
-	<button type="button" onclick="window.history.back();">&larr; Back</button>
-	<!-- <h2>Specimen Details</h2> -->
-	<div class="specimenFull">
-		<h3>{{ specimen.genus }} {{ specimen.species }}</h3>
-		<table>
-			<thead>
+<button type="button" onclick="window.history.back();">&larr; Back</button>
+<div class="specimenFull">
+	<h3>{{ specimen.genus }} {{ specimen.species }}</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>Field</th><th>Value</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for f in fieldData %}
 				<tr>
-					<th>Field</th><th>Value</th>
+					<td>{{ f.label }} {% if f.help is not empty %} <div class="help"><div>{{ f.help }}</div></div> {% endif %}</td>
+					<td> {{ specimen[f.field] }}</td>
 				</tr>
-			</thead>
-			<tbody>
-				{% for f in fieldData %}
-					<tr>
-						<td>{{ f.label }} {% if f.help is not empty %} <div class="help"><div>{{ f.help }}</div></div> {% endif %}</td>
-						<td> {{ specimen[f.field] }}</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table><div class="wiki">
-			<h4>From Wikipedia</h4>
-			<iframe src="http://en.m.wikipedia.org/wiki/{{ (specimen.genus ~ " " ~ specimen.species) | replace({" ": "_"}) }}" frameborder="0"></iframe>
-		</div>
+			{% endfor %}
+		</tbody>
+	</table><div class="wiki">
+		<h4>From Wikipedia</h4>
+		<iframe src="http://en.m.wikipedia.org/wiki/{{ (specimen.genus ~ " " ~ specimen.species) | replace({" ": "_"}) }}" frameborder="0"></iframe>
 	</div>
-{% endblock %}
+</div>
