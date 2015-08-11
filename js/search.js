@@ -551,7 +551,7 @@ function FHSearch(params) {
 		// ---------------------------------------------------
 
 		$(FHS.searchForm).submit(function(e) {
-			if(document.getElementById('exportType').value == "") {
+			if(document.getElementById("exportType").value == "") {
 				e.preventDefault();
 
 				FHS.loadingAnimation.style.display = "block";
@@ -678,7 +678,7 @@ function FHSearch(params) {
 			}
 		});
 
-		if(window.location.hash != '' && window.location.hash != '#') {
+		if(window.location.hash != "" && window.location.hash != "#") {
 			var searchParams = JSON.parse(window.location.hash.substring(1));
 
 			if(searchParams.hasOwnProperty("page")) {
@@ -697,7 +697,7 @@ function FHSearch(params) {
 			}
 
 			$(FHS.searchForm).submit();
-		} else if(document.getElementById('parameter0').value != '') {
+		} else if(document.getElementById("parameter0").value != "") {
 			$(FHS.searchForm).submit();
 		}
 
@@ -722,13 +722,14 @@ function FHSearch(params) {
 
 				var parameterSelect = document.createElement("select");
 				parameterSelect.setAttribute("name", "parameter[]");
+				parameterSelect.setAttribute("class", "parameter select");
 				if(include0id) {
 					parameterSelect.setAttribute("id", "parameter0");
 				}
 
 				for(var f in FHS.fieldData) {
 					if(FHS.fieldData[f]["field"] === obj.value) {
-						var splitOptions = fieldData[f]["options"].split(",");
+						var splitOptions = FHS.fieldData[f]["options"].split(",");
 						for(var o in splitOptions) { 
 							var parameterOption = document.createElement("option");
 							parameterOption.setAttribute("value", splitOptions[o]);
@@ -739,15 +740,19 @@ function FHSearch(params) {
 				}
 
 				$(obj).parent()[0].appendChild(parameterSelect);
-
 				$(obj).parent().children("select").children(".disableForSelect").each(function() {
 					$(this).attr("disabled", "disabled");
 				});
 			} else {
 				if($(obj).parent().children(".parameter").hasClass("select")) {
 					$(obj).parent().children(".parameter").remove();
-					var input = '<input type="text" name="parameter[]" class="parameter">';
-					$(obj).parent().append(input);
+
+					var input = document.createElement("input");
+					input.setAttribute("type", "text");
+					input.setAttribute("name", "parameter[]");
+					input.setAttribute("class", "parameter");
+
+					$(obj).parent()[0].appendChild(input);
 				}
 				$(obj).parent().children(".parameter").attr("type", inputType);
 
