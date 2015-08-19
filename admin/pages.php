@@ -110,7 +110,7 @@
 					<td><?=$page["title"]?></td>
 					<td><?=$page["header"]?></td>
 					<td><?=$page["routes"]?></td>
-					<td><button class="button" onclick="window.location = 'edit_page.php?id=<?php echo $page["id"]; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
+					<td><a class="button" href="edit_page.php?id=<?php echo $page["id"]; ?>"><span class="icon-mode-edit"></span> Edit</a> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
 				</tr>
 			<?php } ?>
 		</tbody>

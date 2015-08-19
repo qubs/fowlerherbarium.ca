@@ -5,7 +5,7 @@
 	session_start();
 
 	if(!isset($_SESSION["user"])) {
-		header('Location: index.php');
+		header("Location: index.php");
 	}
 
 	$mysqli = mysqli_connect($_DATABASE_HOST, $_DATABASE_USER, $_DATABASE_PASS, $_DATABASE_DEFAULT);
@@ -27,9 +27,7 @@
 			$dead = true;
 			$error = "Entered passwords do not match.";
 		}
-		if(
-			(!isset($username) || !isset($email) || !isset($password) || !isset($passagain))
-		 || ($username == "" || $email == "" || $password == "" || $passagain == "")) {
+		if(empty($username) || empty($email) || empty($password) || empty($passagain)) {
 			$dead = true;
 			$error = "All fields must be filled in.";
 		}
@@ -57,7 +55,7 @@
 
 	$fetch_all_users = $mysqli->query("SELECT * FROM users");
 
-	$page = 'users';
+	$page = "users";
 	require_once('./header.php');
 ?>
 <h2>Users</h2>
@@ -101,7 +99,7 @@
 					<td><?=$user["id"]?></td>
 					<td><?=$user["username"]?></td>
 					<td><a href="mailto:<?=$user["email"]?>"><?=$user["email"]?></a></td>
-					<td><button class="button" onclick="window.location = 'edit_user.php?id=<?php echo $user["id"]; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
+					<td><a class="button" href="edit_user.php?id=<?php echo $user["id"]; ?>"><span class="icon-mode-edit"></span> Edit</a> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
 				</tr>
 			<?php } ?>
 		</tbody>

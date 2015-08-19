@@ -26,7 +26,7 @@
 	$fetch_user = $mysqli->query($query);
 
 	if($fetch_user->num_rows == 0) {
-		header('Location: main.php');
+		header("Location: main.php");
 	}
 
 	$user = $fetch_user->fetch_assoc();
@@ -40,9 +40,9 @@
 	<div class="row">
 		<div class="col col50">
 			<label for="username" class="required" style="margin-top: 0;">Username</label>
-			<input type="text" name="username" required value="<?php echo $user['username']; ?>">
+			<input type="text" name="username" required value="<?php echo $user["username"]; ?>">
 			<label for="email" class="required">Email</label>
-			<input type="email" name="email" required value="<?php echo $user['email']; ?>">
+			<input type="email" name="email" required value="<?php echo $user["email"]; ?>">
 			<br>
 			<button class="button" type="submit" name="submit"><span class="icon-done"></span> Save Changes</button>
 		</div><!-- <div class="col col50">

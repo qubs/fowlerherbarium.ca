@@ -215,7 +215,7 @@
 					<td><?=$specimen["accession"]?></td>
 					<td><?=$specimen["common_name"]?></td>
 					<td><?=$specimen["date_collected"]?></td>
-					<td><button class="button" onclick="window.location = 'edit_entry.php?id=<?php echo $specimen["web_id"]; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
+					<td><a class="button" href="edit_entry.php?id=<?php echo $specimen["web_id"]; ?>"><span class="icon-mode-edit"></span> Edit</a> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
 				</tr>
 			<?php } ?>
 		</tbody>

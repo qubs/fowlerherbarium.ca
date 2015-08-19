@@ -15,7 +15,7 @@
 	$mysqli->set_charset("utf8");
 
 	if(!isset($_GET["id"]) && !isset($_POST["submit"])) {
-		header('Location: main.php');
+		header("Location: main.php");
 	} else if(isset($_POST["submit"])) {
 		$id = intval($_POST["id"]);
 
@@ -50,7 +50,7 @@
 	$fetch_field = $mysqli->query($query);
 
 	if($fetch_field->num_rows == 0) {
-		header('Location: main.php');
+		header("Location: main.php");
 	}
 
 	$field = $fetch_field->fetch_assoc();

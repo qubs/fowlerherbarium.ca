@@ -23,7 +23,7 @@
 	$fetch_pages = $mysqli->query("SELECT * FROM pages");
 	$pages = array();
 	while($page = $fetch_pages->fetch_assoc()) {
-		$pages[strtolower(str_replace(" ", "", $page["title"]))] = $page;
+		$pages[$page["page_id"]] = $page;
 	}
 
 	$fieldData = fetchFieldData($mysqli, true);
@@ -31,29 +31,32 @@
 	// Routing
 	// ===================================================
 
-	$router->map("GET|POST", "/", "homePage", "home");
+	// Pages from database
 
-	$router->map("GET|POST", "/search/", "searchPage", "search");
+	foreach($pages as $page) {
+		$router->map("GET|POST", $page["routes"], "databasePage", $page["page_id"]);
+	}
+
+	// Pages not editable
+
 	$router->map("GET|POST", "/specimen/[i:id]/", "specimenPage", "specimen");
+	$router->map("GET|POST", "/data/specimen/[i:id]/", "specimenData", "specimendata");
 	$router->map("GET|POST", "/export/", "exportPage", "export");
-
-	$router->map("GET|POST", "/publications/", "publicationsPage", "publications");
-	$router->map("GET|POST", "/history/", "historyPage", "history");
-	$router->map("GET|POST", "/links/", "linksPage", "links");
-	$router->map("GET|POST", "/contact/", "contactPage", "contact");
 
 	// Routing functions
 	// ===================================================
 
-	function homePage() {
+	function databasePage($targetPage) {
 		global $twig;
 		global $pages;
+		global $fieldData;
 
 		echo $twig->render("base.html", array(
-			"title" => $pages["home"]["title"], 
-			"header" => $pages["home"]["header"],
-			"scripts" => $pages["home"]["scripts"],
-			"content" => $pages["home"]["content"]
+			"title" => $pages[$targetPage]["title"], 
+			"header" => $pages[$targetPage]["header"],
+			"scripts" => $pages[$targetPage]["scripts"],
+			"content" => $pages[$targetPage]["content"],
+			"fieldData" => $fieldData
 		));
 	}
 
@@ -91,6 +94,17 @@
 			"content" => specimenRender($id)
 		));
 	}
+	function specimenData($id) {
+		$fetchSpecimen = $mysqli->prepare("SELECT * FROM specimens WHERE web_id = ? LIMIT 1");
+		$fetchSpecimen->bind_param("i", $id);
+		$fetchSpecimen->execute();
+		$fetchSpecimenResult = $fetchSpecimen->get_result();
+		$specimen = $fetchSpecimenResult->fetch_assoc();
+
+		$headers = "Content-type: application/json";
+		echo json_encode($specimen);
+	}
+
 	function exportPage() {
 		global $twig;
 		global $pages;
@@ -124,7 +138,7 @@
 					array_push($output_array, $specimen);
 				}
 
-				$headers = "Content-type:application/json";
+				$headers = "Content-type: application/json";
 				$output = json_encode($output_array);
 			} else if($type == "csv") {
 				$fieldKeys = array();
@@ -144,18 +158,18 @@
 					$output .= implode(",", $s) . "\n";
 				}
 
-				$headers = "Content-type:text/csv";
+				$headers = "Content-type: text/csv";
 			} else if($type == "xml") {
-				$xml = new SimpleXMLElement('<xml/>');
+				$xml = new SimpleXMLElement("<xml/>");
 
 				while($s = $fetch_specimens->fetch_assoc()) {
-					$specimen = $xml->addChild('specimen');
+					$specimen = $xml->addChild("specimen");
 					foreach($fieldData as $f) {
 						$specimen->addChild($f["field"], htmlspecialchars($s[$f["field"]]));
 					}
 				}
 
-				$headers = "Content-type:text/xml";
+				$headers = "Content-type: text/xml";
 
 				$dom = dom_import_simplexml($xml)->ownerDocument;
 				$dom->formatOutput = true;
@@ -167,61 +181,18 @@
 		}
 	}
 
-	function publicationsPage() {
-		global $twig;
-		global $pages;
-		
-		echo $twig->render("base.html", array(
-			"title" => $pages["publications"]["title"], 
-			"header" => $pages["publications"]["header"],
-			"scripts" => $pages["publications"]["scripts"],
-			"content" => $pages["publications"]["content"]
-		));
-	}
-
-	function historyPage() {
-		global $twig;
-		global $pages;
-
-		echo $twig->render("base.html", array(
-			"title" => $pages["history"]["title"], 
-			"header" => $pages["history"]["header"],
-			"scripts" => $pages["history"]["scripts"],
-			"content" => $pages["history"]["content"]
-		));
-	}
-
-	function linksPage() {
-		global $twig;
-		global $pages;
-
-		echo $twig->render("base.html", array(
-			"title" => $pages["links"]["title"], 
-			"header" => $pages["links"]["header"],
-			"scripts" => $pages["links"]["scripts"],
-			"content" => $pages["links"]["content"]
-		));
-	}
-
-	function contactPage() {
-		global $twig;
-		global $pages;
-
-		echo $twig->render("base.html", array(
-			"title" => $pages["contact"]["title"], 
-			"header" => $pages["contact"]["header"],
-			"scripts" => $pages["contact"]["scripts"],
-			"content" => $pages["contact"]["content"]
-		));
-	}
-
 	// Route Handling
 	// ===================================================
 
 	$match = $router->match();
 
 	if($match && is_callable($match["target"])) {
-		call_user_func_array($match["target"], $match["params"]); 
+		if($match["target"] == "databasePage") {
+			array_push($match["params"], $match["name"]);
+			call_user_func_array($match["target"], $match["params"]);
+		} else {
+			call_user_func_array($match["target"], $match["params"]);
+		}
 	} else {
 		$twig->render("404.html");
 	}

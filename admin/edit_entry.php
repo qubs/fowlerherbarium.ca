@@ -5,7 +5,7 @@
 	session_start();
 
 	if(!isset($_SESSION["user"])) {
-		header('Location: index.php');
+		header("Location: index.php");
 	}
 
 	$mysqli = mysqli_connect($_DATABASE_HOST, $_DATABASE_USER, $_DATABASE_PASS, $_DATABASE_DEFAULT);
@@ -15,7 +15,7 @@
 	$mysqli->set_charset("utf8");
 
 	if(!isset($_GET["id"])) {
-		header('Location: main.php');
+		header("Location: main.php");
 	}
 
 	$id = intval($mysqli->real_escape_string($_GET["id"]));
@@ -41,7 +41,7 @@
 	$specimen = $fetch_specimen->fetch_assoc();
 
 	$page = "editentry";
-	require_once('./header.php');
+	require_once("./header.php");
 ?>
 <h2>Edit Entry "<em><?php echo $specimen["genus"] . " " . $specimen["species"]; ?></em>" (Web ID: <?php echo $specimen["web_id"]; ?>)</h2>
 <form action="edit_entry.php" class="box">
@@ -81,7 +81,7 @@
 			</div>
 			<div class="row">
 				<div class="col col50 noPad padRight">
-					<label for="map_included"><input type="checkbox" name="map_included" <?php if($specimen["map_included"] == 'yes') { ?>checked<?php } ?>> Map Included</label>
+					<label for="map_included"><input type="checkbox" name="map_included" <?php if($specimen["map_included"] == "yes") { ?>checked<?php } ?>> Map Included</label>
 				</div><div class="col col50 noPad padLeft">
 					<label for="map_reference">Map Reference <div class="help"><div><?php echo $field_info_assoc["map_reference"]["help"]; ?></div></div></label>
 					<input type="text" name="map_reference" value="<?php echo $specimen["map_reference"]; ?>">

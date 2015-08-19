@@ -66,7 +66,7 @@
 	$fetch_page = $mysqli->query($query);
 
 	if($fetch_page->num_rows == 0) {
-		header('Location: main.php');
+		header("Location: main.php");
 	}
 
 	$pageObj = $fetch_page->fetch_assoc();

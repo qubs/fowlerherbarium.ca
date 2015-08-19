@@ -45,7 +45,7 @@
 		// }
 	}
 
-	$fetch_all_users = $mysqli->query("SELECT * FROM fields");
+	$fetch_all_fields = $mysqli->query("SELECT * FROM fields");
 
 	$page = "fields";
 	require_once("./header.php");
@@ -80,14 +80,14 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php while($user = $fetch_all_users->fetch_assoc()) { ?>
+			<?php while($field = $fetch_all_fields->fetch_assoc()) { ?>
 				<tr>
-					<td><?=$user['id']?></td>
-					<td><?=$user['field']?></td>
-					<td style="min-width: 160px;"><?=$user['label']?></td>
-					<td><p><?=$user['help']?></p></td>
-					<td><input type="checkbox" onclick="return false" <?php if($user['searchable'] == 1) { echo "checked"; } ?>></td>
-					<td style="min-width: 160px;"><button class="button" onclick="window.location = 'edit_field.php?id=<?php echo $user['id']; ?>'"><span class="icon-mode-edit"></span> Edit</button> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
+					<td><?=$field["id"]?></td>
+					<td><?=$field["field"]?></td>
+					<td style="min-width: 160px;"><?=$field["label"]?></td>
+					<td><p><?=$field["help"]?></p></td>
+					<td><input type="checkbox" onclick="return false" <?php if($field["searchable"] == 1) { echo "checked"; } ?>></td>
+					<td style="min-width: 160px;"><a class="button" href="edit_field.php?id=<?php echo $field["id"]; ?>"><span class="icon-mode-edit"></span> Edit</a> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
 				</tr>
 			<?php } ?>
 		</tbody>

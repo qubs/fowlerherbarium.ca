@@ -35,7 +35,7 @@
 						{title: "Image Align Left", selector: "img", classes: "alignLeft"},
 						{title: "Image Align Right", selector: "img", classes: "alignRighy"},
 
-						{title: 'Button', selector: 'a', classes: 'button'}
+						{title: "Button", selector: "a", classes: "button"}
 					]
 				});
 			});
@@ -51,7 +51,7 @@
 				<li<?php if($page == "users") { ?> class="active"<?php } ?>><a href="users.php"><span class="icon-people"></span> Users</a></li>
 				<li<?php if($page == "fields") { ?> class="active"<?php } ?>><a href="fields.php"><span class="icon-reorder"></span> Fields</a></li>
 				<li<?php if($page == "usersettings") { ?> class="active"<?php } ?>><a href="usersettings.php"><span class="icon-settings"></span> My Settings</a></li>
-				<li class="alignRight"><a href="logout.php">Log Out (<?php echo $_SESSION['user']; ?>)</a></li>
+				<li class="alignRight"><a href="logout.php">Log Out (<?php echo $_SESSION["user"]; ?>)</a></li>
 				<?php } ?>
 			</ul>
 		</nav>

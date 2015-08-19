@@ -1,13 +1,13 @@
 <?php
-	require_once('../config.php');
-	require_once('../shared.php');
+	require_once("../config.php");
+	require_once("../shared.php");
 
-	require_once('./includes/PasswordHash.php');
+	require_once("./includes/PasswordHash.php");
 
 	session_start();
 
-	if(isset($_SESSION['user'])) {
-		header('Location: main.php');
+	if(isset($_SESSION["user"])) {
+		header("Location: main.php");
 	}
 
 	$mysqli = mysqli_connect($_DATABASE_HOST, $_DATABASE_USER, $_DATABASE_PASS, $_DATABASE_DEFAULT);
@@ -19,35 +19,39 @@
 	if(isset($_POST['submit'])) {
 		$hasher = new PasswordHash($_HASH_COST, $_HASH_PORTABLE);
 
-		$username = $mysqli->real_escape_string($_POST['username']);
-		$password = $_POST['password'];
-		// echo $hasher->HashPassword($password);
+		$username = $_POST["username"];
+		$password = $_POST["password"];
 
 		$fail = false;
 		$error = "";
 
-		$fetch_user = $mysqli->query("SELECT * FROM users WHERE username = '$username'");
-		if($fetch_user->num_rows == 0) {
+		$fetchUser = $mysqli->prepare("SELECT * FROM users WHERE username = ?");
+		$fetchUser->bind_result("s", $username);
+		$fetchUser->execute();
+		$fetchUserResult = $fetchUser->get_result();
+
+		if($fetchUserResult->num_rows == 0) {
 			$fail = true;
 			$error = "No user with that username exists.";
 		} else {
-			$user = $fetch_user->fetch_assoc();
+			$user = $fetchUserResult->fetch_assoc();
+			$username = $user["username"];
 
-			if(!$hasher->CheckPassword($password, $user['password'])) {
+			if(!$hasher->CheckPassword($password, $user["password"])) {
 				$fail = true;
 				$error = "The password entered is incorrect.";
 			}
 		}
 
 		if(!$fail) {
-			$_SESSION['user'] = $username;
+			$_SESSION["user"] = $username;
 
-			header('Location: main.php');
+			header("Location: main.php");
 		}
 	}
 
 	$page = "login";
-	require_once('./header.php');
+	require_once("./header.php");
 ?>
 <form action="index.php" method="post">
 	<?php if($fail) { ?>
@@ -62,5 +66,5 @@
 	<button class="button" type="submit" name="submit">Log In</button>
 </form>
 <?php
-	require_once('./footer.php');
+	require_once("./footer.php");
 ?>
