@@ -110,7 +110,7 @@
 				<tr>
 					<td><?=$page["id"]?></td>
 					<td><?=$page["page_id"]?></td>
-					<td><input type="checkbox" <?php if($page["in_menu"] == 1) { ?>checked<?php } ?>></td>
+					<td><input type="checkbox" onclick="return false;" <?php if($page["in_menu"] == 1) { ?>checked<?php } ?>></td>
 					<td><?=$page["title"]?></td>
 					<td><?=$page["header"]?></td>
 					<td><?=$page["routes"]?></td>
