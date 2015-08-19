@@ -89,7 +89,7 @@
 			</div>
 			<label for="image">Image</label>
 			<input type="file" name="image" value="<?php echo $specimen["image"]; ?>">
-			<button class="button"><span class="icon-done"></span> Save Changes</button>
+			<button class="button"><span class="icon-done"></span> Save Changes</button> <a class="button" href="main.php"><span class="icon-highlight-remove"></span> Cancel</a>
 		</div><div class="col col50">
 			<div class="row">
 				<div class="col col50 noPad padRight">
@@ -109,6 +109,4 @@
 		</div>
 	</div>
 </form>
-<?php
-	require_once("./footer.php");
-?>
+<?php require_once("./footer.php"); ?>

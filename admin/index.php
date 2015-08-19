@@ -65,6 +65,4 @@
 	<br>
 	<button class="button" type="submit" name="submit">Log In</button>
 </form>
-<?php
-	require_once("./footer.php");
-?>
+<?php require_once("./footer.php"); ?>

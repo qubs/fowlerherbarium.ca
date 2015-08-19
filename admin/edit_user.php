@@ -44,7 +44,7 @@
 			<label for="email" class="required">Email</label>
 			<input type="email" name="email" required value="<?php echo $user["email"]; ?>">
 			<br>
-			<button class="button" type="submit" name="submit"><span class="icon-done"></span> Save Changes</button>
+			<button class="button" type="submit" name="submit"><span class="icon-done"></span> Save Changes</button> <a class="button" href="users.php"><span class="icon-highlight-remove"></span> Cancel</a>
 		</div><!-- <div class="col col50">
 			<label for="password" class="required">Password</label>
 			<input type="password" name="password" required>
@@ -53,6 +53,4 @@
 		</div> -->
 	</div>
 </form>
-<?php
-	require_once('./footer.php');
-?>
+<?php require_once("./footer.php"); ?>

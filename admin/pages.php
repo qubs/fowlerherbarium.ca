@@ -97,6 +97,8 @@
 		<thead>
 			<tr>
 				<th>ID</th>
+				<th>Page ID</th>
+				<th>In Menu?</th>
 				<th>Title</th>
 				<th>Header</th>
 				<th>Routes</th>
@@ -107,6 +109,8 @@
 			<?php while($page = $fetch_pages->fetch_assoc()) { ?>
 				<tr>
 					<td><?=$page["id"]?></td>
+					<td><?=$page["page_id"]?></td>
+					<td><input type="checkbox" <?php if($page["in_menu"] == 1) { ?>checked<?php } ?>></td>
 					<td><?=$page["title"]?></td>
 					<td><?=$page["header"]?></td>
 					<td><?=$page["routes"]?></td>
