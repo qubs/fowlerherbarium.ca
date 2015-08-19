@@ -26,6 +26,12 @@
 		$pages[$page["page_id"]] = $page;
 	}
 
+	$fetchMenuPages = $mysqli->query("SELECT * FROM pages WHERE in_menu = 1 ORDER BY menu_order ASC");
+	$menuPages = array();
+	while($menuPage = $fetchMenuPages->fetch_assoc()) {
+		array_push($menuPages, $menuPage);
+	}
+
 	$fieldData = fetchFieldData($mysqli, true);
 
 	// Routing
@@ -47,11 +53,13 @@
 	// ===================================================
 
 	function databasePage($targetPage) {
+		global $menuPages;
 		global $twig;
 		global $pages;
 		global $fieldData;
 
 		echo $twig->render("base.html", array(
+			"menuPages" => $menuPages,
 			"title" => $pages[$targetPage]["title"], 
 			"header" => $pages[$targetPage]["header"],
 			"scripts" => $pages[$targetPage]["scripts"],
@@ -60,21 +68,8 @@
 		));
 	}
 
-	function searchPage() {
-		global $twig;
-		global $pages;
-		global $fieldData;
-
-		echo $twig->render("base.html", array(
-			"title" => $pages["search"]["title"], 
-			"header" => $pages["search"]["header"],
-			"scripts" => $pages["search"]["scripts"],
-			"content" => $pages["search"]["content"],
-			"fieldData" => $fieldData
-		));
-	}
-
 	function specimenRender($id) {
+		global $menuPages;
 		global $twig;
 		global $pages;
 		global $mysqli;
@@ -83,11 +78,14 @@
 		$fetchSpecimen = $mysqli->query("SELECT * FROM specimens WHERE web_id = " . $mysqli->real_escape_string($id) . " LIMIT 1");
 		$specimen = $fetchSpecimen->fetch_assoc();
 
-		return $twig->render("specimen.html", array("fieldData" => $fieldData, "specimen" => $specimen));
+		return $twig->render("specimen.html", array("menuPages" => $menuPages, "fieldData" => $fieldData, "specimen" => $specimen));
 	}
 	function specimenPage($id) {
+		global $menuPages;
 		global $twig;
+
 		echo $twig->render("base.html", array(
+			"menuPages" => $menuPages,
 			"title" => $pages["specimen"]["title"], 
 			"header" => $pages["specimen"]["header"],
 			"scripts" => $pages["specimen"]["scripts"],
