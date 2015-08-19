@@ -20,9 +20,18 @@
 		$title = $_POST["title"];
 		$old_title = $_POST["old_title"];
 		$header = $_POST["header"];
+		$in_menu = $_POST["in_menu"];
+		$menu_order = filter_var($_POST["menu_order"], FILTER_VALIDATE_INT, array("options" => array("default" => -1)));
+		$menu_icon = $_POST["menu_icon"];
 		$routes = $_POST["routes"];
 		$scripts = $_POST["scripts"];
 		$content = $_POST["content"];
+
+		$in_menu_bool = 0;
+
+		if($in_menu == "1") {
+			$in_menu_bool = 1;
+		}
 
 		$dead = false;
 		$error = "";
@@ -47,8 +56,8 @@
 		}
 
 		if(!$dead) {
-			$update_page = $mysqli->prepare("UPDATE pages SET title = ?, header = ?, routes = ?, scripts = ?, content = ? WHERE id = ? LIMIT 1");
-			$update_page->bind_param("sssssi", $title, $header, $routes, $scripts, $content, $id);
+			$update_page = $mysqli->prepare("UPDATE pages SET title = ?, header = ?, in_menu = ?, menu_order = ?, menu_icon = ?, routes = ?, scripts = ?, content = ? WHERE id = ? LIMIT 1");
+			$update_page->bind_param("ssiissssi", $title, $header, $in_menu_bool, $menu_order, $menu_icon, $routes, $scripts, $content, $id);
 			$update_page->execute();
 			$update_page->close();
 
@@ -87,6 +96,17 @@
 			<input type="text" name="title" value="<?php echo $pageObj["title"]; ?>" required>
 			<label for="header" class="required">Header</label>
 			<input type="text" name="header" value="<?php echo $pageObj["header"]; ?>" required>
+			<div class="row">
+				<div class="col col33 noPad padRight">
+					<label><input type="checkbox" name="in_menu" value="1" <?php if($pageObj["in_menu"] == 1) { echo "checked"; } ?>> Show in menu?</label>
+				</div><div class="col col33 noPad">
+					<label for="menu_order">Order in Menu</label>
+					<input type="number" name="menu_order" value="<?php echo $pageObj["menu_order"]; ?>">
+				</div><div class="col col33 noPad padLeft">
+					<label for="menu_icon">Menu Icon</label>
+					<input type="text" name="menu_icon" value="<?php echo $pageObj["menu_icon"]; ?>">
+				</div>
+			</div>
 			<label for="routes">Routes</label>
 			<textarea name="routes" rows="3"><?php echo $pageObj["routes"]; ?></textarea>
 			<label for="scripts">Scripts</label>

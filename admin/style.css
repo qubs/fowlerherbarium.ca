@@ -314,14 +314,14 @@ footer {
 	font-size: 1.1em;
 }
 
-input[type="text"], input[type="password"], input[type="file"], input[type="email"] {
+input[type="text"], input[type="password"], input[type="file"], input[type="email"], input[type="number"] {
 	padding: 5px;
 	font-family: "Open Sans", sans-serif;
 	border: 1px solid #CCC;
 	outline: 0;
 	background-color: #F9F9F9;
 }
-input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
+input[type="text"]:focus, input[type="password"]:focus, input[type="file"]:focus, input[type="email"]:focus, input[type="number"]:focus, textarea:focus {
 	border-color: #2196F3;
 }
 
@@ -398,6 +398,9 @@ label .help:before {
 	position: relative;
 	top: 1px;
 }
+label input[type="checkbox"] {
+	vertical-align: top;
+}
 
 a {
 	color: #2196F3;
@@ -470,6 +473,6 @@ a {
 .col.col66 { width: 66.6%; }
 .col.col70 { width: 70%; }
 
-.col input[type="text"], .col input[type="file"], .col input[type="password"], .col input[type="email"], .col textarea {
+.col input[type="text"], .col input[type="file"], .col input[type="password"], .col input[type="email"], .col input[type="number"], .col textarea {
 	width: 100%;
 }

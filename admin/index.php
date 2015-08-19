@@ -16,7 +16,9 @@
 	}
 	$mysqli->set_charset("utf8");
 
-	if(isset($_POST['submit'])) {
+	$fail = false;
+
+	if(isset($_POST["submit"])) {
 		$hasher = new PasswordHash($_HASH_COST, $_HASH_PORTABLE);
 
 		$username = $_POST["username"];
@@ -26,7 +28,7 @@
 		$error = "";
 
 		$fetchUser = $mysqli->prepare("SELECT * FROM users WHERE username = ?");
-		$fetchUser->bind_result("s", $username);
+		$fetchUser->bind_param("s", $username);
 		$fetchUser->execute();
 		$fetchUserResult = $fetchUser->get_result();
 
