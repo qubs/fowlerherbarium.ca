@@ -1,14 +1,19 @@
-function FHSearch(params) {
-	var FHS = this;
+"use strict";
 
-	FHS.page = 1;
-	FHS.maxPage = 1;
-	FHS.itemsPerPage = 100;
-	FHS.pagination = false;
+/**
+ * The Fowler Herbarium Search object constructor.
+ * @param params A list of parameters for constructing the object.
+ * @constructor
+ */
+var FHSearch = function(params) {
+	this.page = 1;
+	this.maxPage = 1;
+	this.itemsPerPage = 100;
+	this.pagination = false;
 
-	FHS.container = document.querySelector(params["selector"]);
+	this.container = document.querySelector(params["selector"]);
 
-	FHS.equivLabels = {
+	this.equivLabels = {
 		"equal": "exactly equals",
 		"notequal": "does not equal",
 		"contains": "contains",
@@ -17,720 +22,542 @@ function FHSearch(params) {
 		"end": "ends with"
 	};
 
-	FHS.fieldData = [];
-
-	FHS.refreshHash = function() {
-		var booleans = [];
-		$("[name='boolean[]']").each(function() {
-			booleans.push(this.value);
-		});
-
-		var fields = [];
-		$("[name='field[]']").each(function() {
-			fields.push(this.value);
-		});
-
-		var matches = [];
-		$("[name='match[]']").each(function() {
-			matches.push(this.value);
-		});
-
-		var parameters = [];
-		$("[name='parameter[]']").each(function() {
-			parameters.push(this.value);
-		});
-
-		var hashObject = {
-			"boolean[]": booleans, 
-			"field[]": fields, 
-			"match[]": matches, 
-			"parameter[]": parameters,
-			"page": FHS.page
-		};
-
-		window.location.hash = JSON.stringify(hashObject);
-	}
-
-	FHS.setPage = function(pageNo) {
-		var startOfOldPage = ((FHS.page - 1) * FHS.itemsPerPage) + 1;
-		var endOfOldPage = (FHS.page * FHS.itemsPerPage);
-
-		for(var i = startOfOldPage; i <= endOfOldPage; i++) {
-			if(document.getElementById("specimen" + i.toString()) !== null) {
-				document.getElementById("specimen" + i.toString()).style.display = "none";
-			}
-		}
-
-		FHS.page = pageNo;
-
-		var startOfPage = ((FHS.page - 1) * FHS.itemsPerPage) + 1;
-		var endOfPage = (FHS.page * FHS.itemsPerPage);
-
-		for(var i = startOfPage; i <= endOfPage; i++) {
-			if(document.getElementById("specimen" + i.toString()) !== null) {
-				document.getElementById("specimen" + i.toString()).style.display = "block";
-			}
-		}
-
-		$("#bBeforeBtn").text((FHS.page - 2).toString());
-		$("#beforeBtn").text((FHS.page - 1).toString());
-		$("#currentPage").text(FHS.page.toString());
-		$("#afterBtn").text((FHS.page + 1).toString());
-		$("#aAfterBtn").text((FHS.page + 2).toString());
-
-		if(FHS.page == 1) {
-			$("#prevPageBtn").attr("disabled", "disabled");
-			$("#prevPageBtn").addClass("disabled");
-			$("#beforeBtn").css("display", "none");
-			$("#beforeBtn").parent().css("borderRightWidth", "0");
-			$("#aAfterBtn").css("display", "inline-block");
-			$("#aAfterBtn").parent().css("borderRightWidth", "1px");
-		} else {
-			$("#prevPageBtn").removeAttr("disabled");
-			$("#prevPageBtn").removeClass("disabled");
-			$("#beforeBtn").css("display", "inline-block");
-			$("#beforeBtn").parent().css("borderRightWidth", "1px");
-			$("#aAfterBtn").css("display", "none");
-			$("#aAfterBtn").parent().css("borderRightWidth", "0");
-		}
-
-		if(FHS.page == FHS.maxPage) {
-			$("#nextPageBtn").attr("disabled", "disabled");
-			$("#nextPageBtn").addClass("disabled");
-			$("#afterBtn").css("display", "none");
-			$("#afterBtn").parent().css("borderRightWidth", "0");
-			$("#bBeforeBtn").css("display", "inline-block");
-			$("#bBeforeBtn").parent().css("borderRightWidth", "1px");
-		} else {
-			$("#nextPageBtn").removeAttr("disabled");
-			$("#nextPageBtn").removeClass("disabled");
-			$("#afterBtn").css("display", "inline-block");
-			$("#afterBtn").parent().css("borderRightWidth", "1px");
-			$("#bBeforeBtn").css("display", "none");
-			$("#bBeforeBtn").parent().css("borderRightWidth", "0");
-		}
-
-		// Special conditions for 2 pages
-
-		if(FHS.page == 1 && FHS.maxPage == 2) {
-			$("#aAfterBtn").css("display", "none");
-			$("#aAfterBtn").parent().css("borderRightWidth", "0");
-		} else if(FHS.page == 2 && FHS.maxPage == 2) {
-			$("#bBeforeBtn").css("display", "none");
-			$("#bBeforeBtn").parent().css("borderRightWidth", "0");
-		}
-
-		FHS.refreshHash();
-	};
-
-	FHS.nextPage = function() {
-		if(FHS.page < FHS.maxPage) {
-			FHS.setPage(FHS.page + 1);
-		}
-
-	};
-	FHS.prevPage = function() {
-		if(FHS.page > 1) {
-			FHS.setPage(FHS.page - 1);
-		}
-	};
-	FHS.firstPage = function() {
-		FHS.setPage(1);
-	};
-	FHS.lastPage = function() {
-		FHS.setPage(FHS.maxPage);
-	};
-
-	FHS.buildFilter = function(boolVal, fieldVal, matchTypeVal, paramVal) {
-		boolVal = typeof boolVal !== "undefined" ? boolVal : "AND";
-		fieldVal = typeof fieldVal !== "undefined" ? fieldVal : "genus";
-		matchTypeVal = typeof matchTypeVal !== "undefined" ? matchTypeVal : "equal";
-		paramVal = typeof paramVal !== "undefined" ? paramVal : "";
-
-		// Create search restriction element and subelements
-
-		var searchRestriction = document.createElement("li");
-		searchRestriction.setAttribute("class", "searchRestriction");
-
-		var boolSelect = document.createElement("select");
-		boolSelect.setAttribute("name", "boolean[]");
-		boolSelect.setAttribute("class", "andOr");
-
-		var boolAnd = document.createElement("option");
-		boolAnd.setAttribute("value", "AND");
-		boolAnd.appendChild(document.createTextNode("AND"));
-
-		var boolOr = document.createElement("option");
-		boolOr.setAttribute("value", "OR");
-		boolOr.appendChild(document.createTextNode("OR"));
-
-		if(boolVal === "OR") {
-			boolOr.setAttribute("selected", "selected");
-		} else {
-			boolAnd.setAttribute("selected", "selected");
-		}
-
-		boolSelect.appendChild(boolAnd);
-		boolSelect.appendChild(boolOr);
-
-		searchRestriction.appendChild(boolSelect);
-		searchRestriction.appendChild(document.createTextNode(" "));
-
-		var boolSpacing = document.createElement("div");
-		boolSpacing.setAttribute("class", "booleanSpacing");
-		boolSpacing.appendChild(document.createTextNode("⋮"));
-
-		searchRestriction.appendChild(boolSpacing);
-
-		var fieldSelect = document.createElement("select");
-		fieldSelect.setAttribute("name", "field[]");
-		fieldSelect.setAttribute("class", "field");
-
-		for(var f in FHS.fieldData) {
-			var fieldOption = document.createElement("option");
-			fieldOption.setAttribute("value", FHS.fieldData[f]["field"]);
-			fieldOption.setAttribute("data-inputtype", FHS.fieldData[f]["input"]);
-
-			if(FHS.fieldData[f]["field"] == fieldVal) {
-				fieldOption.setAttribute("selected", "selected");
-			}
-
-			fieldOption.appendChild(document.createTextNode(FHS.fieldData[f]["label"]));
-			fieldSelect.appendChild(fieldOption);
-		}
-
-		searchRestriction.appendChild(fieldSelect);
-		searchRestriction.appendChild(document.createTextNode(" "));
-
-		var matchSelect = document.createElement("select");
-		matchSelect.setAttribute("name", "match[]");
-		matchSelect.setAttribute("class", "match");
-
-		for(var e in FHS.equivLabels) {
-			var matchOption = document.createElement("option");
-			matchOption.setAttribute("value", e);
-			if(e == matchTypeVal) {
-				matchOption.setAttribute("selected", "selected");
-			}
-			
-			if(e === "contains" || e === "notcontains" || e === "start" || e === "end") {
-				matchOption.setAttribute("class", "disableForSelect");
-			}
-			
-			matchOption.appendChild(document.createTextNode(FHS.equivLabels[e]));
-			matchSelect.appendChild(matchOption);
-		}
-
-		searchRestriction.appendChild(matchSelect);
-		searchRestriction.appendChild(document.createTextNode(" "));
-
-		var parameterInput = document.createElement("input");
-		parameterInput.setAttribute("type", "text");
-		parameterInput.setAttribute("name", "parameter[]");
-		parameterInput.setAttribute("class", "parameter");
-		parameterInput.setAttribute("value", paramVal);
-
-		searchRestriction.appendChild(parameterInput);
-
-		var searchRestrictionDelete = document.createElement("button");
-		searchRestrictionDelete.setAttribute("type", "button");
-		searchRestrictionDelete.setAttribute("class", "searchRestrictionDelete");
-
-		var searchRestrictionDeleteIcon = document.createElement("span");
-		searchRestrictionDeleteIcon.setAttribute("class", "icon-highlight-remove");
-
-		searchRestrictionDelete.appendChild(searchRestrictionDeleteIcon);
-		searchRestrictionDelete.appendChild(document.createTextNode(" Delete"));
-		searchRestriction.appendChild(searchRestrictionDelete);
-
-		return searchRestriction;
-	};
-
-	FHS.addFilter = function(boolVal, fieldVal, matchTypeVal, paramVal) {
-		FHS.searchRestrictions.appendChild(FHS.buildFilter(boolVal, fieldVal, matchTypeVal, paramVal));
-	};
+	this.fieldData = [];
 
 	$.get("/fielddata.php", {
 		"search": "true"
-	}).done(function(data) {
-		FHS.fieldData = data;
+	}).done(this.processCall.bind(this));
+};
 
-		// Build the search form dynamically.
-		// ---------------------------------------------------
+FHSearch.prototype.processCall = function(data) {
+	var FHS = this;
 
-		var searchForm = document.createElement("form"); // <form id="searchForm" name="searchForm" action="/search/" method="post">
-		searchForm.setAttribute("id", "searchForm");
-		searchForm.setAttribute("name", "searchForm");
-		searchForm.setAttribute("method", "post");
-		searchForm.setAttribute("action", "/search/");
+	this.fieldData = data;
 
-		var exportType = document.createElement("input"); // <input type="hidden" name="type" id="exportType" value="">
-		exportType.setAttribute("type", "hidden");
-		exportType.setAttribute("id", "exportType");
-		exportType.setAttribute("name", "type");
-		exportType.setAttribute("value", "");
+	// Build the search form dynamically.
+	// ---------------------------------------------------
 
-		searchForm.appendChild(exportType);
+	// <form id="searchForm" name="searchForm" action="/search/" method="post">
+	var searchForm = document.createElement("form");
+	searchForm.setAttribute("id", "searchForm");
+	searchForm.setAttribute("name", "searchForm");
+	searchForm.setAttribute("method", "post");
+	searchForm.setAttribute("action", "/search/");
 
-		var searchRestrictions = document.createElement("ul"); // <ul class="searchRestrictions">
-		searchRestrictions.setAttribute("id", "searchRestrictions");
+	// <input type="hidden" name="type" id="exportType" value="">
+	var exportType = document.createElement("input");
+	exportType.setAttribute("type", "hidden");
+	exportType.setAttribute("id", "exportType");
+	exportType.setAttribute("name", "type");
+	exportType.setAttribute("value", "");
 
-		var firstRestriction = document.createElement("li");
-		firstRestriction.setAttribute("class", "searchRestriction firstRestriction"); // <li class="searchRestriction firstRestriction">
+	searchForm.appendChild(exportType);
 
-		var boolean0 = document.createElement("input");
-		boolean0.setAttribute("type", "hidden");
-		boolean0.setAttribute("id", "boolean0");
-		boolean0.setAttribute("name", "boolean[]");
-		boolean0.setAttribute("value", "");
+	// <ul class="searchRestrictions">
+	var searchRestrictions = document.createElement("ul");
+	searchRestrictions.setAttribute("id", "searchRestrictions");
 
-		firstRestriction.appendChild(boolean0);
+	// <li class="searchRestriction firstRestriction">
+	var firstRestriction = document.createElement("li");
+	firstRestriction.setAttribute("class", "searchRestriction firstRestriction");
 
-		var field0 = document.createElement("select"); // <select name="field[]" class="field" id="field0">
-		field0.setAttribute("id", "field0");
-		field0.setAttribute("name", "field[]");
-		field0.setAttribute("class", "field");
+	var boolean0 = document.createElement("input");
+	boolean0.setAttribute("type", "hidden");
+	boolean0.setAttribute("id", "boolean0");
+	boolean0.setAttribute("name", "boolean[]");
+	boolean0.setAttribute("value", "");
 
-		for(var f in FHS.fieldData) {
+	firstRestriction.appendChild(boolean0);
+
+	// <select name="field[]" class="field" id="field0">
+	var field0 = document.createElement("select");
+	field0.setAttribute("id", "field0");
+	field0.setAttribute("name", "field[]");
+	field0.setAttribute("class", "field");
+
+	for(var f in this.fieldData) {
+		if(this.fieldData.hasOwnProperty(f)) {
 			var opt = document.createElement("option");
-			opt.setAttribute("value", FHS.fieldData[f]["field"]);
-			opt.setAttribute("data-inputtype", FHS.fieldData[f]["input"]);
-			if(FHS.fieldData[f]["field"] === "genus") {
+			opt.setAttribute("value", this.fieldData[f]["field"]);
+			opt.setAttribute("data-inputtype", this.fieldData[f]["input"]);
+			if (this.fieldData[f]["field"] === "genus") {
 				opt.setAttribute("selected", "selected");
 			}
-			opt.appendChild(document.createTextNode(FHS.fieldData[f]["label"]));
+			opt.appendChild(document.createTextNode(this.fieldData[f]["label"]));
 
 			field0.appendChild(opt);
 		}
+	}
 
-		firstRestriction.appendChild(field0);
-		firstRestriction.appendChild(document.createTextNode(" "));
+	firstRestriction.appendChild(field0);
+	firstRestriction.appendChild(document.createTextNode(" "));
 
-		var helpDisplay = document.createElement("div"); // <div class="help" id="helpDisplay"><div></div></div>
-		helpDisplay.setAttribute("id", "helpDisplay");
-		helpDisplay.setAttribute("class", "help");
+	// <div class="help" id="helpDisplay"><div></div></div>
+	var helpDisplay = document.createElement("div");
+	helpDisplay.setAttribute("id", "helpDisplay");
+	helpDisplay.setAttribute("class", "help");
 
-		var helpInner = document.createElement("div");
-		helpDisplay.appendChild(helpInner);
+	var helpInner = document.createElement("div");
+	helpDisplay.appendChild(helpInner);
 
-		firstRestriction.appendChild(helpDisplay);
-		firstRestriction.appendChild(document.createTextNode(" "));
+	firstRestriction.appendChild(helpDisplay);
+	firstRestriction.appendChild(document.createTextNode(" "));
 
-		var match0 = document.createElement("select"); // <select name="match[]" class="match" id="match0">
-		match0.setAttribute("id", "match0");
-		match0.setAttribute("name", "match[]");
-		match0.setAttribute("class", "match");
+	// <select name="match[]" class="match" id="match0">
+	var match0 = document.createElement("select");
+	match0.setAttribute("id", "match0");
+	match0.setAttribute("name", "match[]");
+	match0.setAttribute("class", "match");
 
-		for(var e in FHS.equivLabels) {
+	for(var e in this.equivLabels) {
+		if(this.equivLabels.hasOwnProperty(e)) {
 			var option_equiv = document.createElement("option");
 			option_equiv.setAttribute("value", e);
-			option_equiv.appendChild(document.createTextNode(FHS.equivLabels[e]));
+			option_equiv.appendChild(document.createTextNode(this.equivLabels[e]));
 
 			match0.appendChild(option_equiv);
 		}
+	}
 
-		firstRestriction.appendChild(match0);
+	firstRestriction.appendChild(match0);
 
-		var parameter0 = document.createElement("input"); // <input type="text" name="parameter[]" class="parameter" id="parameter0">
-		parameter0.setAttribute("type", "text");
-		parameter0.setAttribute("id", "parameter0");
-		parameter0.setAttribute("name", "parameter[]");
-		parameter0.setAttribute("class", "parameter");
+	// <input type="text" name="parameter[]" class="parameter" id="parameter0">
+	var parameter0 = document.createElement("input");
+	parameter0.setAttribute("type", "text");
+	parameter0.setAttribute("id", "parameter0");
+	parameter0.setAttribute("name", "parameter[]");
+	parameter0.setAttribute("class", "parameter");
 
-		firstRestriction.appendChild(parameter0);
-		searchRestrictions.appendChild(firstRestriction);
-		searchForm.appendChild(searchRestrictions);
+	firstRestriction.appendChild(parameter0);
+	searchRestrictions.appendChild(firstRestriction);
+	searchForm.appendChild(searchRestrictions);
 
-		var submitBtn = document.createElement("button"); // <button type="submit" name="submitBtn" onclick="window.search.firstPage();"><span class="icon-search"></span> Search</button>
-		submitBtn.setAttribute("type", "submit");
-		submitBtn.setAttribute("name", "submitBtn");
-		submitBtn.setAttribute("onclick", "window.search.firstPage();");
+	// <button type="submit" name="submitBtn" onclick="window.search.firstPage();">
+	//     <span class="icon-search"></span> Search
+	// </button>
+	var submitBtn = document.createElement("button");
+	submitBtn.setAttribute("type", "submit");
+	submitBtn.setAttribute("name", "submitBtn");
+	submitBtn.setAttribute("onclick", "window.search.firstPage();");
 
-		var submitBtnIcon = document.createElement("span");
-		submitBtnIcon.setAttribute("class", "icon-search");
+	var submitBtnIcon = document.createElement("span");
+	submitBtnIcon.setAttribute("class", "icon-search");
 
-		submitBtn.appendChild(submitBtnIcon);
-		submitBtn.appendChild(document.createTextNode(" Search"));
+	submitBtn.appendChild(submitBtnIcon);
+	submitBtn.appendChild(document.createTextNode(" Search"));
 
-		searchForm.appendChild(submitBtn);
-		searchForm.appendChild(document.createTextNode(" "));
+	searchForm.appendChild(submitBtn);
+	searchForm.appendChild(document.createTextNode(" "));
 
-		var addFilter = document.createElement("button");
-		addFilter.setAttribute("type", "button");
-		addFilter.setAttribute("id", "addFilter");
-		addFilter.appendChild(document.createTextNode("+ Add Filter"));
+	var addFilterBtn = document.createElement("button");
+	addFilterBtn.setAttribute("type", "button");
+	addFilterBtn.setAttribute("id", "addFilter");
+	addFilterBtn.appendChild(document.createTextNode("+ Add Filter"));
 
-		searchForm.appendChild(addFilter);
+	searchForm.appendChild(addFilterBtn);
 
-		var loading = document.createElement("div");
-		loading.setAttribute("id", "loading");
-		loading.setAttribute("style", "display: none;");
-		loading.appendChild(document.createTextNode("Loading..."));
+	var loading = document.createElement("div");
+	loading.setAttribute("id", "loading");
+	loading.setAttribute("style", "display: none;");
+	loading.appendChild(document.createTextNode("Loading..."));
 
-		searchForm.appendChild(loading);
+	searchForm.appendChild(loading);
 
-		var searchResults = document.createElement("div");
-		searchResults.setAttribute("id", "searchResults");
+	var searchResults = document.createElement("div");
+	searchResults.setAttribute("id", "searchResults");
 
-		var searchResultsHeader = document.createElement("h2");
-		searchResultsHeader.appendChild(document.createTextNode("Search Results "));
+	var searchResultsHeader = document.createElement("h2");
+	searchResultsHeader.appendChild(document.createTextNode("Search Results "));
 
-		var exportCSV = document.createElement("button");
-		exportCSV.setAttribute("type", "button");
-		exportCSV.setAttribute("onclick", "$('#exportType').attr('value', 'csv'); $('#searchForm').attr('action', '/export/'); $('#searchForm').attr('method', 'get'); $('#searchForm').submit(); $('#exportType').attr('value', ''); $('#searchForm').attr('action', '/search/'); $('#searchForm').attr('method', 'post');");
-		exportCSV.appendChild(document.createTextNode("Export as CSV"));
-		searchResultsHeader.appendChild(exportCSV);
+	var exportCSV = document.createElement("button");
+	exportCSV.setAttribute("type", "button");
+	exportCSV.addEventListener("click", function () {
+		$('#exportType').attr('value', 'csv');
+		$('#searchForm').attr('action', '/export/');
+		$('#searchForm').attr('method', 'get');
+		$('#searchForm').submit();
 
-		var exportJSON = document.createElement("button");
-		exportJSON.setAttribute("type", "button");
-		exportJSON.setAttribute("onclick", "$('#exportType').attr('value', 'json'); $('#searchForm').attr('action', '/export/'); $('#searchForm').attr('method', 'get'); $('#searchForm').submit(); $('#exportType').attr('value', ''); $('#searchForm').attr('action', '/search/'); $('#searchForm').attr('method', 'post');");
-		exportJSON.appendChild(document.createTextNode("Export as JSON"));
-		searchResultsHeader.appendChild(exportJSON);
+		$('#exportType').attr('value', '');
+		$('#searchForm').attr('action', '/search/');
+		$('#searchForm').attr('method', 'post');
+	});
+	exportCSV.appendChild(document.createTextNode("Export as CSV"));
+	searchResultsHeader.appendChild(exportCSV);
 
-		var exportXML = document.createElement("button");
-		exportXML.setAttribute("type", "button");
-		exportXML.setAttribute("onclick", "$('#exportType').attr('value', 'xml'); $('#searchForm').attr('action', '/export/'); $('#searchForm').attr('method', 'get'); $('#searchForm').submit(); $('#exportType').attr('value', ''); $('#searchForm').attr('action', '/search/'); $('#searchForm').attr('method', 'post');");
-		exportXML.appendChild(document.createTextNode("Export as XML"));
-		searchResultsHeader.appendChild(exportXML);
+	var exportJSON = document.createElement("button");
+	exportJSON.setAttribute("type", "button");
+	exportJSON.addEventListener("click", function () {
+		$('#exportType').attr('value', 'json');
+		$('#searchForm').attr('action', '/export/');
+		$('#searchForm').attr('method', 'get');
+		$('#searchForm').submit();
 
-		searchResults.appendChild(searchResultsHeader);
+		$('#exportType').attr('value', '');
+		$('#searchForm').attr('action', '/search/');
+		$('#searchForm').attr('method', 'post');
+	});
+	exportJSON.appendChild(document.createTextNode("Export as JSON"));
+	searchResultsHeader.appendChild(exportJSON);
 
-		var resultsContainer = document.createElement("div");
-		resultsContainer.setAttribute("id", "resultsContainer");
+	var exportXML = document.createElement("button");
+	exportXML.setAttribute("type", "button");
+	exportXML.addEventListener("click", function () {
+		$('#exportType').attr('value', 'xml');
+		$('#searchForm').attr('action', '/export/');
+		$('#searchForm').attr('method', 'get');
+		$('#searchForm').submit();
 
-		searchResults.appendChild(resultsContainer);
-		searchForm.appendChild(searchResults);
+		$('#exportType').attr('value', '');
+		$('#searchForm').attr('action', '/search/');
+		$('#searchForm').attr('method', 'post');
+	});
+	exportXML.appendChild(document.createTextNode("Export as XML"));
+	searchResultsHeader.appendChild(exportXML);
 
-		var pagination = document.createElement("ul");
-		pagination.setAttribute("id", "pagination");
-		pagination.setAttribute("style", "display: none;");
+	searchResults.appendChild(searchResultsHeader);
 
-		// Pagination buttons
+	var resultsContainer = document.createElement("div");
+	resultsContainer.setAttribute("id", "resultsContainer");
 
-		var firstPageLI = document.createElement("li");
-		var firstPageBtn = document.createElement("button");
-		firstPageBtn.setAttribute("type", "button");
-		firstPageBtn.setAttribute("onclick", "window.search.firstPage();");
-		firstPageBtn.appendChild(document.createTextNode("« First"));
+	searchResults.appendChild(resultsContainer);
+	searchForm.appendChild(searchResults);
 
-		firstPageLI.appendChild(firstPageBtn);
-		pagination.appendChild(firstPageLI);
+	var pagination = document.createElement("ul");
+	pagination.setAttribute("id", "pagination");
+	pagination.setAttribute("style", "display: none;");
 
-		var prevPageLI = document.createElement("li");
-		var prevPageBtn = document.createElement("button");
-		prevPageBtn.setAttribute("type", "button");
-		prevPageBtn.setAttribute("id", "prevPageBtn");
-		prevPageBtn.setAttribute("onclick", "window.search.prevPage();");
-		prevPageBtn.appendChild(document.createTextNode("‹ Previous"));
+	// Pagination buttons
 
-		prevPageLI.appendChild(prevPageBtn);
-		pagination.appendChild(prevPageLI);
+	var firstPageLI = document.createElement("li");
+	var firstPageBtn = document.createElement("button");
+	firstPageBtn.setAttribute("type", "button");
+	firstPageBtn.setAttribute("onclick", "window.search.firstPage();");
+	firstPageBtn.appendChild(document.createTextNode("« First"));
 
-		var bBeforeLI = document.createElement("li");
-		var bBeforeBtn = document.createElement("button");
-		bBeforeBtn.setAttribute("type", "button");
-		bBeforeBtn.setAttribute("id", "bBeforeBtn");
-		bBeforeBtn.setAttribute("onclick", "window.search.setPage(window.search.page - 2);");
+	firstPageLI.appendChild(firstPageBtn);
+	pagination.appendChild(firstPageLI);
 
-		bBeforeLI.appendChild(bBeforeBtn);
-		pagination.appendChild(bBeforeLI);
+	var prevPageLI = document.createElement("li");
+	var prevPageBtn = document.createElement("button");
+	prevPageBtn.setAttribute("type", "button");
+	prevPageBtn.setAttribute("id", "prevPageBtn");
+	prevPageBtn.setAttribute("onclick", "window.search.prevPage();");
+	prevPageBtn.appendChild(document.createTextNode("‹ Previous"));
 
-		var beforeLI = document.createElement("li");
-		var beforeBtn = document.createElement("button");
-		beforeBtn.setAttribute("type", "button");
-		beforeBtn.setAttribute("id", "beforeBtn");
-		beforeBtn.setAttribute("onclick", "window.search.prevPage();");
+	prevPageLI.appendChild(prevPageBtn);
+	pagination.appendChild(prevPageLI);
 
-		beforeLI.appendChild(beforeBtn);
-		pagination.appendChild(beforeLI);
+	var bBeforeLI = document.createElement("li");
+	var bBeforeBtn = document.createElement("button");
+	bBeforeBtn.setAttribute("type", "button");
+	bBeforeBtn.setAttribute("id", "bBeforeBtn");
+	bBeforeBtn.setAttribute("onclick", "window.search.setPage(window.search.page - 2);");
 
-		var currentPageLI = document.createElement("li");
-		var currentPageBtn = document.createElement("button");
-		currentPageBtn.setAttribute("type", "button");
-		currentPageBtn.setAttribute("id", "currentPage");
-		currentPageBtn.setAttribute("class", "active");
-		currentPageBtn.setAttribute("onclick", "");
-		currentPageBtn.appendChild(document.createTextNode("1"));
+	bBeforeLI.appendChild(bBeforeBtn);
+	pagination.appendChild(bBeforeLI);
 
-		currentPageLI.appendChild(currentPageBtn);
-		pagination.appendChild(currentPageLI);
+	var beforeLI = document.createElement("li");
+	var beforeBtn = document.createElement("button");
+	beforeBtn.setAttribute("type", "button");
+	beforeBtn.setAttribute("id", "beforeBtn");
+	beforeBtn.setAttribute("onclick", "window.search.prevPage();");
 
-		var afterLI = document.createElement("li");
-		var afterBtn = document.createElement("button");
-		afterBtn.setAttribute("type", "button");
-		afterBtn.setAttribute("id", "afterBtn");
-		afterBtn.setAttribute("onclick", "window.search.nextPage();");
-		afterBtn.appendChild(document.createTextNode("2"));
+	beforeLI.appendChild(beforeBtn);
+	pagination.appendChild(beforeLI);
 
-		afterLI.appendChild(afterBtn);
-		pagination.appendChild(afterLI);
+	var currentPageLI = document.createElement("li");
+	var currentPageBtn = document.createElement("button");
+	currentPageBtn.setAttribute("type", "button");
+	currentPageBtn.setAttribute("id", "currentPage");
+	currentPageBtn.setAttribute("class", "active");
+	currentPageBtn.setAttribute("onclick", "");
+	currentPageBtn.appendChild(document.createTextNode("1"));
 
-		var aAfterLI = document.createElement("li");
-		var aAfterBtn = document.createElement("button");
-		aAfterBtn.setAttribute("type", "button");
-		aAfterBtn.setAttribute("id", "aAfterBtn");
-		aAfterBtn.setAttribute("onclick", "window.search.setPage(window.search.page + 2);");
+	currentPageLI.appendChild(currentPageBtn);
+	pagination.appendChild(currentPageLI);
 
-		aAfterLI.appendChild(aAfterBtn);
-		pagination.appendChild(aAfterLI);
+	var afterLI = document.createElement("li");
+	var afterBtn = document.createElement("button");
+	afterBtn.setAttribute("type", "button");
+	afterBtn.setAttribute("id", "afterBtn");
+	afterBtn.setAttribute("onclick", "window.search.nextPage();");
+	afterBtn.appendChild(document.createTextNode("2"));
 
-		var nextPageLI = document.createElement("li");
-		var nextPageBtn = document.createElement("button");
-		nextPageBtn.setAttribute("type", "button");
-		nextPageBtn.setAttribute("id", "nextPageBtn");
-		nextPageBtn.setAttribute("onclick", "window.search.nextPage();");
-		nextPageBtn.appendChild(document.createTextNode("Next ›"));
+	afterLI.appendChild(afterBtn);
+	pagination.appendChild(afterLI);
 
-		nextPageLI.appendChild(nextPageBtn);
-		pagination.appendChild(nextPageLI);
+	var aAfterLI = document.createElement("li");
+	var aAfterBtn = document.createElement("button");
+	aAfterBtn.setAttribute("type", "button");
+	aAfterBtn.setAttribute("id", "aAfterBtn");
+	aAfterBtn.setAttribute("onclick", "window.search.setPage(window.search.page + 2);");
 
-		var lastPageLI = document.createElement("li");
-		var lastPageBtn = document.createElement("button");
-		lastPageBtn.setAttribute("type", "button");
-		lastPageBtn.setAttribute("onclick", "window.search.lastPage();");
-		lastPageBtn.appendChild(document.createTextNode("Last »"));
+	aAfterLI.appendChild(aAfterBtn);
+	pagination.appendChild(aAfterLI);
 
-		lastPageLI.appendChild(lastPageBtn);
-		pagination.appendChild(lastPageLI);
+	var nextPageLI = document.createElement("li");
+	var nextPageBtn = document.createElement("button");
+	nextPageBtn.setAttribute("type", "button");
+	nextPageBtn.setAttribute("id", "nextPageBtn");
+	nextPageBtn.setAttribute("onclick", "window.search.nextPage();");
+	nextPageBtn.appendChild(document.createTextNode("Next ›"));
 
-		searchForm.appendChild(pagination);
+	nextPageLI.appendChild(nextPageBtn);
+	pagination.appendChild(nextPageLI);
 
-		FHS.container.innerHTML = "";
-		FHS.container.appendChild(searchForm);
+	var lastPageLI = document.createElement("li");
+	var lastPageBtn = document.createElement("button");
+	lastPageBtn.setAttribute("type", "button");
+	lastPageBtn.setAttribute("onclick", "window.search.lastPage();");
+	lastPageBtn.appendChild(document.createTextNode("Last »"));
 
-		// ---------------------------------------------------
+	lastPageLI.appendChild(lastPageBtn);
+	pagination.appendChild(lastPageLI);
 
-		FHS.searchForm = document.getElementById("searchForm");
-		FHS.searchRestrictions = document.getElementById("searchRestrictions");
-		FHS.resultsContainer = document.getElementById("resultsContainer");
-		FHS.searchResults = document.getElementById("searchResults");
+	searchForm.appendChild(pagination);
 
-		FHS.loadingAnimation = document.getElementById("loading");
+	this.container.innerHTML = "";
+	this.container.appendChild(searchForm);
 
-		// ---------------------------------------------------
+	// ---------------------------------------------------
 
-		FHS.searchResults.style.display = "none";
+	this.searchForm = document.getElementById("searchForm");
+	this.searchRestrictions = document.getElementById("searchRestrictions");
+	this.resultsContainer = document.getElementById("resultsContainer");
+	this.searchResults = document.getElementById("searchResults");
 
-		function makeSearchResult(searchResultNumber, data) {
-			var specimen = document.createElement("a");
-			specimen.setAttribute("id", "specimen" + searchResultNumber.toString());
-			specimen.setAttribute("class", "specimen");
-			specimen.setAttribute("href", "/specimen/" + data["web_id"] + "/");
+	this.loadingAnimation = document.getElementById("loading");
 
-			var specimenTitle = document.createElement("h3");
-			specimenTitle.appendChild(document.createTextNode(data["genus"] + " " + data["species"]));
-			specimen.appendChild(specimenTitle);
+	// ---------------------------------------------------
 
-			var accession = document.createElement("div");
-			accession.setAttribute("class", "accession");
-			var accessionLabel = document.createElement("span");
-			accessionLabel.appendChild(document.createTextNode("Accession #: "));
-			accession.appendChild(accessionLabel);
-			accession.appendChild(document.createTextNode(data["accession"]));
-			specimen.appendChild(accession);
+	this.searchResults.style.display = "none";
 
-			var dth = document.createElement("div");
-			dth.setAttribute("class", "dth");
-			var dthLabel = document.createElement("span");
-			dthLabel.appendChild(document.createTextNode("DTH #: "));
-			dth.appendChild(dthLabel);
-			dth.appendChild(document.createTextNode(data["DTH"]));
-			specimen.appendChild(dth);
+	function makeSearchResult(searchResultNumber, data) {
+		var specimen = document.createElement("a");
+		specimen.setAttribute("id", "specimen" + searchResultNumber.toString());
+		specimen.setAttribute("class", "specimen");
+		specimen.setAttribute("href", "/specimen/" + data["web_id"] + "/");
 
-			var dateCollected = document.createElement("div");
-			dateCollected.setAttribute("class", "date_collected");
-			var dateCollectedLabel = document.createElement("span");
-			dateCollectedLabel.appendChild(document.createTextNode("Date Collected: "));
-			dateCollected.appendChild(dateCollectedLabel);
-			dateCollected.appendChild(document.createTextNode(data["date_collected"]));
-			specimen.appendChild(dateCollected);
+		var specimenTitle = document.createElement("h3");
+		specimenTitle.appendChild(document.createTextNode(data["genus"] + " " + data["species"]));
+		specimen.appendChild(specimenTitle);
 
-			return specimen;
-		}
+		var accession = document.createElement("div");
+		accession.setAttribute("class", "accession");
+		var accessionLabel = document.createElement("span");
+		accessionLabel.appendChild(document.createTextNode("Accession #: "));
+		accession.appendChild(accessionLabel);
+		accession.appendChild(document.createTextNode(data["accession"]));
+		specimen.appendChild(accession);
 
-		// ---------------------------------------------------
+		var dth = document.createElement("div");
+		dth.setAttribute("class", "dth");
+		var dthLabel = document.createElement("span");
+		dthLabel.appendChild(document.createTextNode("DTH #: "));
+		dth.appendChild(dthLabel);
+		dth.appendChild(document.createTextNode(data["DTH"]));
+		specimen.appendChild(dth);
 
-		$(FHS.searchForm).submit(function(e) {
-			if(document.getElementById("exportType").value == "") {
-				e.preventDefault();
+		var dateCollected = document.createElement("div");
+		dateCollected.setAttribute("class", "date_collected");
+		var dateCollectedLabel = document.createElement("span");
+		dateCollectedLabel.appendChild(document.createTextNode("Date Collected: "));
+		dateCollected.appendChild(dateCollectedLabel);
+		dateCollected.appendChild(document.createTextNode(data["date_collected"]));
+		specimen.appendChild(dateCollected);
 
-				FHS.loadingAnimation.style.display = "block";
+		return specimen;
+	}
 
-				var booleans = [];
-				$("[name='boolean[]']").each(function() {
-					booleans.push(this.value);
-				});
+	// ---------------------------------------------------
 
-				var fields = [];
-				$("[name='field[]']").each(function() {
-					fields.push(this.value);
-				});
+	$(this.searchForm).submit((function(e) {
+		if(document.getElementById("exportType").value == "") {
+			e.preventDefault();
 
-				var matches = [];
-				$("[name='match[]']").each(function() {
-					matches.push(this.value);
-				});
+			this.loadingAnimation.style.display = "block";
 
-				var parameters = [];
-				$("[name='parameter[]']").each(function() {
-					parameters.push(this.value);
-				});
+			var booleans = [];
+			$("[name='boolean[]']").each(function() {
+				booleans.push(this.value);
+			});
 
-				$.get("/export/", {
-					"type": "json", 
-					"boolean[]": booleans, 
-					"field[]": fields, 
-					"match[]": matches, 
-					"parameter[]": parameters
-				}).done(function(data) {
-					FHS.resultsContainer.innerHTML = "";
+			var fields = [];
+			$("[name='field[]']").each(function() {
+				fields.push(this.value);
+			});
 
-					var numberOfResults = data.length;
-					FHS.maxPage = Math.ceil(numberOfResults / FHS.itemsPerPage);
+			var matches = [];
+			$("[name='match[]']").each(function() {
+				matches.push(this.value);
+			});
 
-					if(data.length > 0) {
-						var i = 1;
-						for(var d in data) {
-							FHS.resultsContainer.appendChild(makeSearchResult(i, data[d]));
-							i++;
-						}
-					} else {
-						FHS.resultsContainer.innerHTML = "<strong>No specimens were found with those parameters.</strong>";
+			var parameters = [];
+			$("[name='parameter[]']").each(function() {
+				parameters.push(this.value);
+			});
+
+			var processExport = (function(data) {
+				this.resultsContainer.innerHTML = "";
+
+				var numberOfResults = data.length;
+				this.maxPage = Math.ceil(numberOfResults / this.itemsPerPage);
+
+				if(data.length > 0) {
+					var i = 1;
+					for(var d in data) {
+						this.resultsContainer.appendChild(makeSearchResult(i, data[d]));
+						i++;
 					}
-
-					FHS.loadingAnimation.style.display = "none";
-					FHS.searchResults.style.display = "block";
-
-					if(numberOfResults > FHS.itemsPerPage) {
-						FHS.pagination = true;
-						$("#pagination").css("display", "block");
-						$(".specimen").css("display", "none");
-
-						var startOfPage = ((FHS.page - 1) * FHS.itemsPerPage) + 1;
-						var endOfPage = (FHS.page * FHS.itemsPerPage);
-
-						for(var i = startOfPage; i <= endOfPage; i++) {
-							$("#specimen" + i.toString()).css("display", "block");
-						}
-
-						$("#bBeforeBtn").text((FHS.page - 2).toString());
-						$("#beforeBtn").text((FHS.page - 1).toString());
-						$("#currentPage").text(FHS.page.toString());
-						$("#afterBtn").text((FHS.page + 1).toString());
-						$("#aAfterBtn").text((FHS.page + 2).toString());
-
-						if(FHS.page == 1) {
-							$("#prevPageBtn").attr("disabled", "disabled");
-							$("#prevPageBtn").addClass("disabled");
-							$("#beforeBtn").css("display", "none");
-							$("#beforeBtn").parent().css("borderRightWidth", "0");
-							$("#aAfterBtn").css("display", "inline-block");
-							$("#aAfterBtn").parent().css("borderRightWidth", "1px");
-						} else {
-							$("#prevPageBtn").removeAttr("disabled");
-							$("#prevPageBtn").removeClass("disabled");
-							$("#beforeBtn").css("display", "inline-block");
-							$("#beforeBtn").parent().css("borderRightWidth", "1px");
-							$("#aAfterBtn").css("display", "none");
-							$("#aAfterBtn").parent().css("borderRightWidth", "0");
-						}
-
-						if(FHS.page == FHS.maxPage) {
-							$("#nextPageBtn").attr("disabled", "disabled");
-							$("#nextPageBtn").addClass("disabled");
-							$("#afterBtn").css("display", "none");
-							$("#afterBtn").parent().css("borderRightWidth", "0");
-							$("#bBeforeBtn").css("display", "inline-block");
-							$("#bBeforeBtn").parent().css("borderRightWidth", "1px");
-						} else {
-							$("#nextPageBtn").removeAttr("disabled");
-							$("#nextPageBtn").removeClass("disabled");
-							$("#afterBtn").css("display", "inline-block");
-							$("#afterBtn").parent().css("borderRightWidth", "1px");
-							$("#bBeforeBtn").css("display", "none");
-							$("#bBeforeBtn").parent().css("borderRightWidth", "0");
-						}
-
-						// Special conditions for 2 pages
-
-						if(FHS.page == 1 && FHS.maxPage == 2) {
-							$("#aAfterBtn").css("display", "none");
-							$("#aAfterBtn").parent().css("borderRightWidth", "0");
-						} else if(FHS.page == 2 && FHS.maxPage == 2) {
-							$("#bBeforeBtn").css("display", "none");
-							$("#bBeforeBtn").parent().css("borderRightWidth", "0");
-						}
-					}
-
-					var hashObject = {
-						"boolean[]": booleans, 
-						"field[]": fields, 
-						"match[]": matches, 
-						"parameter[]": parameters
-					};
-
-					if(numberOfResults > FHS.itemsPerPage) {
-						hashObject["page"] = FHS.page;
-					}
-
-					window.location.hash = JSON.stringify(hashObject);
-				});
-			}
-		});
-
-		if(window.location.hash != "" && window.location.hash != "#") {
-			var searchParams = JSON.parse(window.location.hash.substring(1));
-
-			if(searchParams.hasOwnProperty("page")) {
-				FHS.page = searchParams["page"];
-			}
-
-			for(var i = 0; i < searchParams["boolean[]"].length; i++) {
-				if(i == 0) {
-					document.getElementById("boolean0").value = searchParams["boolean[]"][i];
-					document.getElementById("field0").value = searchParams["field[]"][i];
-					document.getElementById("match0").value = searchParams["match[]"][i];
-					document.getElementById("parameter0").value = searchParams["parameter[]"][i];
 				} else {
-					FHS.addFilter(searchParams["boolean[]"][i], searchParams["field[]"][i], searchParams["match[]"][i], searchParams["parameter[]"][i])
+					this.resultsContainer.innerHTML = "<strong>No specimens were found with those parameters.</strong>";
 				}
-			}
 
-			$(FHS.searchForm).submit();
-		} else if(document.getElementById("parameter0").value != "") {
-			$(FHS.searchForm).submit();
+				this.loadingAnimation.style.display = "none";
+				this.searchResults.style.display = "block";
+
+				if(numberOfResults > this.itemsPerPage) {
+					this.pagination = true;
+					$("#pagination").css("display", "block");
+					$(".specimen").css("display", "none");
+
+					var startOfPage = ((this.page - 1) * this.itemsPerPage) + 1;
+					var endOfPage = (this.page * this.itemsPerPage);
+
+					for(var i = startOfPage; i <= endOfPage; i++) {
+						$("#specimen" + i.toString()).css("display", "block");
+					}
+
+					$("#bBeforeBtn").text((this.page - 2).toString());
+					$("#beforeBtn").text((this.page - 1).toString());
+					$("#currentPage").text(this.page.toString());
+					$("#afterBtn").text((this.page + 1).toString());
+					$("#aAfterBtn").text((this.page + 2).toString());
+
+					if(this.page == 1) {
+						$("#prevPageBtn").attr("disabled", "disabled");
+						$("#prevPageBtn").addClass("disabled");
+						$("#beforeBtn").css("display", "none");
+						$("#beforeBtn").parent().css("borderRightWidth", "0");
+						$("#aAfterBtn").css("display", "inline-block");
+						$("#aAfterBtn").parent().css("borderRightWidth", "1px");
+					} else {
+						$("#prevPageBtn").removeAttr("disabled");
+						$("#prevPageBtn").removeClass("disabled");
+						$("#beforeBtn").css("display", "inline-block");
+						$("#beforeBtn").parent().css("borderRightWidth", "1px");
+						$("#aAfterBtn").css("display", "none");
+						$("#aAfterBtn").parent().css("borderRightWidth", "0");
+					}
+
+					if(this.page == this.maxPage) {
+						$("#nextPageBtn").attr("disabled", "disabled");
+						$("#nextPageBtn").addClass("disabled");
+						$("#afterBtn").css("display", "none");
+						$("#afterBtn").parent().css("borderRightWidth", "0");
+						$("#bBeforeBtn").css("display", "inline-block");
+						$("#bBeforeBtn").parent().css("borderRightWidth", "1px");
+					} else {
+						$("#nextPageBtn").removeAttr("disabled");
+						$("#nextPageBtn").removeClass("disabled");
+						$("#afterBtn").css("display", "inline-block");
+						$("#afterBtn").parent().css("borderRightWidth", "1px");
+						$("#bBeforeBtn").css("display", "none");
+						$("#bBeforeBtn").parent().css("borderRightWidth", "0");
+					}
+
+					// Special conditions for 2 pages
+
+					if(this.page == 1 && this.maxPage == 2) {
+						$("#aAfterBtn").css("display", "none");
+						$("#aAfterBtn").parent().css("borderRightWidth", "0");
+					} else if(this.page == 2 && this.maxPage == 2) {
+						$("#bBeforeBtn").css("display", "none");
+						$("#bBeforeBtn").parent().css("borderRightWidth", "0");
+					}
+				}
+
+				var hashObject = {
+					"boolean[]": booleans,
+					"field[]": fields,
+					"match[]": matches,
+					"parameter[]": parameters
+				};
+
+				if(numberOfResults > this.itemsPerPage) {
+					hashObject["page"] = this.page;
+				}
+
+				window.location.hash = JSON.stringify(hashObject);
+			}).bind(this);
+
+			$.get("/export/", {
+				"type": "json",
+				"boolean[]": booleans,
+				"field[]": fields,
+				"match[]": matches,
+				"parameter[]": parameters
+			}).done(processExport);
+		}
+	}).bind(this));
+
+	if(window.location.hash != "" && window.location.hash != "#") {
+		var searchParams = JSON.parse(window.location.hash.substring(1));
+
+		if(searchParams.hasOwnProperty("page")) {
+			this.page = searchParams["page"];
 		}
 
-		function updateInputTypeOnParameter(obj) {
-			var inputType = $(obj).children("option:selected").data("inputtype");
-			var fieldName = $(obj).children("option:selected")[0].value;
-			var help = $("#helpDisplay");
+		for(var i = 0; i < searchParams["boolean[]"].length; i++) {
+			if(i == 0) {
+				document.getElementById("boolean0").value = searchParams["boolean[]"][i];
+				document.getElementById("field0").value = searchParams["field[]"][i];
+				document.getElementById("match0").value = searchParams["match[]"][i];
+				document.getElementById("parameter0").value = searchParams["parameter[]"][i];
+			} else {
+				this.addFilter(searchParams["boolean[]"][i], searchParams["field[]"][i], searchParams["match[]"][i],
+					searchParams["parameter[]"][i])
+			}
+		}
 
-			for(var f in FHS.fieldData) {
-				if(FHS.fieldData[f]["field"] == fieldName) {
+		$(this.searchForm).submit();
+	} else if(document.getElementById("parameter0").value != "") {
+		$(this.searchForm).submit();
+	}
+
+	function updateInputTypeOnParameter(obj) {
+		var inputType = $(obj).children("option:selected").data("inputtype");
+		var fieldName = $(obj).children("option:selected")[0].value;
+		var help = $("#helpDisplay");
+
+		for(var f in FHS.fieldData) {
+			if(FHS.fieldData.hasOwnProperty(f)) {
+				if (FHS.fieldData[f]["field"] == fieldName) {
 					help.children("div").html(FHS.fieldData[f]["help"]);
 				}
 			}
+		}
 
-			if(inputType == "select") {
-				var include0id = false;
-				if($(obj).parent().children(".parameter")[0].id == "parameter0") {
-					include0id = true;
-				}
+		if(inputType == "select") {
+			var include0id = false;
+			if($(obj).parent().children(".parameter")[0].id == "parameter0") {
+				include0id = true;
+			}
 
-				$(obj).parent().children(".parameter").remove();
+			$(obj).parent().children(".parameter").remove();
 
-				var parameterSelect = document.createElement("select");
-				parameterSelect.setAttribute("name", "parameter[]");
-				parameterSelect.setAttribute("class", "parameter select");
-				if(include0id) {
-					parameterSelect.setAttribute("id", "parameter0");
-				}
+			var parameterSelect = document.createElement("select");
+			parameterSelect.setAttribute("name", "parameter[]");
+			parameterSelect.setAttribute("class", "parameter select");
+			if(include0id) {
+				parameterSelect.setAttribute("id", "parameter0");
+			}
 
-				for(var f in FHS.fieldData) {
-					if(FHS.fieldData[f]["field"] === obj.value) {
+			for(var f in FHS.fieldData) {
+				if(FHS.fieldData.hasOwnProperty(f)) {
+					if (FHS.fieldData[f]["field"] === obj.value) {
 						var splitOptions = FHS.fieldData[f]["options"].split(",");
-						for(var o in splitOptions) { 
+						for (var o in splitOptions) {
 							var parameterOption = document.createElement("option");
 							parameterOption.setAttribute("value", splitOptions[o]);
 							parameterOption.appendChild(document.createTextNode(splitOptions[o]));
@@ -738,48 +565,320 @@ function FHSearch(params) {
 						}
 					}
 				}
-
-				$(obj).parent()[0].appendChild(parameterSelect);
-				$(obj).parent().children("select").children(".disableForSelect").each(function() {
-					$(this).attr("disabled", "disabled");
-				});
-			} else {
-				if($(obj).parent().children(".parameter").hasClass("select")) {
-					$(obj).parent().children(".parameter").remove();
-
-					var input = document.createElement("input");
-					input.setAttribute("type", "text");
-					input.setAttribute("name", "parameter[]");
-					input.setAttribute("class", "parameter");
-
-					$(obj).parent()[0].appendChild(input);
-				}
-				$(obj).parent().children(".parameter").attr("type", inputType);
-
-				$(obj).parent().children("select").children(".disableForSelect").each(function() {
-					$(this).removeAttr("disabled");
-				});
 			}
-		}
 
-		$(".field").change(function() {
-			updateInputTypeOnParameter(this);
-		});
-		$(".field").change();
-
-		$("#addFilter").click(function() {
-			FHS.addFilter();
-
-			$(".searchRestrictionDelete").click(function() {
-				$(this).parent().remove();
+			$(obj).parent()[0].appendChild(parameterSelect);
+			$(obj).parent().children("select").children(".disableForSelect").each(function() {
+				$(this).attr("disabled", "disabled");
 			});
-		});
+		} else {
+			if($(obj).parent().children(".parameter").hasClass("select")) {
+				$(obj).parent().children(".parameter").remove();
+
+				var input = document.createElement("input");
+				input.setAttribute("type", "text");
+				input.setAttribute("name", "parameter[]");
+				input.setAttribute("class", "parameter");
+
+				$(obj).parent()[0].appendChild(input);
+			}
+			$(obj).parent().children(".parameter").attr("type", inputType);
+
+			$(obj).parent().children("select").children(".disableForSelect").each(function() {
+				$(this).removeAttr("disabled");
+			});
+		}
+	}
+
+	$(".field").change(function() {
+		updateInputTypeOnParameter(this);
+	});
+	$(".field").change();
+
+	$("#addFilter").click(function() {
+		FHS.addFilter();
+
 		$(".searchRestrictionDelete").click(function() {
 			$(this).parent().remove();
 		});
-
-		$(FHS.searchRestrictions).sortable({
-			items: "li:not(.firstRestriction)"
-		});
 	});
-}
+	$(".searchRestrictionDelete").click(function() {
+		$(this).parent().remove();
+	});
+
+	$(this.searchRestrictions).sortable({
+		items: "li:not(.firstRestriction)"
+	});
+};
+
+/**
+ * Moves the search results object to the next page.
+ */
+FHSearch.prototype.nextPage = function() {
+	if(this.page < this.maxPage) {
+		this.setPage(this.page + 1);
+	}
+
+};
+
+/**
+ * Moves the search results object to the previous page.
+ */
+FHSearch.prototype.prevPage = function() {
+	if(this.page > 1) {
+		this.setPage(this.page - 1);
+	}
+};
+
+/**
+ * Moves the search results object to the first page.
+ */
+FHSearch.prototype.firstPage = function() {
+	this.setPage(1);
+};
+
+/**
+ * Moves the search results object to the last page.
+ */
+FHSearch.prototype.lastPage = function() {
+	this.setPage(this.maxPage);
+};
+
+/**
+ * Refreshes the results URL hash.
+ */
+FHSearch.prototype.refreshHash = function() {
+	var booleans = [];
+	$("[name='boolean[]']").each(function() {
+		booleans.push(this.value);
+	});
+
+	var fields = [];
+	$("[name='field[]']").each(function() {
+		fields.push(this.value);
+	});
+
+	var matches = [];
+	$("[name='match[]']").each(function() {
+		matches.push(this.value);
+	});
+
+	var parameters = [];
+	$("[name='parameter[]']").each(function() {
+		parameters.push(this.value);
+	});
+
+	var hashObject = {
+		"boolean[]": booleans,
+		"field[]": fields,
+		"match[]": matches,
+		"parameter[]": parameters,
+		"page": this.page
+	};
+
+	window.location.hash = JSON.stringify(hashObject);
+};
+
+/**
+ * Sets the search results object's current page.
+ * @param pageNo The page to move to.
+ */
+FHSearch.prototype.setPage = function(pageNo) {
+	var startOfOldPage = ((this.page - 1) * this.itemsPerPage) + 1;
+	var endOfOldPage = (this.page * this.itemsPerPage);
+
+	for(var o = startOfOldPage; o <= endOfOldPage; o++) {
+		if(document.getElementById("specimen" + o.toString()) !== null) {
+			document.getElementById("specimen" + o.toString()).style.display = "none";
+		}
+	}
+
+	this.page = pageNo;
+
+	var startOfPage = ((this.page - 1) * this.itemsPerPage) + 1;
+	var endOfPage = (this.page * this.itemsPerPage);
+
+	for(var p = startOfPage; p <= endOfPage; p++) {
+		if(document.getElementById("specimen" + p.toString()) !== null) {
+			document.getElementById("specimen" + p.toString()).style.display = "block";
+		}
+	}
+
+	$("#bBeforeBtn").text((this.page - 2).toString());
+	$("#beforeBtn").text((this.page - 1).toString());
+	$("#currentPage").text(this.page.toString());
+	$("#afterBtn").text((this.page + 1).toString());
+	$("#aAfterBtn").text((this.page + 2).toString());
+
+	if(this.page == 1) {
+		$("#prevPageBtn").attr("disabled", "disabled");
+		$("#prevPageBtn").addClass("disabled");
+		$("#beforeBtn").css("display", "none");
+		$("#beforeBtn").parent().css("borderRightWidth", "0");
+		$("#aAfterBtn").css("display", "inline-block");
+		$("#aAfterBtn").parent().css("borderRightWidth", "1px");
+	} else {
+		$("#prevPageBtn").removeAttr("disabled");
+		$("#prevPageBtn").removeClass("disabled");
+		$("#beforeBtn").css("display", "inline-block");
+		$("#beforeBtn").parent().css("borderRightWidth", "1px");
+		$("#aAfterBtn").css("display", "none");
+		$("#aAfterBtn").parent().css("borderRightWidth", "0");
+	}
+
+	if(this.page == this.maxPage) {
+		$("#nextPageBtn").attr("disabled", "disabled");
+		$("#nextPageBtn").addClass("disabled");
+		$("#afterBtn").css("display", "none");
+		$("#afterBtn").parent().css("borderRightWidth", "0");
+		$("#bBeforeBtn").css("display", "inline-block");
+		$("#bBeforeBtn").parent().css("borderRightWidth", "1px");
+	} else {
+		$("#nextPageBtn").removeAttr("disabled");
+		$("#nextPageBtn").removeClass("disabled");
+		$("#afterBtn").css("display", "inline-block");
+		$("#afterBtn").parent().css("borderRightWidth", "1px");
+		$("#bBeforeBtn").css("display", "none");
+		$("#bBeforeBtn").parent().css("borderRightWidth", "0");
+	}
+
+	// Special conditions for 2 pages
+
+	if(this.page == 1 && this.maxPage == 2) {
+		$("#aAfterBtn").css("display", "none");
+		$("#aAfterBtn").parent().css("borderRightWidth", "0");
+	} else if(this.page == 2 && this.maxPage == 2) {
+		$("#bBeforeBtn").css("display", "none");
+		$("#bBeforeBtn").parent().css("borderRightWidth", "0");
+	}
+
+	this.refreshHash();
+};
+
+/**
+ * Builds a new filter DOM object for the search form.
+ * @param boolVal
+ * @param fieldVal
+ * @param matchTypeVal
+ * @param paramVal
+ * @returns {Element}
+ */
+FHSearch.prototype.buildFilter = function(boolVal, fieldVal, matchTypeVal, paramVal) {
+	boolVal = typeof boolVal !== "undefined" ? boolVal : "AND";
+	fieldVal = typeof fieldVal !== "undefined" ? fieldVal : "genus";
+	matchTypeVal = typeof matchTypeVal !== "undefined" ? matchTypeVal : "equal";
+	paramVal = typeof paramVal !== "undefined" ? paramVal : "";
+
+	// Create search restriction element and subelements
+
+	var searchRestriction = document.createElement("li");
+	searchRestriction.setAttribute("class", "searchRestriction");
+
+	var boolSelect = document.createElement("select");
+	boolSelect.setAttribute("name", "boolean[]");
+	boolSelect.setAttribute("class", "andOr");
+
+	var boolAnd = document.createElement("option");
+	boolAnd.setAttribute("value", "AND");
+	boolAnd.appendChild(document.createTextNode("AND"));
+
+	var boolOr = document.createElement("option");
+	boolOr.setAttribute("value", "OR");
+	boolOr.appendChild(document.createTextNode("OR"));
+
+	if(boolVal === "OR") {
+		boolOr.setAttribute("selected", "selected");
+	} else {
+		boolAnd.setAttribute("selected", "selected");
+	}
+
+	boolSelect.appendChild(boolAnd);
+	boolSelect.appendChild(boolOr);
+
+	searchRestriction.appendChild(boolSelect);
+	searchRestriction.appendChild(document.createTextNode(" "));
+
+	var boolSpacing = document.createElement("div");
+	boolSpacing.setAttribute("class", "booleanSpacing");
+	boolSpacing.appendChild(document.createTextNode("⋮"));
+
+	searchRestriction.appendChild(boolSpacing);
+
+	var fieldSelect = document.createElement("select");
+	fieldSelect.setAttribute("name", "field[]");
+	fieldSelect.setAttribute("class", "field");
+
+	for(var f in this.fieldData) {
+		if(this.fieldData.hasOwnProperty(f)) {
+			var fieldOption = document.createElement("option");
+			fieldOption.setAttribute("value", this.fieldData[f]["field"]);
+			fieldOption.setAttribute("data-inputtype", this.fieldData[f]["input"]);
+
+			if (this.fieldData[f]["field"] == fieldVal) {
+				fieldOption.setAttribute("selected", "selected");
+			}
+
+			fieldOption.appendChild(document.createTextNode(this.fieldData[f]["label"]));
+			fieldSelect.appendChild(fieldOption);
+		}
+	}
+
+	searchRestriction.appendChild(fieldSelect);
+	searchRestriction.appendChild(document.createTextNode(" "));
+
+	var matchSelect = document.createElement("select");
+	matchSelect.setAttribute("name", "match[]");
+	matchSelect.setAttribute("class", "match");
+
+	for(var e in this.equivLabels) {
+		if(this.equivLabels.hasOwnProperty(e)) {
+			var matchOption = document.createElement("option");
+			matchOption.setAttribute("value", e);
+			if (e == matchTypeVal) {
+				matchOption.setAttribute("selected", "selected");
+			}
+
+			if (e === "contains" || e === "notcontains" || e === "start" || e === "end") {
+				matchOption.setAttribute("class", "disableForSelect");
+			}
+
+			matchOption.appendChild(document.createTextNode(this.equivLabels[e]));
+			matchSelect.appendChild(matchOption);
+		}
+	}
+
+	searchRestriction.appendChild(matchSelect);
+	searchRestriction.appendChild(document.createTextNode(" "));
+
+	var parameterInput = document.createElement("input");
+	parameterInput.setAttribute("type", "text");
+	parameterInput.setAttribute("name", "parameter[]");
+	parameterInput.setAttribute("class", "parameter");
+	parameterInput.setAttribute("value", paramVal);
+
+	searchRestriction.appendChild(parameterInput);
+
+	var searchRestrictionDelete = document.createElement("button");
+	searchRestrictionDelete.setAttribute("type", "button");
+	searchRestrictionDelete.setAttribute("class", "searchRestrictionDelete");
+
+	var searchRestrictionDeleteIcon = document.createElement("span");
+	searchRestrictionDeleteIcon.setAttribute("class", "icon-highlight-remove");
+
+	searchRestrictionDelete.appendChild(searchRestrictionDeleteIcon);
+	searchRestrictionDelete.appendChild(document.createTextNode(" Delete"));
+	searchRestriction.appendChild(searchRestrictionDelete);
+
+	return searchRestriction;
+};
+
+/**
+ * Adds a filter to the search form.
+ * @param boolVal
+ * @param fieldVal
+ * @param matchTypeVal
+ * @param paramVal
+ */
+FHSearch.prototype.addFilter = function(boolVal, fieldVal, matchTypeVal, paramVal) {
+	this.searchRestrictions.appendChild(this.buildFilter(boolVal, fieldVal, matchTypeVal, paramVal));
+};
