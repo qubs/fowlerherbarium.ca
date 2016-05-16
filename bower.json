@@ -1,0 +1,26 @@
+{
+  "name": "fowler-herbarium",
+  "authors": [
+    "David Lougheed <david.lougheed@gmail.com>"
+  ],
+  "description": "Website for the Queen's University Fowler Herbarium.",
+  "main": "index.php",
+  "keywords": [
+    "herbarium"
+  ],
+  "license": "All rights reserved.",
+  "homepage": "http://fowlerherbarium.ca",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^1",
+    "tinymce": "^4.3.12",
+    "jquery-ui": "^1.11.4"
+  }
+}
