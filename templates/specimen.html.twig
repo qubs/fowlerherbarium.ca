@@ -1,3 +1,8 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ specimen.genus }} {{ specimen.species }} ({{ specimen.accession }}){% endblock %}
+
+{% block content %}
 <button type="button" onclick="window.history.back();">&larr; Back</button>
 <div class="specimenFull">
 	<h3>{{ specimen.genus }} {{ specimen.species }}</h3>
@@ -17,10 +22,16 @@
 						{% endif %}
 					</td>
 					<td>
-						{% if f.field != "image" %}
-							{{ specimen[f.field] }}
-						{% else %}
-							<img src="/uploads/{{ specimen[f.field] }}">
+						{#
+							Don't bother rendering fields that are blank. This doesn't matter for text but for image and
+						 	other field displays this could cause display issues.
+						 #}
+						{% if specimen[f.field] is not empty %}
+							{% if f.field != "image" %}
+								{{ specimen[f.field] }}
+							{% else %}
+								<img src="/uploads/{{ specimen[f.field] }}">
+							{% endif %}
 						{% endif %}
 					</td>
 				</tr>
@@ -28,6 +39,9 @@
 		</tbody>
 	</table><div class="wiki">
 		<h4>From Wikipedia</h4>
-		<iframe src="http://en.m.wikipedia.org/wiki/{{ (specimen.genus ~ " " ~ specimen.species) | replace({" ": "_"}) }}" frameborder="0"></iframe>
+		<iframe src="http://en.m.wikipedia.org/wiki/{{ (specimen.genus ~ " " ~ specimen.species) | replace({" ": "_"}) }}"
+				frameborder="0"></iframe>
 	</div>
 </div>
+{% endblock %}
+

@@ -3,12 +3,13 @@
 	require_once($_SERVER["DOCUMENT_ROOT"] . "/shared.php");
 	require_once($_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php");
 
-	// Initialize things
+	// Initialization
 	// ===================================================
 
 	$mysqli = mysqli_connect($_DATABASE_HOST, $_DATABASE_USER, $_DATABASE_PASS, $_DATABASE_DEFAULT);
 	if(mysqli_connect_errno()) {
-		$message = message(4, "Connect failed: " . mysqli_connect_error());
+		http_response_code(500);
+		die("Connect failed: " . mysqli_connect_error());
 	}
 	$mysqli->set_charset("utf8");
 
@@ -60,7 +61,7 @@
 		global $pages;
 		global $fieldData;
 
-		echo $twig->render("base.html.twig", array(
+		echo $twig->render("page.html.twig", array(
 			"menuPages" => $menuPages,
 			"title" => $pages[$targetPage]["title"], 
 			"header" => $pages[$targetPage]["header"],
@@ -70,7 +71,7 @@
 		));
 	}
 
-	function specimenRender($id) {
+	function specimenPage($id) {
 		global $menuPages;
 		global $twig;
 		global $mysqli;
@@ -80,23 +81,10 @@
 			. $mysqli->real_escape_string($id) . " LIMIT 1");
 		$specimen = $fetchSpecimen->fetch_assoc();
 
-		return $twig->render("specimen.html.twig", array(
+		echo $twig->render("specimen.html.twig", array(
 			"menuPages" => $menuPages,
 			"fieldData" => $fieldDataAll,
 			"specimen" => $specimen
-		));
-	}
-	function specimenPage($id) {
-		global $menuPages;
-		global $twig;
-		global $pages;
-
-		echo $twig->render("base.html.twig", array(
-			"menuPages" => $menuPages,
-			"title" => $pages["specimen"]["title"],
-			"header" => $pages["specimen"]["header"],
-			"scripts" => $pages["specimen"]["scripts"],
-			"content" => specimenRender($id)
 		));
 	}
 	function specimenData($id) {
@@ -115,8 +103,6 @@
 	}
 
 	function exportPage() {
-		global $twig;
-		global $pages;
 		global $mysqli;
 		global $fieldData;
 
@@ -212,6 +198,7 @@
 			call_user_func_array($match["target"], $match["params"]);
 		}
 	} else {
-		$twig->render("404.html.twig");
+		http_response_code(404);
+		echo $twig->render("404.html.twig", array("menuPages" => $menuPages));
 	}
 ?>

@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>{{ title }} | Fowler Herbarium</title>
+		<title>{% block title %}{% endblock %} | Fowler Herbarium</title>
 
 		<meta charset="utf-8">
 
-		<link href='http://fonts.googleapis.com/css?family=Playfair+Display:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+		<link href="http://fonts.googleapis.com/css?family=Playfair+Display:400,700,400italic,700italic"
+			rel="stylesheet" type="text/css">
+		<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700"
+			rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="/bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css">
 
 		<link rel="stylesheet" href="/style.css">
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+		<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
 
 		<script type="text/javascript">
 			$(".help").each(function() {
@@ -22,7 +24,7 @@
 			});
 		</script>
 
-		{{ scripts|raw }}
+		{% block scripts %}{% endblock %}
 	</head>
 	<body>
 		<div id="qubsBar" class="dark">
@@ -41,15 +43,17 @@
 			<nav>
 				<ul>
 					{% for page in menuPages %}
-						<li><a href="{{ page.routes }}"><span class="icon-{{ page.menu_icon }}"></span> {{ page.title }}</a></li>
+						<li>
+							<a href="{{ page.routes }}"><span class="icon-{{ page.menu_icon }}"></span>
+								{{ page.title }}</a>
+						</li>
 					{% endfor %}
 				</ul>
 			</nav>
 		</header>
 		<section class="main">
 			<div>
-				<h2>{{ header }}</h2>
-				{{ content|raw }}
+				{% block content %}{% endblock %}
 			</div>
 		</section>
 		<footer>
@@ -58,7 +62,10 @@
 				<nav>
 					<ul>
 						{% for page in menuPages %}
-							<li><a href="{{ page.routes }}"><span class="icon-{{ page.menu_icon }}"></span> {{ page.title }}</a></li>
+							<li>
+								<a href="{{ page.routes }}"><span class="icon-{{ page.menu_icon }}"></span>
+									{{ page.title }}</a>
+							</li>
 						{% endfor %}
 					</ul>
 				</nav>

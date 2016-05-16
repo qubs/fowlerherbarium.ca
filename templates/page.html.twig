@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block scripts %}{{ scripts|raw }}{% endblock %}
+
+{% block content %}
+    <h2>{{ header }}</h2>
+	{{ content|raw }}
+{% endblock %}
