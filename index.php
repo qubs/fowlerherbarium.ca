@@ -65,7 +65,8 @@ $router->map("GET|POST", "/fields/", "fieldsData", "fieldsdata");
 
 /**
  * Renders a page with information pulled from the database.
- * @param $targetPage
+ * @param string $targetPage The page to render.
+ * @return void
  */
 function databasePage($targetPage) {
 	global $menuPages;
@@ -87,7 +88,8 @@ function databasePage($targetPage) {
 
 /**
  * Renders a page for a specimen in the database.
- * @param $id
+ * @param int $id The web id of the specimen to render a page for.
+ * @return void
  */
 function specimenPage($id) {
 	global $menuPages;
@@ -110,7 +112,8 @@ function specimenPage($id) {
 
 /**
  * Returns a JSON object with the data for a particular specimen in the database.
- * @param $id
+ * @param int $id The web id of the specimen to create a JSON object for.
+ * @return void
  */
 function specimenData($id) {
 	// Specimen API
@@ -129,6 +132,7 @@ function specimenData($id) {
 
 /**
  * Pulls data about a specimen set, dictated by a particular set of search parameters, and turns them into a data file.
+ * @return void
  */
 function exportPage() {
 	global $mysqli;
@@ -212,6 +216,7 @@ function exportPage() {
 
 /**
  * Renders a JSON list containing fields (either searchable or all) depending on the search parameter.
+ * @return void
  */
 function fieldsData() {
 	global $mysqli;
