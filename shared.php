@@ -1,4 +1,5 @@
 <?php
+	// TODO: This should pull from the database or just be replaced by fetchFieldData
 	$availFields = array(
 		'web_id' => 'Web ID',
 		'dataset' => 'Dataset',

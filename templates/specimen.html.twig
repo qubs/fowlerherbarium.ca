@@ -10,8 +10,19 @@
 		<tbody>
 			{% for f in fieldData %}
 				<tr>
-					<td>{{ f.label }} {% if f.help is not empty %} <div class="help"><div>{{ f.help }}</div></div> {% endif %}</td>
-					<td> {{ specimen[f.field] }}</td>
+					<td>
+						{{ f.label }}
+						{% if f.help is not empty %}
+							<div class="help"><div>{{ f.help }}</div></div>
+						{% endif %}
+					</td>
+					<td>
+						{% if f.field != "image" %}
+							{{ specimen[f.field] }}
+						{% else %}
+							<img src="/uploads/{{ specimen[f.field] }}">
+						{% endif %}
+					</td>
 				</tr>
 			{% endfor %}
 		</tbody>

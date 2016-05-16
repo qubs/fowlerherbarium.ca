@@ -33,6 +33,7 @@
 	}
 
 	$fieldData = fetchFieldData($mysqli, true);
+	$fieldDataAll = fetchFieldData($mysqli, false);
 
 	// Routing
 	// ===================================================
@@ -48,6 +49,7 @@
 	$router->map("GET|POST", "/specimen/[i:id]/", "specimenPage", "specimen");
 	$router->map("GET|POST", "/data/specimen/[i:id]/", "specimenData", "specimendata");
 	$router->map("GET|POST", "/export/", "exportPage", "export");
+	$router->map("GET|POST", "/fields/", "fieldsData", "fieldsdata");
 
 	// Routing functions
 	// ===================================================
@@ -58,7 +60,7 @@
 		global $pages;
 		global $fieldData;
 
-		echo $twig->render("base.html", array(
+		echo $twig->render("base.html.twig", array(
 			"menuPages" => $menuPages,
 			"title" => $pages[$targetPage]["title"], 
 			"header" => $pages[$targetPage]["header"],
@@ -71,35 +73,44 @@
 	function specimenRender($id) {
 		global $menuPages;
 		global $twig;
-		global $pages;
 		global $mysqli;
-		global $fieldData;
+		global $fieldDataAll;
 
-		$fetchSpecimen = $mysqli->query("SELECT * FROM specimens WHERE web_id = " . $mysqli->real_escape_string($id) . " LIMIT 1");
+		$fetchSpecimen = $mysqli->query("SELECT * FROM specimens WHERE web_id = "
+			. $mysqli->real_escape_string($id) . " LIMIT 1");
 		$specimen = $fetchSpecimen->fetch_assoc();
 
-		return $twig->render("specimen.html", array("menuPages" => $menuPages, "fieldData" => $fieldData, "specimen" => $specimen));
+		return $twig->render("specimen.html.twig", array(
+			"menuPages" => $menuPages,
+			"fieldData" => $fieldDataAll,
+			"specimen" => $specimen
+		));
 	}
 	function specimenPage($id) {
 		global $menuPages;
 		global $twig;
+		global $pages;
 
-		echo $twig->render("base.html", array(
+		echo $twig->render("base.html.twig", array(
 			"menuPages" => $menuPages,
-			"title" => $pages["specimen"]["title"], 
+			"title" => $pages["specimen"]["title"],
 			"header" => $pages["specimen"]["header"],
 			"scripts" => $pages["specimen"]["scripts"],
 			"content" => specimenRender($id)
 		));
 	}
 	function specimenData($id) {
+		// Specimen API
+		
+		global $mysqli;
+
 		$fetchSpecimen = $mysqli->prepare("SELECT * FROM specimens WHERE web_id = ? LIMIT 1");
 		$fetchSpecimen->bind_param("i", $id);
 		$fetchSpecimen->execute();
 		$fetchSpecimenResult = $fetchSpecimen->get_result();
 		$specimen = $fetchSpecimenResult->fetch_assoc();
 
-		$headers = "Content-type: application/json";
+		header("Content-type: application/json");
 		echo json_encode($specimen);
 	}
 
@@ -179,6 +190,15 @@
 		}
 	}
 
+	function fieldsData() {
+		global $mysqli;
+
+		header("Content-type: application/json");
+		$search = filter_var($_GET["search"], FILTER_VALIDATE_BOOLEAN);
+
+		echo json_encode(fetchFieldData($mysqli, $search));
+	}
+
 	// Route Handling
 	// ===================================================
 
@@ -192,6 +212,6 @@
 			call_user_func_array($match["target"], $match["params"]);
 		}
 	} else {
-		$twig->render("404.html");
+		$twig->render("404.html.twig");
 	}
 ?>

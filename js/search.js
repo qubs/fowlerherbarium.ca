@@ -24,7 +24,7 @@ var FHSearch = function(params) {
 
 	this.fieldData = [];
 
-	$.get("/fielddata.php", {
+	$.get("/fields/", {
 		"search": "true"
 	}).done(this.processCall.bind(this));
 };

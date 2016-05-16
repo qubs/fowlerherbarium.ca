@@ -6,4 +6,6 @@
 
 	$_HASH_COST = 8;
 	$_HASH_PORTABLE = false;
+
+	$__UPLOAD_DIRECTORY = "/var/www/fowlerherbarium.ca/public_html/uploads/";
 ?>
