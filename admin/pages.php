@@ -8,7 +8,7 @@
 		header("Location: index.php");
 	}
 
-	$mysqli = mysqli_connect($_DATABASE_HOST, $_DATABASE_USER, $_DATABASE_PASS, $_DATABASE_DEFAULT);
+	$mysqli = mysqli_connect($__DATABASE["host"], $__DATABASE["user"], $__DATABASE["password"], $__DATABASE["name"]);
 	if(mysqli_connect_errno()) {
 		$message = message(4, "Connect failed: " . mysqli_connect_error());
 	}
