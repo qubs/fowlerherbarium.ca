@@ -8,11 +8,12 @@ management.
 
 1. [Install Composer](https://getcomposer.org/download/)
 2. [Install Node.js](https://nodejs.org/en/download/)
-3. [Install MySQL](http://dev.mysql.com/downloads/mysql/)
+3. [Install MySQL](http://dev.mysql.com/downloads/mysql/) and make sure it's running.
 3. Run `npm install -g bower` to install [Bower](http://bower.io/)
 4. Run `composer install` or `php composer.phar` (depending on how you installed composer) to install required PHP
 packages.
 5. Run `bower install` to install frontend packages.
+
 
 
     TODO: Create an install script to edit configuration etc.
@@ -23,13 +24,13 @@ All configuration is stored in the `config.php` file, and the variables should b
 
 ### Database
 
-`$_DATABASE_HOST`: Your MySQL host URL. If you do not know what to put here, it should probably be set to`localhost`.
+`$__DATABASE["host"]`: Your MySQL host URL. If you do not know what to put here, it should probably be set to `localhost`.
 
-`$_DATABASE_USER`: The MySQL user that the software will use to access the herbarium database.
+`$__DATABASE["user"]`: The MySQL user that the software will use to access the herbarium database.
 
-`$_DATABASE_PASS`: The password corresponding to the above user which will be used to connect to the database.
+`$__DATABASE["password"]`: The password corresponding to the above user which will be used to connect to the database.
 
-`$_DATABASE_DEFAULT`: The name of the database for the herbarium data.
+`$__DATABASE["name"]`: The name of the database for the herbarium data.
 
 ### Passwords and Security
 
@@ -50,6 +51,7 @@ should be readable by a group you and www-data are in, and should not be readabl
 ## Updating
 
 To update the web software, download a copy of the code in this repository. Remove all files and folders in the root
-directory of the server **EXCEPT** for the `uploads` folder.
+directory of the server **EXCEPT** for the `uploads` folder and your `config.php` file. Any changes to configuration
+will be alluded to with changelogs and you should manually port over changes to make sure your site does not break.
 
-    TODO: Finish uploading instructions.
+    TODO: Finish updating instructions.
