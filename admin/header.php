@@ -9,7 +9,7 @@
 
 		<link rel="stylesheet" href="style.css">
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="/bower_components/jquery/dist/jquery.min.js"></script>
 
 		<script type="text/javascript" src="js/tinymce/jquery.tinymce.min.js"></script>
 		<script type="text/javascript" src="js/tinymce/tinymce.min.js"></script>
@@ -18,7 +18,7 @@
 			$(document).ready(function() {
 				tinymce.init({
 					selector: ".wysiwyg",
-					plugins: "code image media link table codemirror template",
+					plugins: "code image media link table template",
 					entity_encoding: "raw",
 					paste_word_valid_elements: "b,strong,i,em,h1,h2,sup",
 					paste_auto_cleanup_on_paste: true,
@@ -27,13 +27,9 @@
 					content_css: "tinymce.css",
 					relative_urls: false,
 					forced_root_block: "",
-					codemirror: {
-						indentOnInit: true, // Whether or not to indent code on init. 
-						path: "CodeMirror" // Path to CodeMirror distribution
-					},
 					style_formats: [
 						{title: "Image Align Left", selector: "img", classes: "alignLeft"},
-						{title: "Image Align Right", selector: "img", classes: "alignRighy"},
+						{title: "Image Align Right", selector: "img", classes: "alignRight"},
 
 						{title: "Button", selector: "a", classes: "button"}
 					]
@@ -46,12 +42,24 @@
 			<ul>
 				<li class="title"><a href="main.php">Fowler Herbarium Admin</a></li>
 				<?php if($page != "login") { ?>
-				<li<?php if($page == "main") { ?> class="active"<?php } ?>><a href="main.php"><span class="icon-reorder"></span> Entries</a></li>
-				<li<?php if($page == "pages") { ?> class="active"<?php } ?>><a href="pages.php"><span class="icon-description"></span> Pages</a></li>
-				<li<?php if($page == "users") { ?> class="active"<?php } ?>><a href="users.php"><span class="icon-people"></span> Users</a></li>
-				<li<?php if($page == "fields") { ?> class="active"<?php } ?>><a href="fields.php"><span class="icon-reorder"></span> Fields</a></li>
-				<li<?php if($page == "usersettings") { ?> class="active"<?php } ?>><a href="usersettings.php"><span class="icon-settings"></span> My Settings</a></li>
-				<li class="alignRight"><a href="logout.php">Log Out (<?php echo $_SESSION["user"]; ?>)</a></li>
+				<li<?php if($page == "main") { ?> class="active"<?php } ?>>
+					<a href="main.php"><span class="icon-reorder"></span> Entries</a>
+				</li>
+				<li<?php if($page == "pages") { ?> class="active"<?php } ?>>
+					<a href="pages.php"><span class="icon-description"></span> Pages</a>
+				</li>
+				<li<?php if($page == "users") { ?> class="active"<?php } ?>>
+					<a href="users.php"><span class="icon-people"></span> Users</a>
+				</li>
+				<li<?php if($page == "fields") { ?> class="active"<?php } ?>>
+					<a href="fields.php"><span class="icon-reorder"></span> Fields</a>
+				</li>
+				<li<?php if($page == "usersettings") { ?> class="active"<?php } ?>>
+					<a href="usersettings.php"><span class="icon-settings"></span> My Settings</a>
+				</li>
+				<li class="alignRight">
+					<a href="logout.php">Log Out (<?php echo $_SESSION["user"]; ?>)</a>
+				</li>
 				<?php } ?>
 			</ul>
 		</nav>

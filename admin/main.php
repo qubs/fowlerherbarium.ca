@@ -57,7 +57,8 @@
 		$habitat = $_POST["habitat"];
 		$notes = $_POST["notes"];
 
-		//$image = ...
+		$image_file_path = $__UPLOAD_DIRECTORY . $accession . "-" . strval(time()
+				. "." . end(explode(".", $_FILES["image"]["name"])));
 
 		$dead = false;
 		$error = "";
@@ -75,9 +76,17 @@
 		$check_existing->close();
 
 		if(!$dead) {
-			$insert_entry = $mysqli->prepare("INSERT INTO specimens(dataset, genus, species, DTH, accession, common_name, date_collected, collectors, map_included, map_reference, county, township, location, habitat, notes) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			// Don't bother moving the file if the form has already failed for another reason
+			if(!move_uploaded_file($_FILES["image"]["tmp_name"], $image_file_path)) {
+				$dead = true;
+				$error = "An error was encountered while uploading the image.";
+			}
+		}
 
-			$insert_entry->bind_param("sssssssssssssss", 
+		if(!$dead) {
+			$insert_entry = $mysqli->prepare("INSERT INTO specimens(dataset, genus, species, DTH, accession, common_name, date_collected, collectors, map_included, map_reference, county, township, location, habitat, notes, image) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+			$insert_entry->bind_param("ssssssssssssssss",
 					$dataset,
 
 					$genus,
@@ -98,7 +107,9 @@
 					$location,
 
 					$habitat,
-					$notes
+					$notes,
+
+					$image_file_path
 				);
 
 			$insert_entry->execute();
@@ -122,39 +133,61 @@
 	});
 </script>
 <h2>Entries</h2>
-<form action="main.php" class="box">
+<form action="main.php" method="post" class="box" enctype="multipart/form-data">
 	<h3>Add New</h3>
 	<div class="row">
 		<div class="col col50">
-			<label for="dataset">Dataset <div class="help"><div><?php echo $fieldDataAssoc["dataset"]["help"]; ?></div></div></label>
+			<label for="dataset">
+				Dataset
+				<div class="help"><div><?php echo $fieldDataAssoc["dataset"]["help"]; ?></div></div>
+			</label>
 			<input type="text" name="dataset" value="kingston">
+
 			<div class="row">
 				<div class="col col50 noPad padRight">
-					<label for="genus">Genus <div class="help"><div><?php echo $fieldDataAssoc["genus"]["help"]; ?></div></div></label>
-					<input type="text" name="genus">
+					<label for="genus">
+						Genus
+						<div class="help"><div><?php echo $fieldDataAssoc["genus"]["help"]; ?></div></div>
+					</label>
+					<input type="text" name="genus" id="genus">
 				</div><div class="col col50 noPad padLeft">
-					<label for="species">Species <div class="help"><div><?php echo $fieldDataAssoc["species"]["help"]; ?></div></div></label>
-					<input type="text" name="species">
+					<label for="species">
+						Species
+						<div class="help"><div><?php echo $fieldDataAssoc["species"]["help"]; ?></div></div>
+					</label>
+					<input type="text" name="species" id="species">
 				</div>
 			</div>
+
 			<div class="row">
 				<div class="col col50 noPad padRight">
 					<label for="DTH">DTH # <div class="help"><div><?php echo $fieldDataAssoc["DTH"]["help"]; ?></div></div></label>
 					<input type="text" name="DTH">
 				</div><div class="col col50 noPad padLeft">
 					<label for="accession">Accession # <div class="help"><div><?php echo $fieldDataAssoc["accession"]["help"]; ?></div></div></label>
-					<input type="text" name="accession">
+					<input type="text" name="accession" id="accession">
 				</div>
 			</div>
-			<label for="common_name">Common Name <div class="help"><div><?php echo $fieldDataAssoc["common_name"]["help"]; ?></div></div></label>
+
+			<label for="common_name">
+				Common Name
+				<div class="help"><div><?php echo $fieldDataAssoc["common_name"]["help"]; ?></div></div>
+			</label>
 			<input type="text" name="common_name">
+
 			<div class="row">
 				<div class="col col50 noPad padRight">
-					<label for="date_collected">Date Collected <div class="help"><div><?php echo $fieldDataAssoc["date_collected"]["help"]; ?></div></div></label>
+					<label for="date_collected">
+						Date Collected
+						<div class="help"><div><?php echo $fieldDataAssoc["date_collected"]["help"]; ?></div></div>
+					</label>
 					<input type="text" name="date_collected" placeholder="mm dd yyyy">
 				</div><div class="col col50 noPad padLeft">
-					<label for="collectors">Collector(s) <div class="help"><div><?php echo $fieldDataAssoc["collectors"]["help"]; ?></div></div></label>
-					<input type="text" name="collectors">
+					<label for="collectors">
+						Collector(s)
+						<div class="help"><div><?php echo $fieldDataAssoc["collectors"]["help"]; ?></div></div>
+					</label>
+					<input type="text" name="collectors" id="collectors">
 				</div>
 			</div>
 			<div class="row">
@@ -165,7 +198,10 @@
 					<input type="text" name="map_reference">
 				</div>
 			</div>
-			<label for="image">Image <div class="help"><div><?php echo $fieldDataAssoc["image"]["help"]; ?></div></div></label>
+			<label for="image">
+				Image
+				<div class="help"><div><?php echo $fieldDataAssoc["image"]["help"]; ?></div></div>
+			</label>
 			<input type="file" name="image">
 			<button class="button" type="submit" name="submitEntry"><span class="icon-control-point"></span> Add Entry</button>
 		</div><div class="col col50">
@@ -178,11 +214,23 @@
 					<input type="text" name="township">
 				</div>
 			</div>
-			<label for="location">Location <div class="help"><div><?php echo $fieldDataAssoc["location"]["help"]; ?></div></div></label>
+
+			<label for="location">
+				Location
+				<div class="help"><div><?php echo $fieldDataAssoc["location"]["help"]; ?></div></div>
+			</label>
 			<input type="text" name="location">
-			<label for="habitat">Habitat <div class="help"><div><?php echo $fieldDataAssoc["habitat"]["help"]; ?></div></div></label>
+
+			<label for="habitat">
+				Habitat
+				<div class="help"><div><?php echo $fieldDataAssoc["habitat"]["help"]; ?></div></div>
+			</label>
 			<textarea name="habitat" rows="5"></textarea>
-			<label for="habitat">Notes <div class="help"><div><?php echo $fieldDataAssoc["notes"]["help"]; ?></div></div></label>
+
+			<label for="habitat">
+				Notes
+				<div class="help"><div><?php echo $fieldDataAssoc["notes"]["help"]; ?></div></div>
+			</label>
 			<textarea name="notes" rows="5"></textarea>
 		</div>
 	</div>
@@ -215,7 +263,12 @@
 					<td><?=$specimen["accession"]?></td>
 					<td><?=$specimen["common_name"]?></td>
 					<td><?=$specimen["date_collected"]?></td>
-					<td><a class="button" href="edit_entry.php?id=<?php echo $specimen["web_id"]; ?>"><span class="icon-mode-edit"></span> Edit</a> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
+					<td>
+						<a class="button" href="edit_entry.php?id=<?php echo $specimen["web_id"]; ?>">
+							<span class="icon-mode-edit"></span> Edit
+						</a>
+						<button class="button"><span class="icon-highlight-remove"></span> Delete</button>
+					</td>
 				</tr>
 			<?php } ?>
 		</tbody>
