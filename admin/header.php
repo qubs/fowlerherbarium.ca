@@ -4,15 +4,17 @@
 
 		<meta charset="utf-8">
 
-		<link href='http://fonts.googleapis.com/css?family=Playfair+Display:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Playfair+Display:400,700,400italic,700italic'
+			  rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700'
+			  rel='stylesheet' type='text/css'>
 
 		<link rel="stylesheet" href="style.css">
 
 		<script src="/bower_components/jquery/dist/jquery.min.js"></script>
 
-		<script type="text/javascript" src="js/tinymce/jquery.tinymce.min.js"></script>
-		<script type="text/javascript" src="js/tinymce/tinymce.min.js"></script>
+		<script type="text/javascript" src="/bower_components/tinymce/jquery.tinymce.min.js"></script>
+		<script type="text/javascript" src="/bower_components/tinymce/tinymce.min.js"></script>
 
 		<script type="text/javascript">
 			$(document).ready(function() {
