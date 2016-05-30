@@ -13,7 +13,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for f in fieldData %}
+			{% for f in field_data %}
 				<tr>
 					<td>
 						{{ f.label }}
@@ -39,7 +39,7 @@
 		</tbody>
 	</table><div class="wiki">
 		<h4>From Wikipedia</h4>
-		<iframe src="http://en.m.wikipedia.org/wiki/{{ (specimen.genus ~ " " ~ specimen.species) | replace({" ": "_"}) }}"
+		<iframe src="https://en.m.wikipedia.org/wiki/{{ (specimen.genus ~ " " ~ specimen.species)|replace({" ": "_"}) }}"
 				frameborder="0"></iframe>
 	</div>
 </div>

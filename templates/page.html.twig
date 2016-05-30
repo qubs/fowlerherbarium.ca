@@ -1,10 +1,8 @@
 {% extends "base.html.twig" %}
 
-{% block title %}{{ title }}{% endblock %}
-
-{% block scripts %}{{ scripts|raw }}{% endblock %}
+{% block title %}{{ page.title }}{% endblock %}
 
 {% block content %}
-    <h2>{{ header }}</h2>
-	{{ content|raw }}
+    <h2>{{ page.header }}</h2>
+	{{ page.content|raw }}
 {% endblock %}

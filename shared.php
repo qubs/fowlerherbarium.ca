@@ -11,6 +11,53 @@ $equivs = array(
 );
 
 /**
+ * Fetches site settings from the database.
+ * @param object $mysqli The mysqli connection object to use for querying.
+ * @return array A collection of site settings.
+ */
+function fetchSettings($mysqli) {
+	$fetch_settings = $mysqli->query("SELECT * FROM settings");
+
+	// Turn rows into an associative array
+	$settings = array();
+	while($s = $fetch_settings->fetch_assoc()) {
+		$settings[$s["name"]] = $s["value"];
+	}
+	return $settings;
+}
+
+/**
+ * Fetches site pages.
+ * @param object $mysqli
+ * @return array Array of two arrays: an array of all pages and an array of pages in the menu, sorted.
+ */
+function fetchPages($mysqli) {
+	$fetch_pages = $mysqli->query("SELECT * FROM pages");
+
+	$pages = array();
+	$menu_pages = array();
+
+	function compareWeight($a, $b) {
+		if($a["menu_order"] == $b["menu_order"]) {
+			return 0;
+		}
+
+		return ($a["menu_order"] < $b["menu_order"] ? -1 : 1);
+	}
+
+	while($page = $fetch_pages->fetch_assoc()) {
+		$pages[$page["page_id"]] = $page;
+		if($page["in_menu"] == 1) {
+			array_push($menu_pages, $page);
+		}
+	}
+
+	uasort($menu_pages, "compareWeight");
+
+	return array($pages, $menu_pages);
+}
+
+/**
  * Fetches data about fields for specimen objects.
  * @param object $mysqli The mysqli connection object to use for querying.
  * @param bool $search Whether or not to limit the generated list of fields to searchable ones.
@@ -50,8 +97,6 @@ function fetchFieldData($mysqli, $search = false) {
 function buildSearchQuery($mysqli, $booleans, $fields, $matchTypes, $parameters) {
 	global $equivs;
 
-	$fieldInfo = fetchFieldData($mysqli); // TODO: Is this needed?
-
 	$query = "SELECT * FROM specimens ";
 
 	for($i = 0; $i < count($fields); $i++) {
@@ -73,5 +118,3 @@ function buildSearchQuery($mysqli, $booleans, $fields, $matchTypes, $parameters)
 
 	return $query;
 }
-
-?>

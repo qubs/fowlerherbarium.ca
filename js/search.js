@@ -24,7 +24,7 @@ var FHSearch = function(params) {
 
 	this.fieldData = [];
 
-	$.get("/fields/", {
+	$.get("/data/fields/", {
 		"search": "true"
 	}).done(this.processCall.bind(this));
 };
@@ -173,7 +173,7 @@ FHSearch.prototype.processCall = function(data) {
 	exportCSV.setAttribute("type", "button");
 	exportCSV.addEventListener("click", function () {
 		$('#exportType').attr('value', 'csv');
-		$('#searchForm').attr('action', '/export/');
+		$('#searchForm').attr('action', '/data/export/');
 		$('#searchForm').attr('method', 'get');
 		$('#searchForm').submit();
 
@@ -188,7 +188,7 @@ FHSearch.prototype.processCall = function(data) {
 	exportJSON.setAttribute("type", "button");
 	exportJSON.addEventListener("click", function () {
 		$('#exportType').attr('value', 'json');
-		$('#searchForm').attr('action', '/export/');
+		$('#searchForm').attr('action', '/data/export/');
 		$('#searchForm').attr('method', 'get');
 		$('#searchForm').submit();
 
@@ -203,12 +203,12 @@ FHSearch.prototype.processCall = function(data) {
 	exportXML.setAttribute("type", "button");
 	exportXML.addEventListener("click", function () {
 		$('#exportType').attr('value', 'xml');
-		$('#searchForm').attr('action', '/export/');
+		$('#searchForm').attr('action', '/data/export/');
 		$('#searchForm').attr('method', 'get');
 		$('#searchForm').submit();
 
 		$('#exportType').attr('value', '');
-		$('#searchForm').attr('action', '/search/');
+		$('#searchForm').attr('action', '/data/search/');
 		$('#searchForm').attr('method', 'post');
 	});
 	exportXML.appendChild(document.createTextNode("Export as XML"));
@@ -491,7 +491,7 @@ FHSearch.prototype.processCall = function(data) {
 				window.location.hash = JSON.stringify(hashObject);
 			}).bind(this);
 
-			$.get("/export/", {
+			$.get("/data/export/", {
 				"type": "json",
 				"boolean[]": booleans,
 				"field[]": fields,

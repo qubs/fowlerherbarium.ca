@@ -13,10 +13,7 @@ management.
 4. Run `composer install` or `php composer.phar` (depending on how you installed composer) to install required PHP
 packages.
 5. Run `bower install` to install frontend packages.
-
-
-
-    TODO: Create an install script to edit configuration etc.
+6. TODO: INSTALL SCRIPTS ETC
 
 ## Configuration
 

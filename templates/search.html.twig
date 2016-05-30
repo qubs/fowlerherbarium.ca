@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="/js/search.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            window.search = new FHSearch({
+                "selector": "#searchArea"
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <h2>{{ page.header }}</h2>
+	{{ page.content|raw }}
+    <div id="searchArea"></div>
+{% endblock %}
