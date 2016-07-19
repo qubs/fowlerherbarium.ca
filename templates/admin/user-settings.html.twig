@@ -1,0 +1,39 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}My Settings{% endblock %}
+
+{% block content %}
+	<h2>Settings and Options for {{ user["username"] }}</h2>
+	{% if error is not empty %}
+		<div class="error"> {{ error }}</div>
+	{% endif %}
+	<div class="box">
+		<h3>Change Password</h3>
+		<form action="/admin/user-settings/" method="post">
+			<div class="row">
+				<div class="col col33 nopad">
+					<label for="oldpass">Old Password</label>
+					<input type="password" name="oldpass" required>
+					<label for="newpass">New Password</label>
+					<input type="password" name="newpass" required>
+					<label for="newpassagain">New Password Again</label>
+					<input type="password" name="newpassagain" required>
+					<br><button class="button" type="submit" name="submitChangePassword">Change Password</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="box">
+		<h3>Update Email</h3>
+		<form action="/admin/user-settings/" method="post">
+			<div class="row">
+				<div class="col col33 nopad">
+					<label for="email">Email</label>
+					<input type="email" name="email" value="{{ user["email"] }}" required>
+					<br>
+					<button class="button" type="submit" name="submitUpdateEmail">Update Email</button>
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+	<h2>Users</h2>
+	<div class="box">
+		{% if error is not empty %}
+		<div class="error"><?php echo $error; ?></div>
+		{% endif %}
+		<h3>Add New</h3>
+		<form action="users.php" method="post">
+			<div class="row">
+				<div class="col col50">
+					<label for="username" class="required">Username</label>
+					<input type="text" name="username" required>
+					<label for="email" class="required">Email</label>
+					<input type="email" name="email" required>
+					<br>
+					<button class="button" type="submit" name="submit">
+						<span class="icon-control-point"></span> Create User
+					</button>
+				</div><div class="col col50">
+					<label for="password" class="required">Password</label>
+					<input type="password" name="password" required>
+					<label for="passagain" class="required">Password Again</label>
+					<input type="password" name="passagain" required>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="box">
+		<h3>Existing Users</h3>
+		<table>
+			<thead>
+			<tr>
+				<th>ID</th>
+				<th>Username</th>
+				<th>Email</th>
+				<th>Options</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for user in users %}
+				<tr>
+					<td>{{ user.id }}</td>
+					<td>{{ user.username }}</td>
+					<td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+					<td>
+						<a class="button" href="/admin/users/{{ user.id }}/">
+							<span class="icon-mode-edit"></span> Edit
+						</a>
+						<button class="button"><span class="icon-highlight-remove"></span> Delete</button>
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

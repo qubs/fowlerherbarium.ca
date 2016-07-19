@@ -1,0 +1,52 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+	<h2>Fields</h2>
+	<div class="box">
+		{% if error is not empty %}
+			<div class="error"><?php echo $error; ?></div>
+		{% endif %}
+		<h3>Add New</h3>
+		<form action="../../admin/fields.php" method="post">
+			<div class="row">
+				<div class="col col50">
+					<strong>Coming Soon</strong>
+					<!-- <button type="submit" name="submit"><span class="icon-control-point"></span> Add Field</button> -->
+				</div><div class="col col50">
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="box">
+		<h3>Existing Fields</h3>
+		<table>
+			<thead>
+			<tr>
+				<th>ID</th>
+				<th>Field</th>
+				<th>Label</th>
+				<th>Help Text</th>
+				<th>Searchable</th>
+				<th>Options</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for field in fields %}
+				<tr>
+					<td>{{ field["id"] }}</td>
+					<td>{{ field["field"] }}</td>
+					<td style="min-width: 160px;">{{ field["label"] }}</td>
+					<td><p>{{ field["help"] }}</p></td>
+					<td><input type="checkbox" onclick="return false" {% if field["searchable"] == 1%}checked{% endif %}></td>
+					<td style="min-width: 160px;">
+						<a class="button" href="/admin/fields/{{ field["id"] }}/"><span class="icon-mode-edit"></span> Edit</a>
+						<button class="button"><span class="icon-highlight-remove"></span> Delete</button>
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}Edit "{{ page["title"] }}"{% endblock %}
+
+{% block content %}
+	<h2>Edit Page "<em>{{ page["title"] }}</em>" (Web ID: {{ page["page_id"] }})</h2>
+	<form action="/admin/page/{{ page["id"] }}/" method="post" class="box">
+		{% if error is not empty %}
+			<div class="error">{{ error }}</div>
+		{% endif %}
+		<input type="hidden" name="id" value="{{ page["id"] }}">
+		<div class="row">
+			<div class="col col50">
+				<input type="hidden" name="old_title" value="{{ page["title"] }}">
+				<label for="dataset" class="required">Title</label>
+				<input type="text" name="title" value="{{ page["title"] }}" required>
+				<label for="header" class="required">Header</label>
+				<input type="text" name="header" value="{{ page["header"] }}" required>
+				<div class="row">
+					<div class="col col33 noPad padRight">
+						<label><input type="checkbox" name="in_menu" value="1"
+						              {% if page["in_menu"] == 1 %}checked{% endif %}> Show in menu?
+						</label>
+					</div><div class="col col33 noPad">
+						<label for="menu_order">Order in Menu</label>
+						<input type="number" name="menu_order" value="{{ page["menu_order"] }}">
+					</div><div class="col col33 noPad padLeft">
+						<label for="menu_icon">Menu Icon</label>
+						<input type="text" name="menu_icon" value="{{ page["menu_icon"] }}">
+					</div>
+				</div>
+				<label for="routes">Routes</label>
+				<textarea name="routes" rows="3">{{ page["routes"] }}</textarea>
+				<label for="scripts">Scripts</label>
+				<textarea name="scripts" rows="7">{{ page["scripts"] }}</textarea>
+				<button type="submit" name="submit" class="button">
+					<span class="icon-done"></span> Save Changes
+				</button>
+				<a class="button" href="/admin/pages/"><span class="icon-highlight-remove"></span> Cancel</a>
+			</div><div class="col col50">
+				<label for="content">Content</label>
+				<textarea name="content" class="wysiwyg" rows="16" required>{{ page["content"] }}</textarea>
+			</div>
+		</div>
+	</form>
+{% endblock %}

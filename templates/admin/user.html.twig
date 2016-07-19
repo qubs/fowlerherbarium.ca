@@ -1,0 +1,27 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}Edit {{ user["username"] }}{% endblock %}
+
+{% block content %}
+	<h2>
+		<a href="/admin/users/" class="button" style="float: left; margin-right: 10px; margin-left: 0;">
+			&larr; Back to Users
+		</a>
+		Edit User "<em>{{ user["username"] }}"</em> (ID:  {{ user["id"] }})
+	</h2>
+	<form action="/admin/users/{{ user["id"] }}/" method="post" class="box">
+		<div class="row">
+			<div class="col col50">
+				<label for="username" class="required" style="margin-top: 0;">Username</label>
+				<input type="text" name="username" id="username" required value="{{ user["username"] }}">
+				<label for="email" class="required">Email</label>
+				<input type="email" name="email" id="email" required value="{{ user["email"] }}">
+				<br>
+				<button class="button" type="submit" name="submit">
+					<span class="icon-done"></span> Save Changes
+				</button>
+				<a class="button" href="users.php"><span class="icon-highlight-remove"></span> Cancel</a>
+			</div>
+		</div>
+	</form>
+{% endblock %}

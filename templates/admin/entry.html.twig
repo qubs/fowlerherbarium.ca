@@ -1,0 +1,128 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}{{ entry.web_id }}: {{ entry.genus }} {{ entry.species }}{% endblock %}
+
+{% block content %}
+    <h2>Edit Entry "<em>{{ entry.genus }} {{ entry.species }}</em>" (Web ID: {{ entry.web_id }})</h2>
+    <form action="/admin/entries/{{ entry.web_id }}/" method="post" class="box" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col col50">
+                <label for="dataset">
+                    Dataset
+                    <div class="help"><div>{{ field_data_assoc["dataset"]["help"] }}</div></div>
+                </label>
+                <input type="text" name="dataset" value="{{ entry["dataset"] }}">
+                <div class="row">
+                    <div class="col col50 noPad padRight">
+                        <label for="genus">
+                            Genus
+                            <div class="help"><div>{{ field_data_assoc["genus"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="genus" value="{{ entry["genus"] }}">
+                    </div><div class="col col50 noPad padLeft">
+                        <label for="species">
+                            Species
+                            <div class="help"><div>{{ field_data_assoc["species"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="species" value="{{ entry["species"] }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col50 noPad padRight">
+                        <label for="DTH">
+                            DTH #
+                            <div class="help"><div>{{ field_data_assoc["DTH"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="DTH" value="{{ entry["DTH"] }}">
+                    </div><div class="col col50 noPad padLeft">
+                        <label for="accession">
+                            Accession #
+                            <div class="help"><div>{{ field_data_assoc["accession"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="accession" value="{{ entry["accession"] }}">
+                    </div>
+                </div>
+
+                <label for="common_name">
+                    Common Name
+                    <div class="help"><div>{{ field_data_assoc["common_name"]["help"] }}</div></div>
+                </label>
+                <input type="text" name="common_name" value="{{ entry["common_name"] }}">
+
+                <div class="row">
+                    <div class="col col50 noPad padRight">
+                        <label for="date_collected">
+                            Date Collected
+                            <div class="help"><div>{{ field_data_assoc["date_collected"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="date_collected" placeholder="mm dd yyyy"
+                               value="{{ entry["date_collected"] }}">
+                    </div><div class="col col50 noPad padLeft">
+                        <label for="collectors">
+                            Collector(s)
+                            <div class="help"><div>{{ field_data_assoc["collectors"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="collectors" value="{{ entry["collectors"] }}">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col50 noPad padRight">
+                        <label for="map_included">
+                            <input type="checkbox" name="map_included"
+                                   {% if entry["map_included"] == "yes" %}checked{% endif %}>
+                            Map Included
+                        </label>
+                    </div><div class="col col50 noPad padLeft">
+                        <label for="map_reference">
+                            Map Reference
+                            <div class="help"><div>{{ field_data_assoc["map_reference"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="map_reference" value="{{ entry["map_reference"] }}">
+                    </div>
+                </div>
+
+                <label for="image">
+                    Image {% if entry["image"] is not empty %}(Current: {{ entry["image"] }}){% endif %}
+                </label>
+                <input type="file" name="image">
+
+                <button class="button" type="submit" name="saveEntry">
+                    <span class="icon-done"></span> Save Changes
+                </button>
+                <a class="button" href="/admin/entries/"><span class="icon-highlight-remove"></span> Cancel</a>
+            </div><div class="col col50">
+                <div class="row">
+                    <div class="col col50 noPad padRight">
+                        <label for="county">
+                            County
+                            <div class="help"><div>{{ field_data_assoc["county"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="county" value="{{ entry["county"] }}">
+                    </div><div class="col col50 noPad padLeft">
+                        <label for="township">
+                            Township
+                            <div class="help"><div>{{ field_data_assoc["township"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="township" value="{{ entry["township"] }}">
+                    </div>
+                </div>
+                <label for="location">
+                    Location
+                    <div class="help"><div>{{ field_data_assoc["location"]["help"] }}</div></div>
+                </label>
+                <input type="text" name="location" value="{{ entry["location"] }}">
+                <label for="habitat">
+                    Habitat
+                    <div class="help"><div>{{ field_data_assoc["habitat"]["help"] }}</div></div>
+                </label>
+                <textarea name="habitat" cols="30" rows="5">{{ entry["habitat"] }}</textarea>
+                <label for="habitat">
+                    Notes
+                    <div class="help"><div>{{ field_data_assoc["notes"]["help"] }}</div></div>
+                </label>
+                <textarea name="notes" cols="30" rows="5">{{ entry["notes"] }}</textarea>
+            </div>
+        </div>
+    </form>
+{% endblock %}

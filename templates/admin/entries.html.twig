@@ -1,0 +1,169 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}Entries{% endblock %}
+
+{% block content %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".help").each(function() {
+                if($(this).children("div")[0].innerHTML == "") {
+                    $(this).css("display", "none");
+                }
+            });
+        });
+    </script>
+    <h2>Entries</h2>
+    <form action="/admin/entries/" method="post" class="box" enctype="multipart/form-data">
+        <h3>Add New</h3>
+        <div class="row">
+            <div class="col col50">
+                <label for="dataset">
+                    Dataset
+                    <div class="help"><div>{{ field_data_assoc["dataset"]["help"] }}</div></div>
+                </label>
+                <input type="text" name="dataset" value="kingston">
+
+                <div class="row">
+                    <div class="col col50 noPad padRight">
+                        <label for="genus">
+                            Genus
+                            <div class="help"><div>{{ field_data_assoc["genus"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="genus" id="genus">
+                    </div><div class="col col50 noPad padLeft">
+                        <label for="species">
+                            Species
+                            <div class="help"><div>{{ field_data_assoc["species"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="species" id="species">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col50 noPad padRight">
+                        <label for="DTH">
+                            DTH #
+                            <div class="help"><div>{{ field_data_assoc["DTH"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="DTH">
+                    </div><div class="col col50 noPad padLeft">
+                        <label for="accession">
+                            Accession #
+                            <div class="help"><div>{{ field_data_assoc["accession"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="accession" id="accession">
+                    </div>
+                </div>
+
+                <label for="common_name">
+                    Common Name
+                    <div class="help"><div>{{ field_data_assoc["common_name"]["help"] }}</div></div>
+                </label>
+                <input type="text" name="common_name">
+
+                <div class="row">
+                    <div class="col col50 noPad padRight">
+                        <label for="date_collected">
+                            Date Collected
+                            <div class="help"><div>{{ field_data_assoc["date_collected"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="date_collected" placeholder="mm dd yyyy">
+                    </div><div class="col col50 noPad padLeft">
+                        <label for="collectors">
+                            Collector(s)
+                            <div class="help"><div>{{ field_data_assoc["collectors"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="collectors" id="collectors">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col50 noPad padRight">
+                        <label for="map_included">
+                            <input type="checkbox" name="map_included" value="yes"> Map Included
+                            <div class="help"><div>{{ field_data_assoc["map_included"]["help"] }}</div></div>
+                        </label>
+                    </div><div class="col col50 noPad padLeft">
+                        <label for="map_reference">
+                            Map Reference
+                            <div class="help"><div>{{ field_data_assoc["map_reference"]["help"] }}</div></div>
+                        </label>
+                        <input type="text" name="map_reference">
+                    </div>
+                </div>
+                <label for="image">
+                    Image
+                    <div class="help"><div>{{ field_data_assoc["image"]["help"] }}</div></div>
+                </label>
+                <input type="file" name="image">
+                <button class="button" type="submit" name="submitEntry"><span class="icon-control-point"></span> Add Entry</button>
+            </div><div class="col col50">
+                <div class="row">
+                    <div class="col col50 noPad padRight">
+                        <label for="county">County <div class="help"><div>{{ field_data_assoc["county"]["help"] }}</div></div></label>
+                        <input type="text" name="county" id="county">
+                    </div><div class="col col50 noPad padLeft">
+                        <label for="township">Township <div class="help"><div>{{ field_data_assoc["township"]["help"] }}</div></div></label>
+                        <input type="text" name="township">
+                    </div>
+                </div>
+
+                <label for="location">
+                    Location
+                    <div class="help"><div>{{ field_data_assoc["location"]["help"] }}</div></div>
+                </label>
+                <input type="text" name="location" id="location">
+
+                <label for="habitat">
+                    Habitat
+                    <div class="help"><div>{{ field_data_assoc["habitat"]["help"] }}</div></div>
+                </label>
+                <textarea name="habitat" id="habitat" rows="5"></textarea>
+
+                <label for="notes">
+                    Notes
+                    <div class="help"><div>{{ field_data_assoc["notes"]["help"] }}</div></div>
+                </label>
+                <textarea name="notes" id="notes" rows="5"></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="box">
+        <h3>Existing Entries</h3>
+        <p>Specimens are listed in order of ascending latin name.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Web ID</th>
+                    <th>Dataset</th>
+                    <th>Genus</th>
+                    <th>Species</th>
+                    <th>DTH #</th>
+                    <th>Acc. #</th>
+                    <th>Common Name</th>
+                    <th>Date Collected</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.web_id }}</td>
+                    <td>{{ entry.dataset }}</td>
+                    <td>{{ entry.genus }}</td>
+                    <td>{{ entry.species }}</td>
+                    <td>{{ entry.DTH }}</td>
+                    <td>{{ entry.accession }}</td>
+                    <td>{{ entry.common_name }}</td>
+                    <td>{{ entry.date_collected }}</td>
+                    <td>
+                        <a class="button" href="/admin/entries/{{ entry.web_id }}/">
+                            <span class="icon-mode-edit"></span> Edit
+                        </a>
+                        <button class="button"><span class="icon-highlight-remove"></span> Delete</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

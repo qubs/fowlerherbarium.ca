@@ -1,0 +1,51 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}Pages{% endblock %}
+
+{% block content %}
+	<h2>Pages</h2>
+	<form action="/admin/pages/" method="post" class="box">
+		<h3>Add New</h3>
+		<div class="row">
+			<div class="col col50">
+				<strong>Coming Soon</strong>
+				<!-- <button type="submit" name="submitEntry"><span class="icon-control-point"></span> Add Page</button> -->
+			</div><div class="col col50">
+			</div>
+		</div>
+	</form>
+	<div class="box">
+		<h3>Existing Pages</h3>
+		<p>Specimens are listed in order of ascending latin name.</p>
+		<table>
+			<thead>
+			<tr>
+				<th>Page ID</th>
+				<th>In Menu?</th>
+				<th>Title</th>
+				<th>Header</th>
+				<th>Options</th>
+			</tr>
+			</thead>
+			<tbody>
+                {% for page in pages %}
+                    <tr>
+                        <td>{{ page["page_id"] }}</td>
+                        <td>
+                            <input type="checkbox" onclick="return false;"
+									{% if page["in_menu"] == 1 %}checked{% endif %}>
+                        </td>
+                        <td>{{ page["title"] }}</td>
+                        <td>{{ page["header"] }}</td>
+                        <td>
+                            <a class="button" href="/admin/pages/{{ page["page_id"] }}/">
+                                <span class="icon-mode-edit"></span> Edit
+                            </a>
+                            <button class="button"><span class="icon-highlight-remove"></span> Delete</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
