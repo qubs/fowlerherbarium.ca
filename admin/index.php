@@ -1,59 +1,61 @@
 <?php
-	require_once("../config.php");
-	require_once("../shared.php");
 
-	require_once("./includes/PasswordHash.php");
+require_once("../config.php");
+require_once("../shared.php");
 
-	session_start();
+require_once("./includes/PasswordHash.php");
 
-	if(isset($_SESSION["user"])) {
-		header("Location: main.php");
-	}
+session_start();
 
-	$mysqli = mysqli_connect($__DATABASE["host"], $__DATABASE["user"], $__DATABASE["password"], $__DATABASE["name"]);
-	if(mysqli_connect_errno()) {
-		$message = message(4, "Connect failed: " . mysqli_connect_error());
-	}
-	$mysqli->set_charset("utf8");
+if(isset($_SESSION["user"])) {
+	header("Location: main.php");
+}
+
+$mysqli = mysqli_connect($__DATABASE["host"], $__DATABASE["user"], $__DATABASE["password"], $__DATABASE["name"]);
+if(mysqli_connect_errno()) {
+	$message = message(4, "Connect failed: " . mysqli_connect_error());
+}
+$mysqli->set_charset("utf8");
+
+$fail = false;
+
+if(isset($_POST["submit"])) {
+	$hasher = new PasswordHash($__HASH_COST, $__HASH_PORTABLE);
+
+	$username = $_POST["username"];
+	$password = $_POST["password"];
 
 	$fail = false;
+	$error = "";
 
-	if(isset($_POST["submit"])) {
-		$hasher = new PasswordHash($_HASH_COST, $_HASH_PORTABLE);
+	$fetchUser = $mysqli->prepare("SELECT * FROM users WHERE username = ?");
+	$fetchUser->bind_param("s", $username);
+	$fetchUser->execute();
+	$fetchUserResult = $fetchUser->get_result();
 
-		$username = $_POST["username"];
-		$password = $_POST["password"];
+	if($fetchUserResult->num_rows == 0) {
+		$fail = true;
+		$error = "No user with that username exists.";
+	} else {
+		$user = $fetchUserResult->fetch_assoc();
+		$username = $user["username"];
 
-		$fail = false;
-		$error = "";
-
-		$fetchUser = $mysqli->prepare("SELECT * FROM users WHERE username = ?");
-		$fetchUser->bind_param("s", $username);
-		$fetchUser->execute();
-		$fetchUserResult = $fetchUser->get_result();
-
-		if($fetchUserResult->num_rows == 0) {
+		if(!$hasher->CheckPassword($password, $user["password"])) {
 			$fail = true;
-			$error = "No user with that username exists.";
-		} else {
-			$user = $fetchUserResult->fetch_assoc();
-			$username = $user["username"];
-
-			if(!$hasher->CheckPassword($password, $user["password"])) {
-				$fail = true;
-				$error = "The password entered is incorrect.";
-			}
-		}
-
-		if(!$fail) {
-			$_SESSION["user"] = $username;
-
-			header("Location: main.php");
+			$error = "The password entered is incorrect.";
 		}
 	}
 
-	$page = "login";
-	require_once("./header.php");
+	if(!$fail) {
+		$_SESSION["user"] = $username;
+
+		header("Location: main.php");
+	}
+}
+
+$page = "login";
+require_once("./header.php");
+
 ?>
 <form action="index.php" method="post">
 	<?php if($fail) { ?>

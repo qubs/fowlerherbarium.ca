@@ -4,9 +4,9 @@
 
 		<meta charset="utf-8">
 
-		<link href='http://fonts.googleapis.com/css?family=Playfair+Display:400,700,400italic,700italic'
+		<link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,400italic,700italic'
 			  rel='stylesheet' type='text/css'>
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700'
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700'
 			  rel='stylesheet' type='text/css'>
 
 		<link rel="stylesheet" href="style.css">

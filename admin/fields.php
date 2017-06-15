@@ -87,7 +87,10 @@
 					<td style="min-width: 160px;"><?=$field["label"]?></td>
 					<td><p><?=$field["help"]?></p></td>
 					<td><input type="checkbox" onclick="return false" <?php if($field["searchable"] == 1) { echo "checked"; } ?>></td>
-					<td style="min-width: 160px;"><a class="button" href="edit_field.php?id=<?php echo $field["id"]; ?>"><span class="icon-mode-edit"></span> Edit</a> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
+					<td style="min-width: 160px;">
+						<a class="button" href="edit_field.php?id=<?php echo $field["id"]; ?>"><span class="icon-mode-edit"></span> Edit</a>
+						<button class="button"><span class="icon-highlight-remove"></span> Delete</button>
+					</td>
 				</tr>
 			<?php } ?>
 		</tbody>
