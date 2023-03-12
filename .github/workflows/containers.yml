@@ -1,0 +1,69 @@
+name: Build and release Docker containers
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish-php:
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: docker/metadata-action@v3
+        id: meta
+        with:
+          images: ghcr.io/qubs/fowler-herbarium-website-php
+
+      - uses: docker/setup-buildx-action@v1
+
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: .
+          file: Dockerfile.fpm
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  publish-nginx:
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: docker/metadata-action@v3
+        id: meta
+        with:
+          images: ghcr.io/qubs/fowler-herbarium-website-nginx
+
+      - uses: docker/setup-buildx-action@v1
+
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: .
+          file: Dockerfile.nginx
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
