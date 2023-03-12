@@ -4,3 +4,5 @@ bower_components
 node_modules
 vendor
 config.php
+uploads/*
+!uploads/.gitkeep
