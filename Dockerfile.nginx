@@ -18,5 +18,6 @@ COPY admin/tinymce.css admin/tinymce.css
 COPY css css
 COPY images images
 COPY fonts fonts
+COPY js js
 
 RUN apt-get purge -y nodejs npm && apt-get autoremove -y
