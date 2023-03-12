@@ -11,8 +11,10 @@ COPY package-lock.json package-lock.json
 
 RUN npm ci
 
-COPY style.css .
-COPY tinymce.css .
+RUN mkdir -p admin
+
+COPY admin/style.css admin/style.css
+COPY admin/tinymce.css admin/tinymce.css
 COPY css css
 COPY images images
 COPY fonts fonts
