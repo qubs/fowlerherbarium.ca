@@ -68,11 +68,13 @@
 			header("Location: main.php");
 		}
 
-		$id = intval($mysqli->real_escape_string($_GET["id"]));
+		$id = $mysqli->real_escape_string($_GET["id"]);
 	}
 
-	$query = "SELECT * FROM pages WHERE page_id = $id LIMIT 1";
-	$fetch_page = $mysqli->query($query);
+	$query = $mysqli->prepare("SELECT * FROM pages WHERE page_id = ? LIMIT 1");
+	$query->bind_param("s", $id);
+	$query->execute();
+	$fetch_page = $query->get_result();
 
 	if($fetch_page->num_rows == 0) {
 		header("Location: main.php");
@@ -109,8 +111,8 @@
 			</div>
 			<label for="routes">Routes</label>
 			<textarea name="routes" rows="3"><?php echo $pageObj["routes"]; ?></textarea>
-			<label for="scripts">Scripts</label>
-			<textarea name="scripts" rows="7"><?php echo $pageObj["scripts"]; ?></textarea>
+			<!--<label for="scripts">Scripts</label>
+			<textarea name="scripts" rows="7"><?php echo $pageObj["scripts"]; ?></textarea>-->
 			<button type="submit" name="submit" class="button"><span class="icon-done"></span> Save Changes</button> <a class="button" href="pages.php"><span class="icon-highlight-remove"></span> Cancel</a>
 		</div><div class="col col50">
 			<label for="content">Content</label>
