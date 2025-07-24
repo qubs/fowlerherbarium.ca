@@ -47,7 +47,7 @@
 	// 	if(!$dead) {
 	// 		$insert_entry = $mysqli->prepare("INSERT INTO specimens(dataset, genus, species, DTH, accession, common_name, date_collected, collectors, map_included, map_reference, county, township, location, habitat, notes) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-	// 		$insert_entry->bind_param("sssssssssssssss", 
+	// 		$insert_entry->bind_param("sssssssssssssss",
 	// 				$dataset,
 
 	// 				$genus,
@@ -96,7 +96,6 @@
 	<table>
 		<thead>
 			<tr>
-				<th>ID</th>
 				<th>Page ID</th>
 				<th>In Menu?</th>
 				<th>Title</th>
@@ -108,13 +107,12 @@
 		<tbody>
 			<?php while($page = $fetch_pages->fetch_assoc()) { ?>
 				<tr>
-					<td><?=$page["id"]?></td>
 					<td><?=$page["page_id"]?></td>
 					<td><input type="checkbox" onclick="return false;" <?php if($page["in_menu"] == 1) { ?>checked<?php } ?>></td>
 					<td><?=$page["title"]?></td>
 					<td><?=$page["header"]?></td>
 					<td><?=$page["routes"]?></td>
-					<td><a class="button" href="edit_page.php?id=<?php echo $page["id"]; ?>"><span class="icon-mode-edit"></span> Edit</a> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
+					<td><a class="button" href="edit_page.php?id=<?php echo $page["page_id"]; ?>"><span class="icon-mode-edit"></span> Edit</a> <button class="button"><span class="icon-highlight-remove"></span> Delete</button></td>
 				</tr>
 			<?php } ?>
 		</tbody>

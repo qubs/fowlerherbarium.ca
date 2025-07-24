@@ -15,7 +15,7 @@
 	$mysqli->set_charset("utf8");
 
 	if(isset($_POST["submit"])) {
-		$id = $_POST["id"];
+		$id = $_POST["page_id"];
 
 		$title = $_POST["title"];
 		$old_title = $_POST["old_title"];
@@ -56,8 +56,8 @@
 		}
 
 		if(!$dead) {
-			$update_page = $mysqli->prepare("UPDATE pages SET title = ?, header = ?, in_menu = ?, menu_order = ?, menu_icon = ?, routes = ?, scripts = ?, content = ? WHERE id = ? LIMIT 1");
-			$update_page->bind_param("ssiissssi", $title, $header, $in_menu_bool, $menu_order, $menu_icon, $routes, $scripts, $content, $id);
+			$update_page = $mysqli->prepare("UPDATE pages SET title = ?, header = ?, in_menu = ?, menu_order = ?, menu_icon = ?, routes = ?, content = ? WHERE page_id = ? LIMIT 1");
+			$update_page->bind_param("ssiisssi", $title, $header, $in_menu_bool, $menu_order, $menu_icon, $routes, /*$scripts,*/ $content, $id);
 			$update_page->execute();
 			$update_page->close();
 
@@ -66,12 +66,12 @@
 	} else {
 		if(!isset($_GET["id"])) {
 			header("Location: main.php");
-		} 
+		}
 
 		$id = intval($mysqli->real_escape_string($_GET["id"]));
 	}
 
-	$query = "SELECT * FROM pages WHERE id = $id LIMIT 1";
+	$query = "SELECT * FROM pages WHERE page_id = $id LIMIT 1";
 	$fetch_page = $mysqli->query($query);
 
 	if($fetch_page->num_rows == 0) {
@@ -83,12 +83,12 @@
 	$page = "editpage";
 	require_once("./header.php");
 ?>
-<h2>Edit Page "<em><?php echo $pageObj["title"]; ?></em>" (Web ID: <?php echo $pageObj["id"]; ?>)</h2>
+<h2>Edit Page "<em><?php echo $pageObj["title"]; ?></em>" (Web ID: <?php echo $pageObj["page_id"]; ?>)</h2>
 <form action="edit_page.php" method="post" class="box">
 	<?php if(isset($error) && !empty($error)) { ?>
 		<div class="error"><?php echo $error; ?></div>
 	<?php } ?>
-	<input type="hidden" name="id" value="<?php echo $id; ?>">
+	<input type="hidden" name="page_id" value="<?php echo $id; ?>">
 	<div class="row">
 		<div class="col col50">
 			<input type="hidden" name="old_title" value="<?php echo $pageObj["title"]; ?>">
