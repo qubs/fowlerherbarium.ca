@@ -9,6 +9,7 @@
 	}
 
 	$mysqli = mysqli_connect($__DATABASE["host"], $__DATABASE["user"], $__DATABASE["password"], $__DATABASE["name"]);
+	mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 	if(mysqli_connect_errno()) {
 		$message = message(4, "Connect failed: " . mysqli_connect_error());
 	}
@@ -24,7 +25,7 @@
 		$menu_order = filter_var($_POST["menu_order"], FILTER_VALIDATE_INT, array("options" => array("default" => -1)));
 		$menu_icon = $_POST["menu_icon"];
 		$routes = $_POST["routes"];
-		$scripts = $_POST["scripts"];
+		// $scripts = $_POST["scripts"];
 		$content = $_POST["content"];
 
 		$in_menu_bool = 0;
@@ -55,7 +56,7 @@
 			$check_existing->close();
 		}
 
-		echo "$dead | $error | $title | $header | $in_menu";
+		echo "$dead | $error | $title | $header | $in_menu | $menu_order | $menu_cion | $routes | $content";
 
 		if(!$dead) {
 			$update_page = $mysqli->prepare("UPDATE pages SET title = ?, header = ?, in_menu = ?, menu_order = ?, menu_icon = ?, routes = ?, content = ? WHERE page_id = ? LIMIT 1");
