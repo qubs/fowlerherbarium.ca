@@ -25,7 +25,6 @@
 		$menu_order = filter_var($_POST["menu_order"], FILTER_VALIDATE_INT, array("options" => array("default" => -1)));
 		$menu_icon = $_POST["menu_icon"];
 		$routes = $_POST["routes"];
-		// $scripts = $_POST["scripts"];
 		$content = $_POST["content"];
 
 		$in_menu_bool = 0;
@@ -56,17 +55,13 @@
 			$check_existing->close();
 		}
 
-		echo "$dead | $error | $title | $header | $in_menu | $menu_order | $menu_cion | $routes | $content";
-
 		if(!$dead) {
 			$update_page = $mysqli->prepare("UPDATE pages SET title = ?, header = ?, in_menu = ?, menu_order = ?, menu_icon = ?, routes = ?, content = ? WHERE page_id = ? LIMIT 1");
 			$update_page->bind_param("ssiissss", $title, $header, $in_menu_bool, $menu_order, $menu_icon, $routes, $content, $id);
 			$update_page->execute();
 			$update_page->close();
 
-			echo $mysqli->error;
-
-			// header("Location: pages.php");
+			header("Location: pages.php");
 		}
 	} else {
 		if(!isset($_GET["id"])) {
@@ -117,8 +112,6 @@
 			</div>
 			<label for="routes">Routes</label>
 			<textarea name="routes" rows="3"><?php echo $pageObj["routes"]; ?></textarea>
-			<!--<label for="scripts">Scripts</label>
-			<textarea name="scripts" rows="7"><?php echo $pageObj["scripts"]; ?></textarea>-->
 			<button type="submit" name="submit" class="button"><span class="icon-done"></span> Save Changes</button> <a class="button" href="pages.php"><span class="icon-highlight-remove"></span> Cancel</a>
 		</div><div class="col col50">
 			<label for="content">Content</label>
