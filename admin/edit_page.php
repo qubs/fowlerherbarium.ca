@@ -61,14 +61,14 @@
 			$update_page->execute();
 			$update_page->close();
 
-			header("Location: pages.php");
+			// header("Location: pages.php");
 		}
 	} else {
 		if(!isset($_GET["id"])) {
 			header("Location: main.php");
 		}
 
-		$id = $mysqli->real_escape_string($_GET["id"]);
+		$id = $_GET["id"];
 	}
 
 	$query = $mysqli->prepare("SELECT * FROM pages WHERE page_id = ? LIMIT 1");
@@ -81,6 +81,7 @@
 	}
 
 	$pageObj = $fetch_page->fetch_assoc();
+	$query->close();
 
 	$page = "editpage";
 	require_once("./header.php");
