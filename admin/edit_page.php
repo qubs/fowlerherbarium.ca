@@ -61,6 +61,8 @@
 			$update_page->execute();
 			$update_page->close();
 
+			echo $mysqli->error;
+
 			// header("Location: pages.php");
 		}
 	} else {
