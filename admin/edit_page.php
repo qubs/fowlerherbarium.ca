@@ -55,6 +55,8 @@
 			$check_existing->close();
 		}
 
+		echo "$dead | $error | $title | $header | $in_menu";
+
 		if(!$dead) {
 			$update_page = $mysqli->prepare("UPDATE pages SET title = ?, header = ?, in_menu = ?, menu_order = ?, menu_icon = ?, routes = ?, content = ? WHERE page_id = ? LIMIT 1");
 			$update_page->bind_param("ssiisssi", $title, $header, $in_menu_bool, $menu_order, $menu_icon, $routes, /*$scripts,*/ $content, $id);
