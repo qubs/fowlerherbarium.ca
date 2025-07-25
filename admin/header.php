@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 	<head>
 		<title>Admin | Fowler Herbarium</title>
@@ -11,10 +12,10 @@
 
 		<link rel="stylesheet" href="style.css">
 
-		<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="/node_modules/jquery/dist/jquery.min.js"></script>
 
-		<script type="text/javascript" src="/bower_components/tinymce/jquery.tinymce.min.js"></script>
-		<script type="text/javascript" src="/bower_components/tinymce/tinymce.min.js"></script>
+		<script type="text/javascript" src="/node_modules/tinymce/jquery.tinymce.min.js"></script>
+		<script type="text/javascript" src="/node_modules/tinymce/tinymce.min.js"></script>
 
 		<script type="text/javascript">
 			$(document).ready(function() {
