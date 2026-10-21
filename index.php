@@ -28,8 +28,8 @@ if(mysqli_connect_errno()) {
 $mysqli->set_charset("utf8");
 
 // Load template library and set it up
-$loader = new Twig_Loader_Filesystem($_SERVER["DOCUMENT_ROOT"] . "/templates");
-$twig = new Twig_Environment($loader);
+$loader = new \Twig\Loader\FilesystemLoader($_SERVER["DOCUMENT_ROOT"] . "/templates");
+$twig = new \Twig\Environment($loader);
 
 // Set up the page router
 $router = new AltoRouter();
