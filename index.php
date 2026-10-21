@@ -65,7 +65,7 @@ Controllers\initializeAPIPages($router);
 $match = $router->match();
 
 if($match && is_callable($match["target"])) {
-	call_user_func_array($match["target"], $match["params"]);
+	call_user_func_array($match["target"], array_values($match["params"]));
 } else {
 	// If there's no match to the request URL, return a 404 page.
 
